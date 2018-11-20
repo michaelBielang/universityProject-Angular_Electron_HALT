@@ -1,0 +1,11 @@
+{
+  "name": "halt",
+  "version": "0.0.0",
+  "description": "Hochschul Active Directory Lookup Tool",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bichlmeier Christoph, Bielang Michael, Schmid Steffen",
+  "license": "UNLICENSED"
+}
