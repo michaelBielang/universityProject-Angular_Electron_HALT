@@ -42,6 +42,7 @@
 /dist-server
 /tmp
 /out-tsc
+/packages
 
 # IDEs and editors
 /.idea
