@@ -2,7 +2,7 @@
   "name": "halt",
   "version": "0.0.0",
   "description": "Hochschul Active Directory Lookup Tool",
-  "main": "electron-main.js",
+  "main": "electron.prod",
   "author": "Bichlmeier Christoph, Bielang Michael, Schmid Steffen",
   "license": "UNLICENSED",
   "scripts": {
@@ -11,10 +11,10 @@
     "electron:dev": "electron ./src/electron.dev",
     "electron:prod": "electron ./src/electron.prod",
     "build": "ng build --prod",
-    "package:win": "npm run build && cross-var electron-packager dist $npm_package_name-$npm_package_version --out=packages --platform=win32 --arch=all --overwrite ",
-    "package:linux": "npm run build && cross-var electron-packager dist $npm_package_name-$npm_package_version --out=packages --platform=linux --arch=all --overwrite ",
-    "package:osx": "npm run build && cross-var electron-packager dist $npm_package_name-$npm_package_version --out=packages --platform=darwin --arch=all --overwrite ",
-    "package:all": "npm run build && cross-var electron-packager dist $npm_package_name-$npm_package_version --out=packages --all --arch=all --overwrite ",
+    "package:win": "npm run build && copy \"package.json\" \"dist/\" && cross-var electron-packager dist $npm_package_name-$npm_package_version --out=packages --platform=win32 --arch=x64 --overwrite ",
+    "package:linux": "npm run build && copy \"package.json\" \"dist/\" && cross-var electron-packager dist $npm_package_name-$npm_package_version --out=packages --platform=linux --arch=x64 --overwrite ",
+    "package:osx": "npm run build && copy \"package.json\" \"dist/\" && cross-var electron-packager dist $npm_package_name-$npm_package_version --out=packages --platform=darwin --arch=x64 --overwrite ",
+    "package:all": "npm run build && copy \"package.json\" \"dist/\" && cross-var electron-packager dist $npm_package_name-$npm_package_version --out=packages --all --arch=x64 --overwrite ",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
