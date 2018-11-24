@@ -1,1 +1,49 @@
-Details Test
+<div class="details-content">
+  <br>
+
+  <div class="details-info-block">
+    <p class="details-info-label">Gender</p>
+    <div class="details-info-output gender-info">{{ detailsService.detailsObj['gender'] === 2 ? 'female' : detailsService.detailsObj['gender'] === 1 ? 'male' : 'undefined' }}</div>
+  </div>
+
+  <div class="details-info-block">
+    <p class="details-info-label">Firstname</p>
+    <div class="details-info-output firstname-info">{{ detailsService.detailsObj['firstname'] }}</div>
+  </div>
+
+  <div class="details-info-block">
+    <p class="details-info-label">Lastname</p>
+    <div class="details-info-output lastname-info">{{ detailsService.detailsObj['lastname'] }}</div>
+  </div>
+
+  <div class="details-info-block">
+    <p class="details-info-label">Email addresses</p>
+    <div class="details-info-output" [ngClass]="'email-info' + i" *ngFor="let email of detailsService.detailsObj['emails']; let i = index">{{ email }}</div>
+  </div>
+
+  <div class="details-info-block">
+    <p class="details-info-label">Study subject</p>
+    <div class="details-info-output studysubject-info">{{ detailsService.detailsObj['studysubject'] }}</div>
+  </div>
+
+  <div class="details-info-block">
+    <p class="details-info-label">Faculty</p>
+    <div class="details-info-output faculty-info">{{ detailsService.detailsObj['faculty'] }}</div>
+  </div>
+
+  <div class="details-info-block">
+    <p class="details-info-label">Degree</p>
+    <div class="details-info-output degree-info">{{ detailsService.detailsObj['degree'] }}</div>
+  </div>
+
+  <div class="details-info-block">
+    <p class="details-info-label">University</p>
+    <div class="details-info-output university-info">{{ detailsService.detailsObj['university'] }}</div>
+  </div>
+
+  <div class="details-info-block">
+    <p class="details-info-label">Identity</p>
+    <div class="details-info-output identity-info">{{ detailsService.detailsObj['identity'] }}</div>
+  </div>
+
+</div>

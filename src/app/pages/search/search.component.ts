@@ -10,6 +10,7 @@ import { SearchCustomValidators, validationMessagesDE } from './search.validator
 import { MyErrorStateMatcher } from '../../@core/models/error-state-matcher.model';
 import { NotificationService } from '../../@core/services/notification.service';
 import { SearchService } from '../../@core/services/search.service';
+import { ResultsService } from '../../@core/services/results.service';
 import route from '../../@core/enums/route.enum';
 
 @Component({
@@ -37,6 +38,7 @@ export class SearchComponent implements OnInit {
     private readonly tabSelectionService: TabSelectionService,
     private readonly notificationService: NotificationService,
     public readonly searchService: SearchService,
+    private readonly resultsService: ResultsService,
   ) { }
 
   async ngOnInit() {
@@ -46,12 +48,7 @@ export class SearchComponent implements OnInit {
       .then(result => {
         this.serverGroups = result;
       }).catch(err => {
-        console.error(err['message']);
-        this.notificationService.showNotification(
-          'error',
-          null,
-          err['message'],
-        );
+        this.errHandling(err);
       });
     await this.searchService.getFacultiesWithStudysubjects()
       .then(result => {
@@ -69,23 +66,13 @@ export class SearchComponent implements OnInit {
         this.filteredfaculties = this.faculties;
         this.filteredstudysubjects = this.studysubjects;
       }).catch(err => {
-        console.error(err['message']);
-        this.notificationService.showNotification(
-          'error',
-          null,
-          err['message'],
-        );
+        this.errHandling(err);
       });
       await this.searchService.getSearchHistory()
       .then(result => {
         this.searchService.updateSearchHistory(result);
       }).catch(err => {
-        console.error(err['message']);
-        this.notificationService.showNotification(
-          'error',
-          null,
-          err['message'],
-        );
+        this.errHandling(err);
       });
     this.tabSelectionService.loadingEvent.next(false);
   }
@@ -104,6 +91,7 @@ export class SearchComponent implements OnInit {
   }
 
   onSearchBtnClick() {
+    this.tabSelectionService.loadingEvent.next(true);
     this.searchService.updateSearchObj({
       server: this.searchForm.get('server')['value'],
       gender: this.searchForm.get('gender')['value'],
@@ -113,12 +101,23 @@ export class SearchComponent implements OnInit {
       subjectordegree: this.searchForm.get('subjectordegree')['value']
     });
 
-    // TODO: implement request
-
-    if (this.searchTimeout) clearTimeout(this.searchTimeout);
-    this.searchTimeout = setTimeout(() => {
-      this.tabSelectionService.tabSwitchEvent.next(route.RESULTS);
-    }, 250);
+    this.searchService.searchRequest()
+      .then(results => {
+        this.resultsService.setResultsObjs(results);
+        this.resultsService.setCurrentSearchObj(this.searchService.searchObj);
+        if (this.searchTimeout) clearTimeout(this.searchTimeout);
+        this.searchTimeout = setTimeout(() => {
+          this.tabSelectionService.tabSwitchEvent.next(route.RESULTS);
+          this.tabSelectionService.loadingEvent.next(false);
+          this.notificationService.showNotification(
+            'success',
+            null,
+            'search executed',
+          );
+        }, 250);
+      }).catch(err => {
+        this.errHandling(err);
+      });
   }
 
   onFacultyChange() {
@@ -168,5 +167,15 @@ export class SearchComponent implements OnInit {
       return Object.keys(input);
     }
     return undefined;
+  }
+
+  errHandling(err) {
+    console.error(err['message']);
+    this.notificationService.showNotification(
+      'error',
+      null,
+      err['message'],
+    );
+    this.tabSelectionService.loadingEvent.next(false);
   }
 }

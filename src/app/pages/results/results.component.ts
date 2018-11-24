@@ -3,8 +3,7 @@
  * @license UNLICENSED
  */
 
-import { Component, OnInit } from '@angular/core';
-import { TabSelectionService } from '../../@core/services/tab-selection.service';
+import { Component } from '@angular/core';
 import { ResultsService } from '../../@core/services/results.service';
 
 @Component({
@@ -12,12 +11,9 @@ import { ResultsService } from '../../@core/services/results.service';
   styleUrls: ['./results.component.scss'],
   templateUrl: './results.component.html',
 })
-export class ResultsComponent implements OnInit {
+export class ResultsComponent {
+
   constructor(
-    private readonly tabSelectionService: TabSelectionService,
     public readonly resultsService: ResultsService,
   ) { }
-
-  ngOnInit() {
-  }
 }

@@ -1,1 +1,5 @@
-Result-Entry Test
+<mat-card>
+  <h6>{{ userData['firstname'] + ' ' + userData['lastname'] }}</h6>
+  <p [ngClass]="'email-output' + userIndex">{{ userData['emails'] ? userData['emails'][0] : '' }}</p>
+  <mat-icon (click)="onDetailsClick()">search</mat-icon>
+</mat-card>

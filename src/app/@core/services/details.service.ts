@@ -8,11 +8,15 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class DetailsService {
-  detailObj;
+  detailsObj;
 
   constructor() { }
 
   hasDetails() {
-    return this.detailObj != undefined;
+    return this.detailsObj != undefined;
+  }
+
+  updateDetailsObj(obj) {
+    this.detailsObj = obj;
   }
 }

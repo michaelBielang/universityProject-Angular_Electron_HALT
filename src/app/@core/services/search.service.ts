@@ -144,10 +144,42 @@ export class SearchService {
 
   searchRequest(): Promise<any> {
     return new Promise((resolve, reject) => {
-      if (this.searchObj['id']) {
+      if (this.searchObj['id'] || this.searchObj['email']) {
         // return mock data
         resolve([
-
+          {
+            gender: 1,
+            firstname: 'Max',
+            lastname: 'Mustermann',
+            emails: [ 'max.mustermann@hs-augsburg.de', 'max23@rz.fh-augsburg.de' ],
+            studysubject: 'Informatik',
+            faculty: 'Informatik',
+            degree: 'Bachelor',
+            university: 'HS-Augsburg',
+            identity: 'max23'
+          },
+          {
+            gender: 2,
+            firstname: 'Maria',
+            lastname: 'Mustermann',
+            emails: [ 'maria.mustermann@hs-augsburg.de' ],
+            studysubject: 'Wirtschaftsinformatik',
+            faculty: 'Informatik',
+            degree: 'Bachelor',
+            university: 'HS-Augsburg',
+            identity: 'marmu'
+          },
+          {
+            gender: 2,
+            firstname: 'Anna',
+            lastname: 'Müller',
+            emails: [ 'anna.mueller@hs-augsburg.de' ],
+            studysubject: 'Interaktive Medien',
+            faculty: 'Informatik',
+            degree: 'Bachelor',
+            university: 'HS-Augsburg',
+            identity: 'muell'
+          },
         ]);
       } else {
         reject('no search id input was given');
