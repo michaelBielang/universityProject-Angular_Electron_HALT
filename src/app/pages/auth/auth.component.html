@@ -3,25 +3,26 @@
   <br><br><br>
 
   <form [formGroup]="authForm" (ngSubmit)="onAuth()">
+    <div class="row">
+      <mat-form-field class="form-group col-md-12">
+        <input matInput required placeholder="Login ID (RZ)" formControlName="id">
+        <mat-error *ngIf="authForm.get('id')['errors']">
+          {{ errorMessages[ObjKeys(authForm.get('id')['errors'])[0]] }}
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field class="form-group col-md-12">
-      <input matInput required placeholder="Login ID (RZ)" formControlName="id">
-      <mat-error *ngIf="authForm.get('id')['errors']">
-        {{ errorMessages[ObjKeys(authForm.get('id')['errors'])[0]] }}
-      </mat-error>
-    </mat-form-field>
+      <mat-form-field class="form-group col-md-12">
+        <input matInput required placeholder="Login Password (RZ)" formControlName="pw" [type]="hidePw ? 'password' : 'text'">
+        <mat-icon matSuffix class="noselect" (click)="hidePw = !hidePw">{{hidePw ? 'visibility_off' : 'visibility'}}</mat-icon>
+        <mat-error *ngIf="authForm.get('pw')['errors']">
+          {{ errorMessages[ObjKeys(authForm.get('pw')['errors'])[0]] }}
+        </mat-error>
+      </mat-form-field>
+    </div>
 
-    <mat-form-field class="form-group col-md-12">
-      <input matInput required placeholder="Login Password (RZ)" formControlName="pw" [type]="hidePw ? 'password' : 'text'">
-      <mat-icon matSuffix class="noselect" (click)="hidePw = !hidePw">{{hidePw ? 'visibility_off' : 'visibility'}}</mat-icon>
-      <mat-error *ngIf="authForm.get('pw')['errors']">
-        {{ errorMessages[ObjKeys(authForm.get('pw')['errors'])[0]] }}
-      </mat-error>
-    </mat-form-field>
+    <br><br>
 
-    <br><br><br>
-
-    <button type="submit" class="btn btn-block btn-primary" [disabled]="!authForm.valid || isLoading">
+    <button type="submit" class="btn btn-block btn-primary" [disabled]="!authForm.valid">
       Login
     </button>
   </form>

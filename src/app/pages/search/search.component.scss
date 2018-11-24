@@ -3,6 +3,40 @@
  * @license UNLICENSED
  */
 @import 'styles';
+
+.search-content {
+  padding: 0 15px;
+}
+
+.gender-radio-button {
+  display: block;
+}
+
+.narrow-input-group {
+  margin-bottom: 5px;
+}
+
+.search-history {
+  padding-top: 20px;
+
+  .history-label {
+    font-size: 11px;
+    color: #929292;
+    margin-bottom: -5px;
+  }
+  .history-block {
+    display: inline-block;
+    padding: 0 25px 0 15px;
+    color: #6598f7;
+    text-decoration: underline;
+    &:hover {
+      color: #4298f4;
+      font-weight: 500;
+      cursor: pointer;
+    }
+  }
+}
+
 // uncommend required breakpoints
 // @media (max-width:$breakpoints(xs)) {}
 // @media (max-width:$breakpoints(md)) {}

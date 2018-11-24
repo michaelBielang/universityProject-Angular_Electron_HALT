@@ -1,1 +1,68 @@
-<div (click)="onSearchBtnClick()">Search Test</div>
+<div class="search-content">
+  <form [formGroup]="searchForm" (ngSubmit)="onSearchBtnClick()">
+
+    <div class="row">
+      <mat-form-field class="form-group narrow-input-group col-md-12">
+        <mat-select placeholder="Look at specific LDAP server" formControlName="server">
+          <mat-option [value]=""> -- ALL SERVERS -- </mat-option>
+          <mat-option *ngFor="let serverentry of serverGroups" [value]="serverentry">
+            {{ serverentry }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-radio-group class="form-group narrow-input-group col-md-12" formControlName="gender">
+        <mat-radio-button class="gender-radio-button" [value]="2">Only female</mat-radio-button>
+        <mat-radio-button class="gender-radio-button" [value]="1">Only male</mat-radio-button>
+      </mat-radio-group>
+
+      <mat-form-field class="form-group narrow-input-group col-md-12">
+        <input matInput required placeholder="Name or id (RZ-Kennung)" formControlName="id">
+        <mat-error *ngIf="searchForm.get('id')['errors']">
+          {{ errorMessages[ObjKeys(searchForm.get('id')['errors'])[0]] }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="form-group narrow-input-group col-md-12">
+        <input matInput placeholder="Email address" formControlName="email">
+        <mat-error *ngIf="searchForm.get('email')['errors']">
+          {{ errorMessages[ObjKeys(searchForm.get('email')['errors'])[0]] }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="form-group narrow-input-group col-md-12">
+        <input matInput type="text" placeholder="Faculty" formControlName="faculty" [matAutocomplete]="AutoFaculty" (keyup)="onFacultyChange()">
+        <mat-autocomplete #AutoFaculty="matAutocomplete" (optionSelected)="onFacultyChange()">
+          <mat-option *ngFor="let fac of filteredfaculties" [value]="fac">
+            {{ fac }}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="searchForm.get('faculty')['errors']">
+          {{ errorMessages[ObjKeys(searchForm.get('faculty')['errors'])[0]] }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="form-group narrow-input-group col-md-12">
+        <input matInput type="text" placeholder="Study subject or degree" formControlName="subjectordegree" [matAutocomplete]="AutoSubject" (keyup)="onSubjectChange()">
+        <mat-autocomplete #AutoSubject="matAutocomplete" (optionSelected)="onSubjectChange()">
+          <mat-option *ngFor="let subject of filteredstudysubjects" [value]="subject">
+            {{ subject }}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="searchForm.get('subjectordegree')['errors']">
+          {{ errorMessages[ObjKeys(searchForm.get('subjectordegree')['errors'])[0]] }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+
+    <button type="submit" class="btn btn-block btn-primary" [disabled]="!searchForm.valid">
+      Start LDAP Search
+    </button>
+  </form>
+
+  <div class="search-history" *ngIf="searchService.searchHistory.length">
+    <p class="history-label">Search history:</p>
+    <div class="row history-block" *ngFor="let hist of searchService.searchHistory; let i = index" (click)="onHistoryClick(i)">{{ hist['id'] || hist['email'] }}</div>
+  </div>
+</div>

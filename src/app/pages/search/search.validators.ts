@@ -3,7 +3,7 @@
  * @license UNLICENSED
  */
 
-export class AuthCustomValidators {
+export class SearchCustomValidators {
 
 }
 
