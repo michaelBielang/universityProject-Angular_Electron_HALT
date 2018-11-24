@@ -1,0 +1,57 @@
+/* You can add global styles to this file, and also import other style files */
+// global app font size
+@import './font-size'; // install the framework and custom global styles
+@import './custom.material';
+@import './google.icons'; // google @angular/material icons
+// install breakpoints
+@import './breakpoints';
+
+button {
+  &:disabled {
+    background-color: #a4abb3;
+    border-color: #a4abb3;
+  }
+}
+
+.mat-form-field-suffix {
+  mat-icon {
+    cursor: pointer;
+  }
+}
+
+.noselect {
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Safari */
+  -khtml-user-select: none;
+  /* Konqueror HTML */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+
+.scrollable,
+.scrollable-container {
+  // &::-moz-scrollbar,
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  // &::-moz-scrollbar-thumb,
+  &::-webkit-scrollbar-thumb {
+    background: #dadada;
+    border-radius: 2.5px;
+  }
+  // &::-moz-scrollbar-track,
+  &::-webkit-scrollbar-track {
+    background: #f2f2f2;
+  }
+  // &::-moz-scrollbar-thumb:hover,
+  &::-webkit-scrollbar-thumb:hover {
+    background: #a4abb3;
+  }
+}
