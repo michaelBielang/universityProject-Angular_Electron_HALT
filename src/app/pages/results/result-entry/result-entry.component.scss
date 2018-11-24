@@ -1,0 +1,40 @@
+/**
+ * @author Christoph Bichlmeier
+ * @license UNLICENSED
+ */
+@import 'styles';
+
+mat-card {
+  background: #EEEEEE !important;
+  padding: 10px 10px 1px 5px;
+
+  h6 {
+    font-weight: 600;
+  }
+
+  p {
+    cursor: pointer;
+
+    &:hover {
+      font-weight: 500;
+    }
+  }
+
+  mat-icon {
+    position: absolute;
+    top: 25px;
+    right: 10px;
+    cursor: pointer;
+
+    &:hover {
+      color: #3673f7;
+      font-weight: 600;
+    }
+  }
+}
+// uncommend required breakpoints
+// @media (max-width:$breakpoints(xs)) {}
+// @media (max-width:$breakpoints(md)) {}
+// @media (max-width:$breakpoints(sm)) {}
+// @media (max-width:$breakpoints(is)) {}
+// @media (max-width:$breakpoints(xs)) {}

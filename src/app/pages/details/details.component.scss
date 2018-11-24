@@ -1,0 +1,30 @@
+/**
+ * @author Christoph Bichlmeier
+ * @license UNLICENSED
+ */
+@import 'styles';
+
+.details-content {
+  padding: 0 15px;
+
+  .details-info-label {
+    font-size: 11px;
+    color: #929292;
+    margin-bottom: -3px;
+  }
+
+  .details-info-output {
+    font-weight: 400;
+    cursor: pointer;
+  }
+
+  .details-info-block {
+    margin-bottom: 10px;
+  }
+}
+// uncommend required breakpoints
+// @media (max-width:$breakpoints(xs)) {}
+// @media (max-width:$breakpoints(md)) {}
+// @media (max-width:$breakpoints(sm)) {}
+// @media (max-width:$breakpoints(is)) {}
+// @media (max-width:$breakpoints(xs)) {}

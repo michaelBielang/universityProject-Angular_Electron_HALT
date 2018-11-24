@@ -1,0 +1,31 @@
+/**
+ * @author Christoph Bichlmeier
+ * @license UNLICENSED
+ */
+@import 'styles';
+
+.header-block {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  padding: 10px 0 0;
+  background: transparent;
+
+  .loader-indicator {
+    position: absolute;
+    right: 10px;
+    bottom: 15px;
+  }
+
+  .header-title {
+    text-align: center;
+  }
+}
+// uncommend required breakpoints
+// @media (max-width:$breakpoints(xs)) {}
+// @media (max-width:$breakpoints(md)) {}
+// @media (max-width:$breakpoints(sm)) {}
+// @media (max-width:$breakpoints(is)) {}
+// @media (max-width:$breakpoints(xs)) {}

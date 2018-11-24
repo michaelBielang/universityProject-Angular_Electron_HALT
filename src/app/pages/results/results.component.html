@@ -1,0 +1,20 @@
+<div class="results-content">
+  <div class="search-results-output">
+    <div class="row">
+      <div class="">Results for:&nbsp;&nbsp;</div>
+      <div class="search-output">
+        {{ resultsService.currentSearchObj['id'] && resultsService.currentSearchObj['id'] !== '' ?
+            resultsService.currentSearchObj['id'] + '; ' + resultsService?.currentSearchObj['email'] :
+            resultsService?.currentSearchObj['email'] }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="">Count:&nbsp;&nbsp;</div>
+      <div class="count-output">{{ resultsService.resultObjs.length }}</div>
+    </div>
+  </div>
+
+  <div class="result-entry" *ngFor="let userObj of resultsService.resultObjs; let i = index">
+    <app-result-entry [userData]="userObj" [userIndex]=i></app-result-entry>
+  </div>
+</div>
