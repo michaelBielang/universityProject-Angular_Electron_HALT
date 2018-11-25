@@ -2,8 +2,9 @@
   "compileOnSave": false,
   "compilerOptions": {
     "target": "es6",
-    "outDir": "./dist/out-tsc",
+    "outDir": "../../dist/api",
     "moduleResolution": "node",
+    "module": "amd",
     "removeComments": true,
     "sourceMap": true,
     "declaration": false,
@@ -16,5 +17,8 @@
       "es2017",
       "dom"
     ]
-  }
+  },
+  "include": [
+    "./**/*.ts"
+  ]
 }

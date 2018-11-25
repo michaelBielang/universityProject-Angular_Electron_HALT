@@ -1,0 +1,8 @@
+{
+  "signal": "SIGHUP",
+  "ext": "ts",
+  "exec": "ts-node --inspect ./src/api/server.ts",
+  "env": {
+    "LOG_DB_ACTIVITY": true
+  }
+}

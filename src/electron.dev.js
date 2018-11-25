@@ -4,10 +4,12 @@ const {
 } = require('electron');
 const path = require('path');
 const url = require('url');
+// const cp = require('child_process');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
+// let server;
 
 const createWindow = () => {
   // set timeout to render the window not until the Angular
@@ -23,7 +25,23 @@ const createWindow = () => {
       }
     });
 
-    // and load the app.
+    // if (!server) {
+    //   // express = cp.spawn('nodemon',[path.join(__dirname, 'api/server.ts')]);
+    //   // express = cp.spawn('ts-node', ['--inspect', 'api/server.ts', '8787']);
+    //   // express = new
+    //   express = new BrowserWindow({
+    //     width: 250,
+    //     height: 250,
+    //     show: false
+    //   });
+    //
+    //   server.loadURL(url.format({
+    //     pathname: 'localhost:8787/api',
+    //     protocol: 'http:',
+    //     slashes: true
+    //   }));
+    // }
+
     win.loadURL(url.format({
       pathname: 'localhost:4200',
       protocol: 'http:',
@@ -37,7 +55,8 @@ const createWindow = () => {
       // Dereference the window object, usually you would store windows
       // in an array if your app supports multi windows, this is the time
       // when you should delete the corresponding element.
-      win = null;
+      win = undefined;
+      // express = undefined;
     });
   }, 10000);
 }
@@ -63,6 +82,3 @@ app.on('activate', () => {
     createWindow();
   }
 });
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
