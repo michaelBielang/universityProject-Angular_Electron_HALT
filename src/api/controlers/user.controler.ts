@@ -7,8 +7,8 @@ import * as winston from 'winston';
 
 const logger = winston.createLogger({
   transports: [
-    new (winston.transports.Console)({ level: 'info' }),
-    new (winston.transports.File)({ filename: 'user-controler.log', level: 'error' }),
+    new (winston.transports.Console)({ format: winston.format.simple(), level: 'info' }),
+    new (winston.transports.File)({ filename: 'src/api/logging/user-controler.log', level: 'error' }),
   ],
 });
 

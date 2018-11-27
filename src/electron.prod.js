@@ -4,7 +4,7 @@ const {
 } = require('electron');
 const path = require('path');
 const url = require('url');
-const { spawn } = require('child_process');
+const { exec } = require('child_process');
 
 let mainWindow;
 let server;
@@ -34,7 +34,7 @@ function createWindow() {
 function createServer() {
   // TODO: test child process!
   if (!server) {
-    server = spawn(path.join(__dirname, 'api/server.js'));
+    server = exec('node ', [path.join(__dirname, 'api/server.js')]);
   }
 }
 

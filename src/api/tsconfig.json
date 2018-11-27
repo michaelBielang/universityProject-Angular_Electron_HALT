@@ -1,17 +1,24 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "sourceRoot": "/",
     "target": "es6",
     "outDir": "../../dist/api",
     "moduleResolution": "node",
     "module": "amd",
     "removeComments": true,
-    "sourceMap": true,
     "inlineSources": true,
+    "inlineSourceMap": true,
     "declaration": false,
-    "emitDecoratorMetadata": false,
-    "experimentalDecorators": false,
-    "noResolve": false
+    "experimentalDecorators": true,
+    "noResolve": false,
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "*",
+        "../../node_modules/*"
+      ]
+    }
   },
   "include": [
     "./**/*.ts"
