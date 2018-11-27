@@ -14,7 +14,7 @@ import userRoutes from './routes/users';
 
 
 class Api {
-  public express;
+  public express: any;
 
   constructor() {
     this.express = express();

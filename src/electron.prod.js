@@ -1,10 +1,24 @@
+/**
+ * @author Christoph Bichlmeier
+ * @license UNLICENSED
+ */
+
 const {
   app,
   BrowserWindow
 } = require('electron');
 const path = require('path');
 const url = require('url');
-const { exec } = require('child_process');
+const {
+  exec
+} = require('child_process');
+const winston = require('winston');
+const logger = winston.createLogger({
+  transports: [
+    new (winston.transports.Console)({ format: winston.format.simple(), level: 'info' }),
+    new (winston.transports.File)({ filename: path.join(__dirname, '../logging/electron.log'), level: 'info' }),
+  ],
+});
 
 let mainWindow;
 let server;
@@ -34,7 +48,16 @@ function createWindow() {
 function createServer() {
   // TODO: test child process!
   if (!server) {
-    server = exec('node ', [path.join(__dirname, 'api/server.js')]);
+    server = exec('node ' + path.join(__dirname, 'server.js'), {
+      shell: process.env.indexOf('win') !== -1 ? 'pwsh' : undefined, // use powershell if windows
+    }, (error, stdout, stderr) => {
+      if (error) {
+        logger.error("exec error: ", error);
+        return;
+      }
+      logger.info("stdout: ", stdout);
+      logger.info("stderr: ", stderr);
+    });
   }
 }
 

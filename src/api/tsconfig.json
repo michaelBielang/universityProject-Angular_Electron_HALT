@@ -1,29 +1,18 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "sourceRoot": "/",
     "target": "es6",
-    "outDir": "../../dist/api",
     "moduleResolution": "node",
-    "module": "amd",
-    "removeComments": true,
+    "pretty": true,
     "inlineSources": true,
     "inlineSourceMap": true,
-    "declaration": false,
-    "experimentalDecorators": true,
-    "noResolve": false,
-    "baseUrl": ".",
-    "paths": {
-      "*": [
-        "*",
-        "../../node_modules/*"
-      ]
-    }
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "jsx": "preserve"
   },
   "include": [
     "./**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
   ]
 }

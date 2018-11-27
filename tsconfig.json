@@ -2,13 +2,14 @@
   "compileOnSave": false,
   "compilerOptions": {
     "target": "es6",
-    "outDir": "./dist/out-tsc",
+    "outDir": "./dist",
     "moduleResolution": "node",
     "removeComments": true,
     "sourceMap": true,
     "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "noUnusedParameters": false,
     "typeRoots": [
       "node_modules/@types"
     ],

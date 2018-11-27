@@ -1,3 +1,8 @@
+/**
+ * @author Christoph Bichlmeier
+ * @license UNLICENSED
+ */
+
 const {
   app,
   BrowserWindow
