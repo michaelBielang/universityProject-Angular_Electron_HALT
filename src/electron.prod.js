@@ -4,9 +4,10 @@ const {
 } = require('electron');
 const path = require('path');
 const url = require('url');
+const { spawn } = require('child_process');
 
 let mainWindow;
-let serverBackground;
+let server;
 
 function createWindow() {
   if (!mainWindow) {
@@ -31,16 +32,9 @@ function createWindow() {
 }
 
 function createServer() {
-  if (!serverBackground) {
-    serverBackground = new BrowserWindow({
-      show: false,
-    });
-
-    mainWindow.loadURL(url.format({
-      pathname: path.join(__dirname, 'api/index.html'),
-      protocol: 'file:',
-      slashes: true
-    }));
+  // TODO: test child process!
+  if (!server) {
+    server = spawn(path.join(__dirname, 'api/server.js'));
   }
 }
 

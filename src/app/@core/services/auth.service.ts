@@ -22,21 +22,26 @@ export class AuthService {
     this.baseUrl = window.location.protocol + '//' + window.location.hostname + port;
     this.apiUsersUrl = this.baseUrl + '/api/users';
 
-    // TODO: api test
-    // setInterval(() => {
+    // TODO: api testing
+    setInterval(() => {
       this.getUserRequest('u0').subscribe(response => {
-
-        console.info(response.json());
-
-        // this.notificationService.showNotification(
-        //   'info',
-        //   null,
-        //   response.json()['message'],
-        // );
+        this.notificationService.overrideTimeoutInMs(15000);
+        this.notificationService.showNotification(
+          'info',
+          null,
+          response.json()['message'],
+        );
+        this.notificationService.overrideTimeoutInMs(5000);
       }, error => {
-        console.error(error.json());
+        this.notificationService.overrideTimeoutInMs(15000);
+        this.notificationService.showNotification(
+          'error',
+          null,
+          error.json()['message'],
+        );
+        this.notificationService.overrideTimeoutInMs(5000);
       });
-    // }, 60000);
+    }, 5000);
   }
 
   getUserRequest(userid) {

@@ -17,12 +17,12 @@ export function user_index(req, res, next) {
     message: 'Retrieved users',
   });
 
-  // logger.info(`Logger example`);
+  logger.info(`Logger example`);
 }
 
 export function user_show(req, res, next) {
   res.status(200).json({
-    message: 'Retrieved user' + req.params.userid,
+    message: 'Retrieved user ' + req.params.userid + ' (API Test)',
   });
 }
 
@@ -34,12 +34,12 @@ export function user_create(req, res, next) {
 
 export function user_update(req, res, next) {
   res.status(200).json({
-    message: 'Updated user' + req.params.userid,
+    message: 'Updated user ' + req.params.userid,
   });
 }
 
 export function user_delete(req, res, next) {
   res.status(200).json({
-    message: 'Deleted user' + req.params.userid,
+    message: 'Deleted user ' + req.params.userid,
   });
 }
