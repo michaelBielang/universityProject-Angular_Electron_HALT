@@ -23,7 +23,7 @@ const createWindow = () => {
       icon: './src/favicon.ico',
       webPreferences: {
         nodeIntegration: false // turn it on to use node features
-      }
+      },
     });
 
     win.loadURL(url.format({
@@ -37,7 +37,7 @@ const createWindow = () => {
     win.on('closed', () => {
       win = undefined;
     });
-  }, 25000);
+  }, 20000);
 }
 
 app.on('ready', createWindow);

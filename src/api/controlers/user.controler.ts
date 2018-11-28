@@ -3,24 +3,18 @@
  * @license UNLICENSED
  */
 
-import * as winston from 'winston';
+import logger from '../logging/logger';
 
-const logger = winston.createLogger({
-  transports: [
-    new (winston.transports.Console)({ format: winston.format.simple(), level: 'info' }),
-    new (winston.transports.File)({ filename: 'src/api/logging/user-controler.log', level: 'error' }),
-  ],
-});
 
 export function user_index(req, res, next) {
   res.status(200).json({
     message: 'Retrieved users',
   });
-
-  logger.info(`Logger example`);
 }
 
 export function user_show(req, res, next) {
+  logger.info(`User_show controler test`);
+
   res.status(200).json({
     message: 'Retrieved user ' + req.params.userid + ' (API Test)',
   });

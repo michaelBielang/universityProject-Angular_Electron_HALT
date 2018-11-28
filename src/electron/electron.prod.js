@@ -7,18 +7,21 @@ const {
   app,
   BrowserWindow
 } = require('electron');
-const path = require('path');
 const url = require('url');
 const {
-  exec
+  fork
 } = require('child_process');
-const winston = require('winston');
-const logger = winston.createLogger({
-  transports: [
-    new (winston.transports.Console)({ format: winston.format.simple(), level: 'info' }),
-    new (winston.transports.File)({ filename: path.join(__dirname, '../logging/electron.log'), level: 'info' }),
-  ],
-});
+
+const path = require('path');
+const fs = require('fs');
+const logger = require('electron-log');
+logger.transports.file.level = 'info';
+const loggingPath = path.join(__dirname, 'logging');
+if (!fs.existsSync(loggingPath)) {
+  fs.mkdirSync(loggingPath);
+}
+logger.transports.file.file = path.join(loggingPath, 'halt-main.log');
+
 
 let mainWindow;
 let server;
@@ -29,6 +32,7 @@ function createWindow() {
       width: 600,
       height: 650,
       icon: path.join(__dirname, 'favicon.ico'),
+      show: false,
     });
 
     mainWindow.loadURL(url.format({
@@ -37,26 +41,25 @@ function createWindow() {
       slashes: true
     }));
 
-    mainWindow.on('closed', () => {
+    mainWindow.once('ready-to-show', () => {
+      mainWindow.show();
+    });
+
+    mainWindow.on('close', () => {
       // Dereference to garbage collect
       mainWindow = undefined;
-      server = undefined;
     });
   }
 }
 
 function createServer() {
-  // TODO: test child process!
+  logger.info('starting server child process...');
   if (!server) {
-    server = exec('node ' + path.join(__dirname, 'server.js'), {
-      shell: process.env.indexOf('win') !== -1 ? 'pwsh' : undefined, // use powershell if windows
-    }, (error, stdout, stderr) => {
-      if (error) {
-        logger.error("exec error: ", error);
-        return;
-      }
-      logger.info("stdout: ", stdout);
-      logger.info("stderr: ", stderr);
+    // see https://dzone.com/articles/understanding-execfile-spawn-exec-and-fork-in-node
+    server = fork(path.join(__dirname, 'server.js'));
+
+    server.on('error', err => {
+      logger.error('api server: ', err);
     });
   }
 }

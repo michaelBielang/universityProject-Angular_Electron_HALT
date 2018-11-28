@@ -9,7 +9,7 @@ import { NotificationService } from './notification.service';
 
 @Injectable()
 export class AuthService {
-  private baseUrl;
+  private apiBaseUrl;
   private apiUsersUrl;
 
   userObj;
@@ -18,9 +18,8 @@ export class AuthService {
     private http: Http,
     private readonly notificationService: NotificationService,
   ) {
-    const port = (window.location.port === '4200') ? ':8787' : '';
-    this.baseUrl = window.location.protocol + '//' + window.location.hostname + port;
-    this.apiUsersUrl = this.baseUrl + '/api/users';
+    this.apiBaseUrl = 'http://localhost:8787';
+    this.apiUsersUrl = this.apiBaseUrl + '/api/users';
 
     // TODO: api testing
     setInterval(() => {

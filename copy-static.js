@@ -5,14 +5,26 @@
 
 const fs = require('fs');
 const path = require('path');
+const filesToCopy = [{
+    source: 'package.json',
+    target: 'dist/package.json'
+  },
+];
 
-copyFile(path.join(__dirname, 'package.json'), path.join(__dirname, 'dist/package.json'));
-copyFile(path.join(__dirname, 'src/api/index.html'), path.join(__dirname, 'dist/api/index.html'));
+for (let entry of filesToCopy) {
+  copyFile(path.join(__dirname, entry['source']), path.join(__dirname, entry['target']));
+}
 
-console.info('copied 2 files');
+console.info('copied ' + filesToCopy.length + ' files');
 
 function copyFile(src, target) {
   if (fs.existsSync(src)) {
-      fs.createReadStream(src).pipe(fs.createWriteStream(target));
+    if (fs.existsSync(target)) {
+      fs.unlinkSync(target);
+    } else {
+      const targetPath = path.dirname(target);
+      if (!fs.existsSync(targetPath)) fs.mkdirSync(targetPath);
+    }
+    fs.createReadStream(src).pipe(fs.createWriteStream(target));
   }
 }

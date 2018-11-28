@@ -9,7 +9,3 @@
 "experimentalDecorators": true,
 "noResolve": false
 "strict": true,
-
-
-
-&& npm run build:server

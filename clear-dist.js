@@ -29,3 +29,7 @@ const deleteFolderRecursive = function(p) {
 }
 
 deleteFolderRecursive(distPath);
+
+setTimeout(() => {
+  console.info('cleared dist folder...')
+}, 50);

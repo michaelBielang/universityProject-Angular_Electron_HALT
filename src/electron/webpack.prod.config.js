@@ -9,40 +9,24 @@ const webpack = require('webpack');
 const commonConfig = {
   devtool: 'eval',
   mode: 'production',
-  target: 'node',
+  target: 'electron-main',
   output: {
     path: path.resolve(__dirname, '../../dist'),
-    filename: 'server.js'
+    filename: 'halt.js'
   },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+  ],
   module: {
     rules: [{
-        test: /\.ts$/,
-        enforce: 'pre',
-        loader: 'tslint-loader',
-        options: {
-          typeCheck: true,
-          emitErrors: true
-        }
-      },
-      {
-        test: /\.ts?$/,
-        loader: 'ts-loader'
-      }
-    ]
+      test: /\.js$/,
+      loaders: ['babel-loader']
+    }]
   },
   node: {
     __dirname: false,
     __filename: false
   },
-  resolve: {
-    extensions: ['.js', '.ts', '.tsx', '.jsx', '.json'],
-    modules: [
-      'node_modules',
-    ],
-  },
-  plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-  ],
   stats: {
     all: false,
     modules: true,
@@ -57,7 +41,7 @@ const commonConfig = {
 
 module.exports = Object.assign({
     entry: {
-      main: './src/api/server.ts'
+      main: './src/electron/electron.prod.js'
     }
   },
   commonConfig
