@@ -35,7 +35,10 @@ Users should not need to know long and complicated LDAP commands. This tool ther
 
 ## How to start this tool, How to use it
 - simply run: `npm start`
-- ...
+- For development simply run `npm start`
+-	For development api server only run: `npm run server`
+-	To build production and packaging run: `npm run package:all`
+
 
 
 ## RoadMap
