@@ -16,3 +16,5 @@ export const createTables = {
   LDAP_ServerGroup: 'CREATE TABLE ldap(pk_server_group_id INT PRIMARY KEY AUTOINCREMENT NOT NULL, server_group_name VARCHAR(255) NOT NULL, people VARCHAR(255) NOT NULL, dc VARCHAR(255) NOT NULL, lang VARCHAR(255) NOT NULL, group_priority INT NOT NULL)',
   VPN_ServerConfig: 'CREATE TABLE vpn_server_config(server_config_id INT PRIMARY KEY AUTOINCREMENT NOT NULL, FOREIGN KEY (fk_group_id) REFERENCES ldap(pk_server_group_id), config_file VARCHAR(255) NOT NULL, url VARCHAR(255) NOT NULL, port INTEGER NOT NULL, cert VARCHAR(255) NOT NULL , ca VARCHAR(255) NOT NULL )'
 }
+
+

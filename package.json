@@ -50,7 +50,11 @@
     "nodemon": "^1.18.6",
     "rxjs": "^6.3.3",
     "rxjs-compat": "^6.0.0-rc.0",
-    "zone.js": "^0.8.19"
+    "zone.js": "^0.8.19",
+    "events": "^2.0.0",
+    "marked": "^0.5.1",
+    "marked-terminal": "^3.1.1",
+    "request": "^2.88.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.10.7",
@@ -83,6 +87,9 @@
     "tslint-loader": "^3.5.4",
     "typescript": "~3.1.6",
     "webpack": "4.19.1",
-    "webpack-cli": "^3.1.2"
+    "webpack-cli": "^3.1.2",
+    "chai": "^4.1.2",
+    "mocha": "^5.0.5",
+    "sqlite3": "^4.0.4"
   }
 }

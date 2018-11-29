@@ -6,12 +6,14 @@
  * Project:
  * java version "10.0.1"
  */
+
 'use strict'
 
 const exec = require('child_process').exec
 const path = require('path')
 const request = require('request')
 const expect = require('chai').expect
+const db = require('../datastorage.mjs')
 
 function testInitDB () {
 
@@ -29,22 +31,6 @@ function testAddUser (user) {
 function testDeleteUser (user) {
 }
 
-function testAddStudySubject(studySubject){
-
-}
-
-function testDeleteStudySubject(studySubject){
-
-}
-
-function testAddFaculty(faculty){
-
-}
-
-function testDeleteFaculty(faculty){
-
-}
-
 function testAddSearchHistory (sh) {
 }
 
@@ -59,8 +45,16 @@ function testDropAll () {
 
 }
 
-describe('http collect', function () {
+describe('test database', function () {
 
-  this.timeout(9000)
+  describe('test add user', function () {
+    it('should return a promise', () => {
+      expect(db.tablePresent('user')).to.eql(false)
+      /*      const usersUpResult = User.up()
+            expect(usersUpResult.then).to.be.a('Function')
+            expect(usersUpResult.catch).to.be.a('Function')*/
+    })
+  })
+  //this.timeout(9000)
 
 })

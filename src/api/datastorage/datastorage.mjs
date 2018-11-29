@@ -7,13 +7,16 @@
  * java version "10.0.1"
  */
 
+'use strict'
+
 import { createTables } from './tables'
 
 /** @noinspection SqlResolve */
 const sqlConnection = require('sqlite3').verbose()
+//const dbImport = require('./tables')
 
 //open database --> uses create/readwrite per default
-let db = new sqlConnection.Database('./db/halt.db', (err) => {
+let db = new sqlConnection.Database('test.db', (err) => {
   if (err) {
     console.error('Error connecting to database')
   }
@@ -28,15 +31,15 @@ const insertPlayerTwo = 'INSERT INTO PLAYERS (ID, first_name, last_name) VALUES 
 function init_db () {
   let ok = true
   if (!tablePresent('user')) {
-    createTable(createTables.user)
+    createTable(createTablesExport.user)
       .then(resolve => {
-        createTable(createTables.history)
+        createTable(createTablesExport.history)
       }).then(resolve => {
-      createTable(createTables.LDAP_ServerGroup)
+      createTable(createTablesExport.LDAP_ServerGroup)
     }).then(resolve => {
-      createTable(createTables.studySubject)
+      createTable(createTablesExport.studySubject)
     }).then(resolve => {
-      createTable(createTables.VPN_ServerConfig)
+      createTable(createTablesExport.VPN_ServerConfig)
     }).catch(reject => {
       console.log('Error init DB')
       ok = false
@@ -60,14 +63,19 @@ function createTable (table) {
 }
 
 function tablePresent (table_name) {
+  console.log('table present called')
   let returnValue = true
   db.run('SELECT * FROM (?)', table_name, (err) => {
     if (err) {
       returnValue = false
+      console.log('Error')
+      return
     }
   })
   return returnValue
 }
+
+createTable(createTables.user)
 
 function dropTable (table) {
   //db.prepare prevents SQL injection hacks
