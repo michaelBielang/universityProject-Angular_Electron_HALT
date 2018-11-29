@@ -1,9 +1,9 @@
 # Hochschul Active Directory Lookup Tool (HALT)
 
 ## Project members
-- Bichlmeier Christoph [Master]: UI, Electron, Angular, LDAP, Auth
-- Bielang Michael [Bachelor]: DB, ORM, API
-- Schmid Steffen [Bachelor]: Testing, VPN
+- Bichlmeier Christoph [Master]: UI (Angular), Electron (processmanagement), Auth, packaging (webpack)
+- Bielang Michael [Bachelor]: DB, DB-Interface, API
+- Schmid Steffen [Bachelor]: Testing, VPN, LDAP
 
 
 ## Project description
