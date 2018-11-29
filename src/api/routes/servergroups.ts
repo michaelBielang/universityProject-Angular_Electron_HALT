@@ -1,15 +1,16 @@
 /**
- * @author Christoph Bichlmeier
+ * @author Christoph Bichlmeier, Steffen Schmid
  * @license UNLICENSED
  */
 
 import * as express from 'express';
 
 import {
-  user_show,
-} from '../controlers/user.controler';
+  servergroup_index,
+  servergroup_show,
+} from '../controlers/servergroup.controler';
 
-class UsersRoutes {
+class SearchHistoryRoutes {
   public express;
 
   constructor() {
@@ -20,7 +21,9 @@ class UsersRoutes {
   private mountRoutes(): void {
     const userRoutes = express.Router();
 
-    userRoutes.get('/:userid', user_show);
+    userRoutes.get('/', servergroup_index);
+
+    userRoutes.get('/:groupname', servergroup_show);
 
     this.express.use('/', userRoutes);
   }
@@ -30,4 +33,4 @@ class UsersRoutes {
   }
 }
 
-export default new UsersRoutes().express;
+export default new SearchHistoryRoutes().express;
