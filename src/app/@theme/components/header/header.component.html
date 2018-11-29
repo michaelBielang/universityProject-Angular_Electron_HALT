@@ -10,7 +10,7 @@
 
   <div class="loader-indicator">
     <div class="load noselect">
-      <div class="loadspinner" *ngIf="isLoading">
+      <div *ngIf="isLoading" class="loadspinner">
         <div class="blob blob-0"></div>
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
@@ -21,7 +21,8 @@
     </div>
   </div>
 
-  <mat-tab-group class="noselect" color="accent" [disableRipple]="true" [selectedIndex]="selectedTabIndex" (selectedIndexChange)="onTabChange($event)">
-    <mat-tab *ngFor="let tab of tabs; let i = index" [label]="tab['label']" [disabled]="tab['disabled']"></mat-tab>
+  <mat-tab-group (selectedIndexChange)="onTabChange($event)" [disableRipple]="true" [selectedIndex]="selectedTabIndex" class="noselect"
+                 color="accent">
+    <mat-tab *ngFor="let tab of tabs; let i = index" [disabled]="tab['disabled']" [label]="tab['label']"></mat-tab>
   </mat-tab-group>
 </div>

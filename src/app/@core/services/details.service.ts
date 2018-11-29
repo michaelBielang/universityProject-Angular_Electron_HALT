@@ -3,14 +3,15 @@
  * @license UNLICENSED
  */
 
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 
 @Injectable()
 export class DetailsService {
   detailsObj;
 
-  constructor() { }
+  constructor() {
+  }
 
   hasDetails() {
     return this.detailsObj != undefined;

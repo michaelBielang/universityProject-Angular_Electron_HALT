@@ -3,8 +3,8 @@
  * @license UNLICENSED
  */
 
-import { Component } from '@angular/core';
-import { ResultsService } from '../../@core/services/results.service';
+import {Component} from '@angular/core';
+import {ResultsService} from '../../@core/services/results.service';
 
 @Component({
   selector: 'app-results',
@@ -15,5 +15,6 @@ export class ResultsComponent {
 
   constructor(
     public readonly resultsService: ResultsService,
-  ) { }
+  ) {
+  }
 }

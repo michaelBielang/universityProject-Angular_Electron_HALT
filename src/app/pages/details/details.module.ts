@@ -3,13 +3,11 @@
  * @license UNLICENSED
  */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { DetailsComponent } from './details.component';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {DetailsComponent} from './details.component';
 
-import {
-  MatTooltipModule,
-} from '@angular/material';
+import {MatTooltipModule,} from '@angular/material';
 
 const ANGULAR_MATERIAL = [
   MatTooltipModule,
@@ -28,4 +26,5 @@ const BASE_MODULES = [
     DetailsComponent,
   ],
 })
-export class DetailsModule { }
+export class DetailsModule {
+}

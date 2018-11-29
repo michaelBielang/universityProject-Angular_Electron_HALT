@@ -3,14 +3,14 @@
  * @license UNLICENSED
  */
 
-import { Component, OnInit } from '@angular/core';
-import { TabSelectionService } from '../../@core/services/tab-selection.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { SearchCustomValidators, validationMessagesDE } from './search.validators';
-import { MyErrorStateMatcher } from '../../@core/models/error-state-matcher.model';
-import { NotificationService } from '../../@core/services/notification.service';
-import { SearchService } from '../../@core/services/search.service';
-import { ResultsService } from '../../@core/services/results.service';
+import {Component, OnInit} from '@angular/core';
+import {TabSelectionService} from '../../@core/services/tab-selection.service';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {SearchCustomValidators, validationMessagesDE} from './search.validators';
+import {MyErrorStateMatcher} from '../../@core/models/error-state-matcher.model';
+import {NotificationService} from '../../@core/services/notification.service';
+import {SearchService} from '../../@core/services/search.service';
+import {ResultsService} from '../../@core/services/results.service';
 import route from '../../@core/enums/route.enum';
 
 @Component({
@@ -39,7 +39,8 @@ export class SearchComponent implements OnInit {
     private readonly notificationService: NotificationService,
     public readonly searchService: SearchService,
     private readonly resultsService: ResultsService,
-  ) { }
+  ) {
+  }
 
   async ngOnInit() {
     this.initForm();
@@ -68,7 +69,7 @@ export class SearchComponent implements OnInit {
       }).catch(err => {
         this.errHandling(err);
       });
-      await this.searchService.getSearchHistory()
+    await this.searchService.getSearchHistory()
       .then(result => {
         this.searchService.updateSearchHistory(result);
       }).catch(err => {
@@ -116,8 +117,8 @@ export class SearchComponent implements OnInit {
           );
         }, 250);
       }).catch(err => {
-        this.errHandling(err);
-      });
+      this.errHandling(err);
+    });
   }
 
   onFacultyChange() {

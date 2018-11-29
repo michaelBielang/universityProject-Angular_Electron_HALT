@@ -3,7 +3,7 @@
  * @license UNLICENSED
  */
 
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-pages',
@@ -11,7 +11,8 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './pages.component.html',
 })
 export class PagesComponent implements OnInit {
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }

@@ -3,13 +3,13 @@
  * @license UNLICENSED
  */
 
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../@core/services/auth.service';
-import { TabSelectionService } from '../../@core/services/tab-selection.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AuthCustomValidators, validationMessagesDE } from './auth.validators';
-import { MyErrorStateMatcher } from '../../@core/models/error-state-matcher.model';
-import { NotificationService } from '../../@core/services/notification.service';
+import {Component, OnInit} from '@angular/core';
+import {AuthService} from '../../@core/services/auth.service';
+import {TabSelectionService} from '../../@core/services/tab-selection.service';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {AuthCustomValidators, validationMessagesDE} from './auth.validators';
+import {MyErrorStateMatcher} from '../../@core/models/error-state-matcher.model';
+import {NotificationService} from '../../@core/services/notification.service';
 import route from '../../@core/enums/route.enum';
 
 @Component({
@@ -28,7 +28,8 @@ export class AuthComponent implements OnInit {
     private readonly authService: AuthService,
     private readonly tabSelectionService: TabSelectionService,
     private readonly notificationService: NotificationService,
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.initForm();
@@ -70,22 +71,14 @@ export class AuthComponent implements OnInit {
         }
         this.tabSelectionService.loadingEvent.next(false);
       }).catch(err => {
-        console.error(err['message']);
-        this.notificationService.showNotification(
-          'error',
-          null,
-          err['message'],
-        );
-        this.tabSelectionService.loadingEvent.next(false);
-      });
-  }
-
-  private mailAddressRegex() {
-    // To refactor Regex - help: https://regex101.com/
-    const rePrefix = /[a-z0-9!#$%&'*+/=?^_`{|}~-]{2,}/;
-    const reMiddle = /(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]{1,})*/;
-    const reSuffix = /(?:@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.){2,}[a-z0-9](?:[a-z0-9-]{2,}[a-z0-9])?)?/;
-    return new RegExp(rePrefix.source + reMiddle.source + reSuffix.source);
+      console.error(err['message']);
+      this.notificationService.showNotification(
+        'error',
+        null,
+        err['message'],
+      );
+      this.tabSelectionService.loadingEvent.next(false);
+    });
   }
 
   ObjKeys(input) {
@@ -94,5 +87,13 @@ export class AuthComponent implements OnInit {
       return Object.keys(input);
     }
     return undefined;
+  }
+
+  private mailAddressRegex() {
+    // To refactor Regex - help: https://regex101.com/
+    const rePrefix = /[a-z0-9!#$%&'*+/=?^_`{|}~-]{2,}/;
+    const reMiddle = /(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]{1,})*/;
+    const reSuffix = /(?:@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.){2,}[a-z0-9](?:[a-z0-9-]{2,}[a-z0-9])?)?/;
+    return new RegExp(rePrefix.source + reMiddle.source + reSuffix.source);
   }
 }

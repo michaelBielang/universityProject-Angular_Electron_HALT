@@ -3,16 +3,12 @@
  * @license UNLICENSED
  */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ResultsComponent } from './results.component';
-import { ResultEntryComponent } from './result-entry/result-entry.component';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ResultsComponent} from './results.component';
+import {ResultEntryComponent} from './result-entry/result-entry.component';
 
-import {
-  MatTooltipModule,
-  MatCardModule,
-  MatIconModule,
-} from '@angular/material';
+import {MatCardModule, MatIconModule, MatTooltipModule,} from '@angular/material';
 
 const ANGULAR_MATERIAL = [
   MatTooltipModule,
@@ -34,4 +30,5 @@ const BASE_MODULES = [
     ResultEntryComponent,
   ],
 })
-export class ResultsModule { }
+export class ResultsModule {
+}

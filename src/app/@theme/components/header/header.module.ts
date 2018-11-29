@@ -3,14 +3,11 @@
  * @license UNLICENSED
  */
 
- import { NgModule, ModuleWithProviders } from '@angular/core';
- import { CommonModule } from '@angular/common';
-import { HeaderComponent } from './header.component';
+import {ModuleWithProviders, NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {HeaderComponent} from './header.component';
 
-import {
-  MatTooltipModule,
-  MatTabsModule,
-} from '@angular/material';
+import {MatTabsModule, MatTooltipModule,} from '@angular/material';
 
 const ANGULAR_MATERIAL = [
   MatTooltipModule,
@@ -36,8 +33,7 @@ export class HeaderModule {
   static forRoot(): ModuleWithProviders {
     return <ModuleWithProviders>{
       ngModule: HeaderModule,
-      providers: [
-      ],
+      providers: [],
     };
   }
 }

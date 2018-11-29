@@ -3,8 +3,8 @@
  * @license UNLICENSED
  */
 
-import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {Subject} from 'rxjs';
 import route from '../enums/route.enum';
 
 @Injectable()

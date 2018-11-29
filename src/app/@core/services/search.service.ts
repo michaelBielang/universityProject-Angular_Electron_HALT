@@ -3,7 +3,7 @@
  * @license UNLICENSED
  */
 
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 interface SearchObj {
   server;
@@ -26,7 +26,8 @@ export class SearchService {
     subjectordegree: ''
   };
 
-  constructor() { }
+  constructor() {
+  }
 
   updateSearchObj(obj: SearchObj) {
     this.searchObj = obj;
@@ -59,38 +60,34 @@ export class SearchService {
           {
             facultyname: 'Informatik',
             studysubjectObjs: [
-              { studysubjectname: 'Wirtschaftsinformatik (Bachelor)' },
-              { studysubjectname: 'Informatik (Bachelor)' },
-              { studysubjectname: 'Informatik (Master)' },
-              { studysubjectname: 'Interaktive Medien (Bachelor)' },
-              { studysubjectname: 'Interaktive Medien Systeme (Master)' },
+              {studysubjectname: 'Wirtschaftsinformatik (Bachelor)'},
+              {studysubjectname: 'Informatik (Bachelor)'},
+              {studysubjectname: 'Informatik (Master)'},
+              {studysubjectname: 'Interaktive Medien (Bachelor)'},
+              {studysubjectname: 'Interaktive Medien Systeme (Master)'},
             ]
           },
           {
             facultyname: 'Wirtschaft',
             studysubjectObjs: [
-              { studysubjectname: 'Wirtschaftswissenschaften (Bachelor)' },
+              {studysubjectname: 'Wirtschaftswissenschaften (Bachelor)'},
             ]
           },
           {
             facultyname: 'Gestaltung',
-            studysubjectObjs: [
-            ]
+            studysubjectObjs: []
           },
           {
             facultyname: 'Maschinenbau',
-            studysubjectObjs: [
-            ]
+            studysubjectObjs: []
           },
           {
             facultyname: 'Architektur und Bau',
-            studysubjectObjs: [
-            ]
+            studysubjectObjs: []
           },
           {
             facultyname: 'Elektrotechnik',
-            studysubjectObjs: [
-            ]
+            studysubjectObjs: []
           }
         ]);
 
@@ -151,7 +148,7 @@ export class SearchService {
             gender: 1,
             firstname: 'Max',
             lastname: 'Mustermann',
-            emails: [ 'max.mustermann@hs-augsburg.de', 'max23@rz.fh-augsburg.de' ],
+            emails: ['max.mustermann@hs-augsburg.de', 'max23@rz.fh-augsburg.de'],
             studysubject: 'Informatik',
             faculty: 'Informatik',
             degree: 'Bachelor',
@@ -162,7 +159,7 @@ export class SearchService {
             gender: 2,
             firstname: 'Maria',
             lastname: 'Mustermann',
-            emails: [ 'maria.mustermann@hs-augsburg.de' ],
+            emails: ['maria.mustermann@hs-augsburg.de'],
             studysubject: 'Wirtschaftsinformatik',
             faculty: 'Informatik',
             degree: 'Bachelor',
@@ -173,7 +170,7 @@ export class SearchService {
             gender: 2,
             firstname: 'Anna',
             lastname: 'Müller',
-            emails: [ 'anna.mueller@hs-augsburg.de' ],
+            emails: ['anna.mueller@hs-augsburg.de'],
             studysubject: 'Interaktive Medien',
             faculty: 'Informatik',
             degree: 'Bachelor',

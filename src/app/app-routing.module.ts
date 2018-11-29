@@ -3,16 +3,16 @@
  * @license UNLICENSED
  */
 
-import { ExtraOptions, RouterModule, Routes } from '@angular/router';
-import { NgModule } from '@angular/core';
+import {ExtraOptions, RouterModule, Routes} from '@angular/router';
+import {NgModule} from '@angular/core';
 
 const routes: Routes = [
   {
     path: '',
     loadChildren: 'app/pages/pages.module#PagesModule',
   },
-  { path: '', redirectTo: '', pathMatch: 'full' },
-  { path: '**', redirectTo: '' },
+  {path: '', redirectTo: '', pathMatch: 'full'},
+  {path: '**', redirectTo: ''},
 ];
 
 const config: ExtraOptions = {
