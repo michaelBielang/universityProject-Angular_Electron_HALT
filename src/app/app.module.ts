@@ -11,6 +11,7 @@ import { CoreModule } from './@core/core.module';
 import { ToasterModule } from 'angular2-toaster';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { HttpModule } from '@angular/http';
 
 const BASE_MODULES = [
   BrowserModule,
@@ -21,6 +22,7 @@ const BASE_MODULES = [
   imports: [
     ...BASE_MODULES,
     AppRoutingModule,
+    HttpModule,
     ToasterModule.forRoot(),
     CoreModule.forRoot(),
   ],
