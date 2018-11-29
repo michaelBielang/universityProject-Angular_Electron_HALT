@@ -15,7 +15,7 @@
     "build": "npm run clear && ng build --prod && npm run build:server && npm run build:electron && npm run copy",
     "build:server": "webpack --progress --config src/api/webpack.config.js",
     "build:electron": "webpack --progress --config src/electron/webpack.prod.config.js",
-    "package:win": "npm run build && electron-packager dist HALT --platform=win32 --out=packages --arch=x64 --overwrite ",
+    "package:win": "npm run build && electron-packager dist HALT --out=packages --platform=win32 --arch=x64 --overwrite ",
     "package:linux": "npm run build && electron-packager dist HALT --out=packages --platform=linux --arch=x64 --overwrite ",
     "package:osx": "npm run build && electron-packager dist HALT --out=packages --platform=darwin --arch=x64 --overwrite ",
     "package:all": "npm run build && electron-packager dist HALT --out=packages --all --arch=x64 --overwrite ",

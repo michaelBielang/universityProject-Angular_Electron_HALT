@@ -6,10 +6,10 @@
 import * as express from 'express';
 
 import {
-  user_show,
-} from '../controlers/user.controler';
+  healthcheck_state,
+} from '../controlers/healthcheck.controler';
 
-class UsersRoutes {
+class HealthCheckRoutes {
   public express;
 
   constructor() {
@@ -20,7 +20,7 @@ class UsersRoutes {
   private mountRoutes(): void {
     const userRoutes = express.Router();
 
-    userRoutes.get('/:userid', user_show);
+    userRoutes.get('/', healthcheck_state);
 
     this.express.use('/', userRoutes);
   }
@@ -30,4 +30,4 @@ class UsersRoutes {
   }
 }
 
-export default new UsersRoutes().express;
+export default new HealthCheckRoutes().express;

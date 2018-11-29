@@ -10,8 +10,13 @@ import * as cors from 'cors';
 import env from './server-env';
 
 // Subroutes
+import authRoutes from './routes/auth';
 import userRoutes from './routes/users';
-
+import searchRoutes from './routes/search';
+import searchHistoryRoutes from './routes/searchhistories';
+import facultyRoutes from './routes/faculties';
+import serverGroupRoutes from './routes/servergroups';
+import healthCheckRoutes from './routes/healthcheck';
 
 class Api {
   public express: any;
@@ -67,7 +72,13 @@ class Api {
   }
 
   private mountSubRoutes(): void {
+    this.express.use('/api/auth', authRoutes);
     this.express.use('/api/users', userRoutes);
+    this.express.use('/api/search', searchRoutes);
+    this.express.use('/api/searchhistories', searchHistoryRoutes);
+    this.express.use('/api/faculties', facultyRoutes);
+    this.express.use('/api/servergroups', serverGroupRoutes);
+    this.express.use('/api/healthcheck', healthCheckRoutes);
   }
 
   private mountApiRoutes(): void {
