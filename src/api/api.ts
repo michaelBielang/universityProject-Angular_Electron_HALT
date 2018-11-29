@@ -16,6 +16,7 @@ import searchRoutes from './routes/search';
 import searchHistoryRoutes from './routes/searchhistories';
 import facultyRoutes from './routes/faculties';
 import serverGroupRoutes from './routes/servergroups';
+import healthCheckRoutes from './routes/healthcheck';
 
 class Api {
   public express: any;
@@ -77,6 +78,7 @@ class Api {
     this.express.use('/api/searchhistories', searchHistoryRoutes);
     this.express.use('/api/faculties', facultyRoutes);
     this.express.use('/api/servergroups', serverGroupRoutes);
+    this.express.use('/api/healthcheck', healthCheckRoutes);
   }
 
   private mountApiRoutes(): void {
