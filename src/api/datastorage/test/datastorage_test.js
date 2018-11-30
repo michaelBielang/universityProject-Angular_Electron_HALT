@@ -13,7 +13,7 @@ const exec = require('child_process').exec
 const path = require('path')
 const request = require('request')
 const expect = require('chai').expect
-const db = require('../datastorage.mjs')
+const db = require('../datastorage.js')
 
 function testInitDB () {
 
