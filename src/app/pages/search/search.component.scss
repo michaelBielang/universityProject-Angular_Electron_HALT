@@ -14,6 +14,10 @@
 
 .narrow-input-group {
   margin-bottom: 5px;
+
+  .hint-required {
+    color: #e2a938;
+  }
 }
 
 .search-history {
@@ -36,6 +40,8 @@
     }
   }
 }
+
+
 
 // uncommend required breakpoints
 // @media (max-width:$breakpoints(xs)) {}

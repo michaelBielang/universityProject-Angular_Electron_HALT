@@ -17,7 +17,8 @@
       </mat-radio-group>
 
       <mat-form-field class="form-group narrow-input-group col-md-12">
-        <input matInput required placeholder="Name or id (RZ-Kennung)" formControlName="id">
+        <input matInput placeholder="Name or id (RZ-Kennung)" formControlName="id">
+        <mat-hint class="hint-required" *ngIf="searchForm.get('id')['pristine'] && searchForm.get('id')['value'] === '' && searchForm.get('email')['pristine'] && searchForm.get('email')['value'] === ''">Either this field or email is required</mat-hint>
         <mat-error *ngIf="searchForm.get('id')['errors']">
           {{ errorMessages[ObjKeys(searchForm.get('id')['errors'])[0]] }}
         </mat-error>
@@ -25,6 +26,7 @@
 
       <mat-form-field class="form-group narrow-input-group col-md-12">
         <input matInput placeholder="Email address" formControlName="email">
+        <mat-hint class="hint-required" *ngIf="searchForm.get('email')['pristine'] && searchForm.get('email')['value'] === '' && searchForm.get('id')['pristine'] && searchForm.get('id')['value'] === ''">Either this field or id is required</mat-hint>
         <mat-error *ngIf="searchForm.get('email')['errors']">
           {{ errorMessages[ObjKeys(searchForm.get('email')['errors'])[0]] }}
         </mat-error>

@@ -16,7 +16,6 @@ import route from '../../../@core/enums/route.enum';
   selector: 'app-header',
   styleUrls: [
     './header.component.scss',
-    '../../styles/spinner.scss',
   ],
   templateUrl: './header.component.html',
 })
@@ -25,7 +24,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   tabs: any = [];
   selectedTabIndex: number = 0;
   tabSwitchSubscription: Subscription;
-  isLoading: boolean = true;
+  isLoading: boolean = false;
   loadingSubscription: Subscription;
 
   constructor(

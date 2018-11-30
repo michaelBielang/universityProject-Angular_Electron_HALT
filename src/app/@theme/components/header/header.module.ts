@@ -10,11 +10,13 @@ import { HeaderComponent } from './header.component';
 import {
   MatTooltipModule,
   MatTabsModule,
+  MatProgressSpinnerModule,
 } from '@angular/material';
 
 const ANGULAR_MATERIAL = [
   MatTooltipModule,
   MatTabsModule,
+  MatProgressSpinnerModule,
 ];
 
 @NgModule({

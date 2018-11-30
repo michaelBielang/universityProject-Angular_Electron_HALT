@@ -35,7 +35,7 @@ const commonConfig = {
     __filename: false
   },
   resolve: {
-    extensions: ['.js', '.ts', '.tsx', '.jsx', '.json'],
+    extensions: ['.mjs', '.js', '.ts', '.tsx', '.jsx', '.json'],
     modules: [
       'node_modules',
     ],
