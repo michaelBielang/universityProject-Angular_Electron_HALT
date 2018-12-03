@@ -54,7 +54,13 @@ Users should not need to know long and complicated LDAP commands. This tool ther
 - ...
 
 ### week 2
-- test
+- create route model
+- create express server route and controler boilerplate code
+- writing db Interface
+- compilation of study subjects at HSA
+- research of electron possibilities
+- create db model
+- ...
 
 ### week 3
 - ...
