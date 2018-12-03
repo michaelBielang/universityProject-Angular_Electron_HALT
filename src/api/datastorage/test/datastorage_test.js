@@ -13,19 +13,15 @@ const exec = require('child_process').exec
 const path = require('path')
 const request = require('request')
 const expect = require('chai').expect
-const db = require('../datastorage.js')
-
 
 describe('test database', function () {
 
-  describe('test add user', function () {
-    it('should return a promise', () => {
-      expect(db.tablePresent('user')).to.eql(false)
-      /*      const usersUpResult = User.up()
-            expect(usersUpResult.then).to.be.a('Function')
-            expect(usersUpResult.catch).to.be.a('Function')*/
-    })
+  let db
+  before(function () {
+    db = require('../dbInterface')
   })
-  //this.timeout(9000)
+  it('should work', function () {
+    expect(db.userPresent(1)).to.eql('true')
+  })
 
 })

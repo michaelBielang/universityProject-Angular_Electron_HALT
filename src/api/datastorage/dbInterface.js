@@ -8,17 +8,10 @@
  */
 
 'use strict'
-const createTableStatements = {
-  studySubject: 'CREATE TABLE study_subject(pk_study_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, study_name VARCHAR(255) NOT NULL, FOREIGN KEY (fK_faculty_name) REFERENCES faculty(pk_faculty_name))',
-  user: 'CREATE TABLE user(pk_user_id INTEGER PRIMARY KEY NOT NULL, first_name VARCHAR(255), last_name VARCHAR(255), e_mail VARCHAR(255))',
-  history: 'CREATE TABLE history(pk_history_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, FOREIGN KEY (fk_user_id) REFERENCES user(pk_user_id), id_input INTEGER, name VARCHAR(255), e_mail VARCHAR(255), faculty VARCHAR(255), subject VARCHAR(255), server_group VARCHAR(255), gender VARCHAR(255))',
-  faculty: 'CREATE TABLE faculty(pk_faculty_id INTEGER PRIMARY KEY , faculty_name VARCHAR(255), university_name VARCHAR(255))',
-  LDAP_ServerGroup: 'CREATE TABLE ldap(pk_server_group_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, server_group_name VARCHAR(255) NOT NULL, people VARCHAR(255) NOT NULL, dc VARCHAR(255) NOT NULL, lang VARCHAR(255) NOT NULL, group_priority INTEGER NOT NULL)',
-  VPN_ServerConfig: 'CREATE TABLE vpn_server_config(server_config_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, FOREIGN KEY (fk_group_id) REFERENCES ldap(pk_server_group_id), config_file VARCHAR(255) NOT NULL, url VARCHAR(255) NOT NULL, port INTEGEREGER NOT NULL, cert VARCHAR(255) NOT NULL , ca VARCHAR(255) NOT NULL )'
-}
 
 /** @noinspection SqlResolve */
 const sqlConnection = require('sqlite3').verbose()
+const data = require('./data.js')
 
 //open database --> uses create/readwrite per default
 let db = new sqlConnection.Database('./db/halt.db', (err) => {
@@ -28,16 +21,16 @@ let db = new sqlConnection.Database('./db/halt.db', (err) => {
   console.log('Connected to the chinook database.')
 })
 
+// todo ask for help
 function init_db () {
-
   if (!tablePresent('user')) {
-    createTable(createTableStatements.user)
+    createTable(data.createTableStatements.user)
       .then(resolve => {
-        createTable(createTableStatements.history)
+        createTable(data.createTableStatements.history)
       }).then(resolve => {
-      createTable(createTableStatements.faculty)
+      createTable(data.createTableStatements.faculty)
     }).then(resolve => {
-      createTable(createTableStatements.studySubject)
+      createTable(data.createTableStatements.studySubject)
     }).catch(reject => {
       console.log('Error init DB')
     })
@@ -152,7 +145,6 @@ function deleteUser (pk_user_id) {
 
 //works
 function showTableContent (table) {
-
   // noinspection SqlResolve
   const statement = 'SELECT * FROM ' + table
   db.get(statement, (err, row) => {
@@ -218,15 +210,24 @@ function getHistory (user_id) {
 }
 
 function getFaculties (ldapServer) {
-
+  if (ldapServer === 'HSA') {
+    return data.HSAFaculties()
+  } else if (ldapServer === '?') {
+    return '....'
+  }
 }
 
 function getSubjects (ldapServer, faculty) {
-
+  if (ldapServer === 'HSA') {
+    return data.HSAStudies(faculty)
+  } else if (ldapServer === '?') {
+    return '....'
+  }
 }
 
 //addUser(1, 'firstName', 'lastName', 'email')
-console.log(userPresent(1).then(resolve => console.log(resolve)))
+//console.log(userPresent(1).then(resolve => console.log(resolve)), reject => console.loge(reject))
+//console.log(data.createTableStatements.user)
 
 /*createTable(createTableStatements.user).then(resolve => {
   console.log('table already present')
