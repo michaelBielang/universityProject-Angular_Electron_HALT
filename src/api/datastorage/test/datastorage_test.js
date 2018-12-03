@@ -15,35 +15,6 @@ const request = require('request')
 const expect = require('chai').expect
 const db = require('../datastorage.js')
 
-function testInitDB () {
-
-}
-
-function testCreateDB (db) {
-}
-
-function testDropDB (db) {
-}
-
-function testAddUser (user) {
-}
-
-function testDeleteUser (user) {
-}
-
-function testAddSearchHistory (sh) {
-}
-
-function testDeleteSearchHistory (sh) {
-}
-
-function testTablePresent (table) {
-
-}
-
-function testDropAll () {
-
-}
 
 describe('test database', function () {
 
