@@ -39,3 +39,7 @@ exports.HSAStudies = function (faculty) {
 exports.HSAFaculties = function () {
   return 'Informatik,Wirtschaft,Gestaltung,Angewandte Geistes und Naturwissenschaften,Architektur und Bauwesen,Elektrotechnik,Maschinenbau und Verfahrenstechnik'.split(',')
 }
+
+exports.allStudies = function () {
+  return ''
+}

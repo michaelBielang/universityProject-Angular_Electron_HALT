@@ -12,29 +12,101 @@
 /** @noinspection SqlResolve */
 const sqlConnection = require('sqlite3').verbose()
 const data = require('./data.js')
+const path = require('path')
+const dbPath = path.join(process.cwd()).split('datastorage')[0] + 'datastorage\\db\\halt.db'
 
 //open database --> uses create/readwrite per default
-let db = new sqlConnection.Database('./db/halt.db', (err) => {
+let db = new sqlConnection.Database(dbPath, (err) => {
   if (err) {
     console.error('Error connecting to database')
   }
   console.log('Connected to the chinook database.')
 })
 
-// todo ask for help
+//todo ggf
+//const logger = require('../logging/logger.js')
+
+exports.dbFunctions = {
+  updateUser: updateUser,
+  getUser: getUser,
+  userPresent: userPresent,
+  createTable: createTable,
+  tablePresent: tablePresent,
+  dropTable: dropTable,
+  dropAll: dropAll,
+  addUser: addUser,
+  deleteUser: deleteUser,
+  showTableContent: showTableContent,
+  addHistory: addHistory,
+  clearHistory: clearHistory,
+  removeLastHistoryEntry: removeLastHistoryEntry,
+  getHistory: getHistory,
+  getFaculties: getFaculties,
+  getSubjects: getSubjects
+}
+
+function userPresent (id) {
+  // noinspection SqlResolve
+  const statement = 'SELECT * FROM user WHERE pk_user_id == ' + id
+  return new Promise((resolve, reject) => {
+    db.all(statement, (err, row) => {
+      if (err) {
+        console.log('reject userPresent')
+        reject(false)
+        return
+      }
+      console.log('resolve userPresent')
+      resolve(true)
+    })
+  })
+}
+
 function init_db () {
   if (!tablePresent('user')) {
-    createTable(data.createTableStatements.user)
-      .then(resolve => {
-        createTable(data.createTableStatements.history)
-      }).then(resolve => {
-      createTable(data.createTableStatements.faculty)
-    }).then(resolve => {
-      createTable(data.createTableStatements.studySubject)
-    }).catch(reject => {
-      console.log('Error init DB')
-    })
+    return Promise.all([createTable(data.createTableStatements.user),
+      createTable(data.createTableStatements.history),
+      createTable(data.createTableStatements.faculty),
+      createTable(data.createTableStatements.studySubject)])
   }
+}
+
+function updateUser (email, rzKennung) {
+  let statement
+  if (email) {
+    statement = 'UPDATE user SET last_login = datetime(\'now\') WHERE e_mail == ' + email
+  } else {
+    statement = 'UPDATE user SET last_login = datetime(\'now\') WHERE pk_user_id == ' + rzKennung
+  }
+  return new Promise((resolve, reject) => {
+    db.run(statement, err => {
+        if (err) {
+          console.log('Error in update user')
+          reject()
+          return
+        }
+        resolve()
+      }
+    )
+  })
+}
+
+function getUser (email, rzKennung) {
+  let statement
+  if (email) {
+    statement = 'SELECT * FROM user WHERE e_mail == ' + email
+  } else {
+    statement = 'SELECT * FROM user WHERE pk_user_id == ' + rzKennung
+  }
+  return new Promise((resolve, reject) => {
+    db.get(statement, (err, row) => {
+      if (err) {
+        reject(false)
+        return
+      }
+      resolve(row)
+    })
+  })
+
 }
 
 function createTable (table) {
@@ -65,25 +137,9 @@ function tablePresent (tableName) {
   })
 }
 
-// works
-// TODO fragen wie man das hier mit return true/false ohne promise lösen kann
-function userPresent (id) {
-  // noinspection SqlResolve
-  const statement = 'SELECT * FROM user WHERE pk_user_id == ' + id
-  return new Promise((resolve, reject) => {
-    db.all(statement, (err, row) => {
-      if (err) {
-        reject(false)
-        return
-      }
-      resolve(true)
-    })
-  })
-}
-
 //works
 function dropTable (table) {
-  console.log('prepare statement')
+  console.log('prepare statement for table: ' + table)
   const statement = 'DROP TABLE ' + table
   return new Promise((resolve, reject) => {
     db.run(statement, err => {
@@ -99,7 +155,7 @@ function dropTable (table) {
 }
 
 function dropAll () {
-  return Promise.all(Object.keys(createTableStatements).map(tableName => {
+  return Promise.all(Object.keys(data.createTableStatements).map(tableName => {
     return new Promise((resolve) => {
       dropTable(tableName)
         .then(resolve => {
@@ -224,27 +280,3 @@ function getSubjects (ldapServer, faculty) {
     return '....'
   }
 }
-
-//addUser(1, 'firstName', 'lastName', 'email')
-//console.log(userPresent(1).then(resolve => console.log(resolve)), reject => console.loge(reject))
-//console.log(data.createTableStatements.user)
-
-/*createTable(createTableStatements.user).then(resolve => {
-  console.log('table already present')
-  return addUser(1, 'firstName', 'lastName', 'email')
-}, reject => {
-  console.log('table not present')
-  return addUser(1, 'firstName', 'lastName', 'email')
-}).then(resolve => {
-    console.log('user was not added')
-  }, reject => {
-    console.log('user was present and gets deleted')
-    console.log('should be true: ' + userPresent(1))
-    return deleteUser(1)
-  }
-).then(resolve => {
-  console.log('should be false: ' + userPresent(1))
-  console.log('User got deleted')
-}, reject => {
-  console.log('reject')
-})*/

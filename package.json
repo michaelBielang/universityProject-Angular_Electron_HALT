@@ -21,7 +21,7 @@
     "package:all": "npm run build && electron-packager dist HALT --out=packages --all --arch=x64 --overwrite ",
     "copy": "node copy-static.js",
     "clear": "node clear-dist.js",
-    "test": "ng test",
+    "dbFunctions": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
@@ -54,7 +54,8 @@
     "events": "^2.0.0",
     "marked": "^0.5.1",
     "marked-terminal": "^3.1.1",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "sqlite3": "^4.0.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.10.7",

@@ -66,7 +66,7 @@
             "browserTarget": "halt:build"
           }
         },
-        "test": {
+        "dbFunctions": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "src/test.ts",
