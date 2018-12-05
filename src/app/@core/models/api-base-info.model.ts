@@ -12,10 +12,12 @@ const jsonHeader = new Headers({
 const apiBaseUrl = 'http://localhost:8787';
 const apiHealthCheckUrl = apiBaseUrl + '/api/healthcheck';
 const apiUsersUrl = apiBaseUrl + '/api/users';
+const apiAuthUrl = apiBaseUrl + '/api/auth';
 
 export default {
   headers: jsonHeader,
   base: apiBaseUrl,
   healthcheck: apiHealthCheckUrl,
   users: apiUsersUrl,
+  auth: apiAuthUrl,
 }

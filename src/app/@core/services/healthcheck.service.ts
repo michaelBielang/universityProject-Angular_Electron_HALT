@@ -4,7 +4,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { Http } from '@angular/http';
 import { NotificationService } from './notification.service';
 import api from '../models/api-base-info.model';
 
@@ -15,7 +15,7 @@ export class AuthService {
     private readonly notificationService: NotificationService,
   ) {
     setInterval(() => {
-      this.healthcheckRequest().subscribe(response => {
+      this.healthcheckRequest().subscribe(() => {
       }, error => {
         console.error(error);
         this.notificationService.showNotification(
