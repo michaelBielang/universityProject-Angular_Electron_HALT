@@ -7,10 +7,14 @@ const {
   app,
   BrowserWindow
 } = require('electron');
+const fs = require('fs');
 const url = require('url');
 const {
   fork
 } = require('child_process');
+const {
+  exec
+} = require('sudo-prompt');
 
 const path = require('path');
 const fs = require('fs');
@@ -75,6 +79,27 @@ app.on('activate', () => {
 });
 
 app.on('window-all-closed', () => {
+  const tmpFileName = 'tmp.key';
+  const fileTarget = path.join(__dirname, 'vpn-config-files', tmpFileName);
+  if (fs.existsSync(fileTarget)) {
+    fs.unlinkSync(fileTarget);
+  }
+
+  // TODO doesn't work
+  // if (process.platform.indexOf('win') !== -1) {
+  //   exec('taskkill /f /t /im openvpn.exe', err => {
+  //     if (err) {
+  //       logger.error(err);
+  //     }
+  //   });
+  // } else {
+  //   exec('pkill \"openvpn\"', err => {
+  //     if (err) {
+  //       logger.error(err);
+  //     }
+  //   });
+  // }
+
   if (process.platform !== 'darwin') {
     app.quit();
   }

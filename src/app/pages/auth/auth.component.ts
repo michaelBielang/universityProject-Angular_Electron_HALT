@@ -23,6 +23,7 @@ export class AuthComponent implements OnInit {
   readonly customValidators = new AuthCustomValidators();
   readonly errorMessages = validationMessagesDE();
   readonly matcher = new MyErrorStateMatcher();
+  loginTimeout;
 
   constructor(
     private readonly authService: AuthService,
@@ -49,10 +50,18 @@ export class AuthComponent implements OnInit {
 
   onAuth() {
     this.tabSelectionService.loadingEvent.next(true);
-    this.authService.authRequest(this.authForm.get('id')['value'], this.authForm.get('pw')['value'])
-      .then(userObj => {
-        if (userObj) {
-          this.authService.setSession(userObj);
+    const id = this.authForm.get('id')['value'];
+    const pw = this.authForm.get('pw')['value'];
+
+    if (id == undefined || id === '' || pw == undefined || pw === '') {
+      this.tabSelectionService.loadingEvent.next(false);
+    } else {
+      if (this.loginTimeout) {
+        clearTimeout(this.loginTimeout);
+      }
+      this.loginTimeout = setTimeout(() => {
+        this.authService.authRequest(id, pw).subscribe(res => {
+          this.authService.setSession(res.json()['userObj']);
           this.notificationService.showNotification(
             'success',
             null,
@@ -60,24 +69,19 @@ export class AuthComponent implements OnInit {
           );
           setTimeout(() => {
             this.tabSelectionService.tabSwitchEvent.next(route.SEARCH);
+            this.tabSelectionService.loadingEvent.next(false);
           }, 250);
-        } else {
+
+        }, err => {
           this.notificationService.showNotification(
             'error',
-            null,
             'login failed!',
+            err['message'] || '',
           );
-        }
-        this.tabSelectionService.loadingEvent.next(false);
-      }).catch(err => {
-        console.error(err['message']);
-        this.notificationService.showNotification(
-          'error',
-          null,
-          err['message'],
-        );
-        this.tabSelectionService.loadingEvent.next(false);
-      });
+          this.tabSelectionService.loadingEvent.next(false);
+        });
+      }, 250);
+    }
   }
 
   private mailAddressRegex() {
