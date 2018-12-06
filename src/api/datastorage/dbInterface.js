@@ -139,7 +139,6 @@ function tablePresent (tableName) {
 
 //works
 function dropTable (table) {
-  console.log('prepare statement for table: ' + table)
   const statement = 'DROP TABLE ' + table
   return new Promise((resolve, reject) => {
     db.run(statement, err => {
@@ -156,15 +155,16 @@ function dropTable (table) {
 
 function dropAll () {
   return Promise.all(Object.keys(data.createTableStatements).map(tableName => {
-    return new Promise((resolve) => {
-      dropTable(tableName)
-        .then(resolve => {
-          console.log('reached resolved')
-        }, onReject => {
-          console.log('reject part')
-        })
-    })
-  }))
+      return new Promise(((re) => {
+        dropTable(tableName).then(resolve => {
+            re()
+          }, reject => {
+            re()
+          }
+        )
+      }))
+    }
+  ))
 }
 
 // works
@@ -208,12 +208,14 @@ function showTableContent (table) {
   })
 }
 
-function addHistory (user_id, id_input, name, e_mail, faculty, subject, server_group, gender) {
+function addHistory (user_id, searched_rz_nr, name, e_mail, faculty, subject, server_group, gender) {
   return new Promise((resolve, reject) => {
       // noinspection SqlResolve
-      const statement = 'INSERT INTO history(pk_user_id, id_input, name, e_mail, faculty, subject, server_group, gender) VALUES (?,? ,? ,?,?,?,?,?)'
-      db.run(statement, [user_id, id_input, name, e_mail, faculty, subject, server_group, gender], err => {
+      const statement = 'INSERT INTO history(fk_user_id, searched_rz_nr, name, e_mail, faculty, subject, server_group, gender) VALUES (?,? ,? ,?,?,?,?,?)'
+      db.run(statement, [user_id, searched_rz_nr, name, e_mail, faculty, subject, server_group, gender], err => {
         if (err) {
+          console.log('ERROR IS:')
+          console.log(err)
           reject()
           return
         }
@@ -243,6 +245,7 @@ function removeLastHistoryEntry () {
   return new Promise((resolve, reject) => {
     db.run(statement, err => {
       if (err) {
+        console.log('ERROR')
         reject()
         return
       }
@@ -257,16 +260,18 @@ function getHistory (user_id) {
     const statement = 'SELECT * FROM history'
     db.all(statement, [], (err, rows) => {
       if (err) {
+        console.log('reject')
         reject()
         return
       }
+      console.log('resolve')
       resolve(JSON.stringify(rows))
     })
   })
 }
 
 function getFaculties (ldapServer) {
-  if (ldapServer === 'HSA') {
+  if (ldapServer === 'hsa') {
     return data.HSAFaculties()
   } else if (ldapServer === '?') {
     return '....'
@@ -274,7 +279,7 @@ function getFaculties (ldapServer) {
 }
 
 function getSubjects (ldapServer, faculty) {
-  if (ldapServer === 'HSA') {
+  if (ldapServer === 'hsa') {
     return data.HSAStudies(faculty)
   } else if (ldapServer === '?') {
     return '....'

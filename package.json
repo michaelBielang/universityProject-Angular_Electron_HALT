@@ -21,7 +21,7 @@
     "package:all": "npm run build && electron-packager dist HALT --out=packages --all --arch=x64 --overwrite ",
     "copy": "node copy-static.js",
     "clear": "node clear-dist.js",
-    "dbFunctions": "ng test",
+    "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
