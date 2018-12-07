@@ -10,6 +10,7 @@
 'use strict'
 
 /** @noinspection SqlResolve */
+const fs = require('fs');
 const sqlConnection = require('sqlite3').verbose()
 const data = require('./data.js')
 const path = require('path')
@@ -17,13 +18,20 @@ console.log(__dirname)
 const dbPath = path.join(__dirname, 'db/halt.db')
 
 //open database --> uses create/readwrite per default
-let db = new sqlConnection.Database(dbPath, (err) => {
-  console.log(dbPath)
-  if (err) {
-    console.error('Error connecting to database')
-  } else
-    console.log('Connected to the chinook database.')
-})
+let db = getDbConnection();
+
+function getDbConnection() {
+  const targetPath = path.dirname(dbPath);
+  if (!fs.existsSync(targetPath)) fs.mkdirSync(targetPath);
+  return new sqlConnection.Database(dbPath, (err) => {
+    console.log(dbPath);
+    if (err) {
+      console.error('Error connecting to database');
+    } else {
+      console.log('Connected to the chinook database.');
+    }
+  });
+}
 
 //todo ggf
 //const logger = require('../logging/logger.js')
@@ -69,6 +77,8 @@ function init_db () {
       createTable(data.createTableStatements.history),
       createTable(data.createTableStatements.faculty),
       createTable(data.createTableStatements.studySubject)])
+  } else {
+    return Promise.resolve();
   }
 }
 

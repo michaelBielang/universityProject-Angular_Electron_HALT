@@ -11,8 +11,9 @@ export class SearchCustomValidators {
       return undefined;
     }
     const id = group['controls']['id']['value'];
+    const name = group['controls']['name']['value'];
     const email = group['controls']['email']['value'];
-    if (id === '' && email === '') {
+    if (id === '' && email === '' && name === '') {
       return { idOrPwRequired: true };
     }
     return undefined;
@@ -22,6 +23,6 @@ export class SearchCustomValidators {
 export function validationMessagesEN() {
   return {
     'required': 'This field is required.',
-    'idOrPwRequired': 'Either id or email is required',
+    'idOrPwRequired': 'Either id, name, or email is required',
   };
 }

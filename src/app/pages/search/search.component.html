@@ -2,31 +2,36 @@
   <form [formGroup]="searchForm" (ngSubmit)="onSearchBtnClick()">
 
     <div class="row">
-      <mat-form-field class="form-group narrow-input-group col-md-12">
-        <mat-select placeholder="Look at specific LDAP server" formControlName="server">
-          <mat-option [value]=""> -- ALL SERVERS -- </mat-option>
-          <mat-option *ngFor="let serverentry of serverGroups" [value]="serverentry">
-            {{ serverentry }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
       <mat-radio-group class="form-group narrow-input-group col-md-12" formControlName="gender">
         <mat-radio-button class="gender-radio-button" [value]="2">Only female</mat-radio-button>
         <mat-radio-button class="gender-radio-button" [value]="1">Only male</mat-radio-button>
       </mat-radio-group>
 
       <mat-form-field class="form-group narrow-input-group col-md-12">
-        <input matInput placeholder="Name or id (RZ-Kennung)" formControlName="id">
-        <mat-hint class="hint-required" *ngIf="searchForm.get('id')['pristine'] && searchForm.get('id')['value'] === '' && searchForm.get('email')['pristine'] && searchForm.get('email')['value'] === ''">Either this field or email is required</mat-hint>
+        <input matInput placeholder="id (RZ-Kennung)" formControlName="id">
+        <mat-hint class="hint-required" *ngIf="searchForm.get('id')['pristine'] && searchForm.get('id')['value'] === '' &&
+        searchForm.get('name')['pristine'] && searchForm.get('name')['value'] === '' &&
+        searchForm.get('email')['pristine'] && searchForm.get('email')['value'] === ''">Either this field or name or email is required</mat-hint>
         <mat-error *ngIf="searchForm.get('id')['errors']">
           {{ errorMessages[ObjKeys(searchForm.get('id')['errors'])[0]] }}
         </mat-error>
       </mat-form-field>
 
       <mat-form-field class="form-group narrow-input-group col-md-12">
+        <input matInput placeholder="Name" formControlName="name">
+        <mat-hint class="hint-required" *ngIf="searchForm.get('id')['pristine'] && searchForm.get('id')['value'] === '' &&
+        searchForm.get('name')['pristine'] && searchForm.get('name')['value'] === '' &&
+        searchForm.get('email')['pristine'] && searchForm.get('email')['value'] === ''">Either this field or id or email is required</mat-hint>
+        <mat-error *ngIf="searchForm.get('name')['errors']">
+          {{ errorMessages[ObjKeys(searchForm.get('name')['errors'])[0]] }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="form-group narrow-input-group col-md-12">
         <input matInput placeholder="Email address" formControlName="email">
-        <mat-hint class="hint-required" *ngIf="searchForm.get('email')['pristine'] && searchForm.get('email')['value'] === '' && searchForm.get('id')['pristine'] && searchForm.get('id')['value'] === ''">Either this field or id is required</mat-hint>
+        <mat-hint class="hint-required" *ngIf="searchForm.get('id')['pristine'] && searchForm.get('id')['value'] === '' &&
+        searchForm.get('name')['pristine'] && searchForm.get('name')['value'] === '' &&
+        searchForm.get('email')['pristine'] && searchForm.get('email')['value'] === ''">Either this field or id or name is required</mat-hint>
         <mat-error *ngIf="searchForm.get('email')['errors']">
           {{ errorMessages[ObjKeys(searchForm.get('email')['errors'])[0]] }}
         </mat-error>
@@ -65,6 +70,6 @@
 
   <div class="search-history" *ngIf="searchService.searchHistory.length">
     <p class="history-label">Search history:</p>
-    <div class="row history-block" *ngFor="let hist of searchService.searchHistory; let i = index" (click)="onHistoryClick(i)">{{ hist['id'] || hist['email'] }}</div>
+    <div class="row history-block" *ngFor="let hist of searchService.searchHistory; let i = index" (click)="onHistoryClick(i)">{{ hist['id'] || hist['name'] || hist['email'] }}</div>
   </div>
 </div>
