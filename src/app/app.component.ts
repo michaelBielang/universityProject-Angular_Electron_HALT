@@ -3,9 +3,9 @@
  * @license UNLICENSED
  */
 
-import { Component, AfterViewInit } from '@angular/core';
-import { NotificationService } from './@core/services/notification.service';
-import { ToasterService } from 'angular2-toaster';
+import {AfterViewInit, Component} from '@angular/core';
+import {NotificationService} from './@core/services/notification.service';
+import {ToasterService} from 'angular2-toaster';
 import 'style-loader!angular2-toaster/toaster.css';
 
 @Component({
@@ -19,7 +19,8 @@ export class AppComponent implements AfterViewInit {
   constructor(
     private readonly toasterService: ToasterService,
     private readonly notificationService: NotificationService,
-  ) { }
+  ) {
+  }
 
   ngAfterViewInit() {
     const element = document.getElementById('global-load-spinner');

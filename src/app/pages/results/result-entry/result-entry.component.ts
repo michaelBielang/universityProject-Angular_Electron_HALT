@@ -3,10 +3,10 @@
  * @license UNLICENSED
  */
 
-import { Component, Input, AfterViewInit, OnDestroy } from '@angular/core';
-import { TabSelectionService } from '../../../@core/services/tab-selection.service';
-import { DetailsService } from '../../../@core/services/details.service';
-import { NotificationService } from '../../../@core/services/notification.service';
+import {AfterViewInit, Component, Input, OnDestroy} from '@angular/core';
+import {TabSelectionService} from '../../../@core/services/tab-selection.service';
+import {DetailsService} from '../../../@core/services/details.service';
+import {NotificationService} from '../../../@core/services/notification.service';
 import * as Clipboard from 'clipboard';
 import route from '../../../@core/enums/route.enum';
 
@@ -25,7 +25,8 @@ export class ResultEntryComponent implements AfterViewInit, OnDestroy {
     private readonly tabSelectionService: TabSelectionService,
     private readonly notificationService: NotificationService,
     private readonly detailsService: DetailsService,
-  ) { }
+  ) {
+  }
 
   ngAfterViewInit() {
     this.registerClipboardEvents();
@@ -33,7 +34,9 @@ export class ResultEntryComponent implements AfterViewInit, OnDestroy {
 
   registerClipboardEvents() {
     this.emailClipboard = new Clipboard('.email-output' + this.userIndex, {
-      text: trigger => { return trigger.innerHTML.trim() },
+      text: trigger => {
+        return trigger.innerHTML.trim();
+      },
     });
     this.emailClipboard.on('success', (e) => success(e, this.notificationService));
     this.emailClipboard.on('error', (e) => fail(e, this.notificationService));
@@ -46,6 +49,7 @@ export class ResultEntryComponent implements AfterViewInit, OnDestroy {
       );
       e.clearSelection();
     }
+
     function fail(e, note) {
       note.showNotification(
         'error',

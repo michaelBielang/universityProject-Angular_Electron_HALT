@@ -3,7 +3,8 @@
 
   <div class="details-info-block">
     <p class="details-info-label">Gender</p>
-    <div class="details-info-output gender-info">{{ detailsService.detailsObj['gender'] === 2 ? 'female' : detailsService.detailsObj['gender'] === 1 ? 'male' : 'undefined' }}</div>
+    <div
+      class="details-info-output gender-info">{{ detailsService.detailsObj['gender'] === 2 ? 'female' : detailsService.detailsObj['gender'] === 1 ? 'male' : 'undefined' }}</div>
   </div>
 
   <div class="details-info-block">
@@ -18,7 +19,8 @@
 
   <div class="details-info-block">
     <p class="details-info-label">Email addresses</p>
-    <div class="details-info-output" [ngClass]="'email-info' + i" *ngFor="let email of detailsService.detailsObj['emails']; let i = index">{{ email }}</div>
+    <div *ngFor="let email of detailsService.detailsObj['emails']; let i = index" [ngClass]="'email-info' + i"
+         class="details-info-output">{{ email }}</div>
   </div>
 
   <div class="details-info-block">

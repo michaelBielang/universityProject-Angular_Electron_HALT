@@ -3,13 +3,13 @@
  * @license UNLICENSED
  */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
-import { TabSelectionService } from '../../../@core/services/tab-selection.service';
-import { DetailsService } from '../../../@core/services/details.service';
-import { ResultsService } from '../../../@core/services/results.service';
-import { AuthService } from '../../../@core/services/auth.service';
-import { Subscription } from 'rxjs';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {TabSelectionService} from '../../../@core/services/tab-selection.service';
+import {DetailsService} from '../../../@core/services/details.service';
+import {ResultsService} from '../../../@core/services/results.service';
+import {AuthService} from '../../../@core/services/auth.service';
+import {Subscription} from 'rxjs';
 import route from '../../../@core/enums/route.enum';
 
 @Component({
@@ -33,7 +33,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private readonly resultsService: ResultsService,
     private readonly detailsService: DetailsService,
     private readonly authService: AuthService,
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.updateTabs();
@@ -53,9 +54,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   updateTabs() {
     this.tabs = [
-      { label: 'Search', disabled: this.getSearchValidation(), route: 'search', enum: route.SEARCH },
-      { label: 'Results', disabled: this.getResultsValidation(), route: 'results', enum: route.RESULTS },
-      { label: 'Details', disabled: this.getDetailsValidation(), route: 'details', enum: route.DETAILS }
+      {label: 'Search', disabled: this.getSearchValidation(), route: 'search', enum: route.SEARCH},
+      {label: 'Results', disabled: this.getResultsValidation(), route: 'results', enum: route.RESULTS},
+      {label: 'Details', disabled: this.getDetailsValidation(), route: 'details', enum: route.DETAILS}
     ];
     this.tabs = this.tabs.filter(entry => {
       return !entry['disabled'];

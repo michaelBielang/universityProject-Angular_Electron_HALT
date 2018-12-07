@@ -4,10 +4,12 @@
  */
 
 import logger from '../logging/logger';
+// @ts-ignore
 import ldap from './business-logic/ldap.controler';
+// @ts-ignore
 import vpn from './business-logic/vpn.controler';
 
-
+//todo chris
 export function auth_login(req, res, next) {
   let userid = req.body['id'];
   let pw = req.body['pw'];
@@ -21,12 +23,10 @@ export function auth_login(req, res, next) {
   }
   // 2. if email look into db to get corresponding rz-id
 
-  vpn.connectHsaVpn({ id: userid, pw: pw }).then(result => {
+  vpn.connectHsaVpn({id: userid, pw: pw}).then(result => {
 
     // TODO: implement auth logic
     logger.info(result);
-
-
 
 
     res.status(200).json({

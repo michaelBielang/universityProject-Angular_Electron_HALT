@@ -3,23 +3,17 @@
  * @license UNLICENSED
  */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AuthComponent } from './auth.component';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {AuthComponent} from './auth.component';
+import {MatFormFieldModule, MatIconModule, MatInputModule, MatTooltipModule,} from '@angular/material';
 
 const BASE_MODULES = [
   CommonModule,
   FormsModule,
   ReactiveFormsModule
 ];
-
-import {
-  MatTooltipModule,
-  MatIconModule,
-  MatInputModule,
-  MatFormFieldModule,
-} from '@angular/material';
 
 const ANGULAR_MATERIAL = [
   MatTooltipModule,
@@ -37,4 +31,5 @@ const ANGULAR_MATERIAL = [
     AuthComponent,
   ],
 })
-export class AuthModule { }
+export class AuthModule {
+}
