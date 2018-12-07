@@ -15,14 +15,15 @@
 
   .loader-indicator {
     position: absolute;
-    right: 10px;
-    bottom: 15px;
+    right: 15px;
+    bottom: 20px;
   }
 
   .header-title {
     text-align: center;
   }
 }
+
 // uncommend required breakpoints
 // @media (max-width:$breakpoints(xs)) {}
 // @media (max-width:$breakpoints(md)) {}

@@ -102,3 +102,16 @@ put this at the end:
 ```
 export PS1="$PS1\033[1;34m\$(git branch 2>/dev/null | grep '^*' | colrm 1 2)\033[00m "
 ```
+
+## Create a types definition
+install following module globally and auto gen the .d.ts file
+```
+npm install -g dts-gen
+dts-gen -m <your-module>
+```
+move the .d.ts file into the folder ./types
+
+## Killing a windows process by name
+```
+taskkill /f /t /im openvpn.exe
+```

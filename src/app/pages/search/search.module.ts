@@ -3,19 +3,19 @@
  * @license UNLICENSED
  */
 
-import { NgModule } from '@angular/core';
-import { SearchComponent } from './search.component';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {NgModule} from '@angular/core';
+import {SearchComponent} from './search.component';
+import {CommonModule} from '@angular/common';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import {
-  MatTooltipModule,
-  MatInputModule,
-  MatFormFieldModule,
-  MatRadioModule,
   MatAutocompleteModule,
+  MatFormFieldModule,
   MatIconModule,
+  MatInputModule,
+  MatRadioModule,
   MatSelectModule,
+  MatTooltipModule,
 } from '@angular/material';
 
 const ANGULAR_MATERIAL = [
@@ -43,4 +43,5 @@ const BASE_MODULES = [
     SearchComponent,
   ],
 })
-export class SearchModule { }
+export class SearchModule {
+}

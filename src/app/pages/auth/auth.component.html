@@ -1,19 +1,22 @@
 <div class="auth-content">
-  <p class="welcome-text">Welcome! Due to data protection laws, you need to be authenticated in the network of your college or university to use this tool.</p>
+  <p class="welcome-text">Welcome! Due to data protection laws, you need to be authenticated in the network of your
+    college or university to use this tool.</p>
   <br><br><br>
 
-  <form [formGroup]="authForm" (ngSubmit)="onAuth()">
+  <form (ngSubmit)="onAuth()" [formGroup]="authForm">
     <div class="row">
       <mat-form-field class="form-group col-md-12">
-        <input matInput required placeholder="Login ID (RZ)" formControlName="id">
+        <input formControlName="id" matInput placeholder="Login ID (RZ)" required>
         <mat-error *ngIf="authForm.get('id')['errors']">
           {{ errorMessages[ObjKeys(authForm.get('id')['errors'])[0]] }}
         </mat-error>
       </mat-form-field>
 
       <mat-form-field class="form-group col-md-12">
-        <input matInput required placeholder="Login Password (RZ)" formControlName="pw" [type]="hidePw ? 'password' : 'text'">
-        <mat-icon matSuffix class="noselect" (click)="hidePw = !hidePw">{{hidePw ? 'visibility_off' : 'visibility'}}</mat-icon>
+        <input [type]="hidePw ? 'password' : 'text'" formControlName="pw" matInput placeholder="Login Password (RZ)"
+               required>
+        <mat-icon (click)="hidePw = !hidePw" class="noselect"
+                  matSuffix>{{hidePw ? 'visibility_off' : 'visibility'}}</mat-icon>
         <mat-error *ngIf="authForm.get('pw')['errors']">
           {{ errorMessages[ObjKeys(authForm.get('pw')['errors'])[0]] }}
         </mat-error>
@@ -22,7 +25,7 @@
 
     <br><br>
 
-    <button type="submit" class="btn btn-block btn-primary" [disabled]="!authForm.valid">
+    <button [disabled]="!authForm.valid" class="btn btn-block btn-primary" type="submit">
       Login
     </button>
   </form>

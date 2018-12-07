@@ -7,10 +7,14 @@ const {
   app,
   BrowserWindow
 } = require('electron');
+const fs = require('fs');
 const url = require('url');
 const {
   fork
 } = require('child_process');
+const {
+  exec
+} = require('sudo-prompt');
 
 const path = require('path');
 const fs = require('fs');
@@ -75,7 +79,74 @@ app.on('activate', () => {
 });
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+  cleanUpAndClose().then(() => {
+    if (process.platform !== 'darwin') {
+      app.quit();
+    }
+  }).catch(err => {
+    logger.error(err);
+  });
 });
+
+function cleanUpAndClose() {
+  const tmpFileName = 'tmp.key';
+  const folderTarget = path.join(__dirname, 'vpn-config-files');
+
+  if (fs.existsSync(folderTarget)) {
+    const files = fs.readdirSync(folderTarget);
+    files.forEach(file => {
+      if (file.indexOf(tmpFileName) !== -1) {
+        try {
+          fs.unlinkSync(file);
+        } catch (e) {
+          // logger.info(e);
+        }
+      }
+    });
+  }
+
+  return new Promise((resolve, reject) => {
+    checkIfOpenVpnIsRunning('openvpn').then(isRunning => {
+      if (isRunning) {
+        if (process.platform.indexOf('win') !== -1) {
+          sudo('taskkill /im openvpn.exe /f /t', {
+            name: 'openvpnkill'
+          }, err => {
+            if (err) {
+              reject(err);
+            }
+            resolve();
+          });
+        } else {
+          sudo('pkill \"openvpn\"', {
+            name: 'openvpnkill'
+          }, err => {
+            if (err) {
+              reject(err);
+            }
+            resolve();
+          });
+        }
+      }
+    }).catch(err => {
+      reject(err);
+    });
+  });
+}
+
+function checkIfOpenVpnIsRunning(processName) {
+  return new Promise((resolve, reject) => {
+    const plat = process.platform;
+    const cmd = plat === 'win32' ? 'tasklist' : (plat === 'darwin' ? 'ps -ax | grep ' + mac : (plat === 'linux' ? 'ps -A' : ''));
+    const pName = plat === 'win32' ? processName + '.exe' : processName;
+    if (cmd === '' || processName === '' || processName == undefined) {
+      resolve(false)
+    }
+    exec(cmd, function(err, stdout, stderr) {
+      if (err) {
+        logger.error(err);
+      }
+      resolve(stdout.toLowerCase().indexOf(pName.toLowerCase()) > -1)
+    });
+  });
+}

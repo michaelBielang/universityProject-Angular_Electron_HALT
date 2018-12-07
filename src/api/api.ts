@@ -8,14 +8,12 @@ import * as logger from 'morgan';
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 import env from './server-env';
-
 // Subroutes
 import authRoutes from './routes/auth';
 import userRoutes from './routes/users';
 import searchRoutes from './routes/search';
 import searchHistoryRoutes from './routes/searchhistories';
 import facultyRoutes from './routes/faculties';
-import serverGroupRoutes from './routes/servergroups';
 import healthCheckRoutes from './routes/healthcheck';
 
 class Api {
@@ -33,7 +31,7 @@ class Api {
     if (env.mode === 'dev') {
       this.express.use(logger('dev')); // Use Morgan logger
     }
-    this.express.use(bodyParser.urlencoded({ extended: false }));
+    this.express.use(bodyParser.urlencoded({extended: false}));
     this.express.use(bodyParser.json());
 
     const urlOrigins = [
@@ -43,7 +41,7 @@ class Api {
 
     this.express.use(cors(
       {
-        'origin': function(origin, callback) {
+        'origin': function (origin, callback) {
           if (origin) {
             const originArr = origin.split(':');
             let corsAllowed = false;
@@ -77,7 +75,6 @@ class Api {
     this.express.use('/api/search', searchRoutes);
     this.express.use('/api/searchhistories', searchHistoryRoutes);
     this.express.use('/api/faculties', facultyRoutes);
-    this.express.use('/api/servergroups', serverGroupRoutes);
     this.express.use('/api/healthcheck', healthCheckRoutes);
   }
 
