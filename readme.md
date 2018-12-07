@@ -1,9 +1,9 @@
 # Hochschul Active Directory Lookup Tool (HALT)
 
 ## Project members
-- Bichlmeier Christoph [Master]: UI, Electron, Angular, LDAP, Auth
-- Bielang Michael [Bachelor]: DB, ORM, API
-- Schmid Steffen [Bachelor]: Testing, VPN
+- Bichlmeier Christoph [Master]: UI (Angular), Electron (processmanagement), Auth, packaging (webpack)
+- Bielang Michael [Bachelor]: DB, DB-Interface, API
+- Schmid Steffen [Bachelor]: Testing, VPN, LDAP
 
 
 ## Project description
@@ -26,16 +26,19 @@ Users should not need to know long and complicated LDAP commands. This tool ther
 ## Used collaboration tools
 - GitLab tickets
 - draw.io (broken, sockets do no longer work)
-- google docs
-- discord
-- teamspeak
-- teamviewer
-- whatsapp
+- Google Docs
+- Discord
+- Teamspeak 3
+- TeamViewer
+- WhatsApp
 
 
 ## How to start this tool, How to use it
 - simply run: `npm start`
-- ...
+- For development simply run `npm start`
+-	For development api server only run: `npm run server`
+-	To build production and packaging run: `npm run package:all`
+
 
 
 ## RoadMap
@@ -51,6 +54,12 @@ Users should not need to know long and complicated LDAP commands. This tool ther
 - ...
 
 ### week 2
+- create route model
+- create express server route and controler boilerplate code
+- writing db Interface
+- compilation of study subjects at HSA
+- research of electron possibilities
+- create db model
 - ...
 
 ### week 3
