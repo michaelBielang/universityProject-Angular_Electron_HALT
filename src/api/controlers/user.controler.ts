@@ -3,14 +3,14 @@
  * @license UNLICENSED
  */
 
-import logger from '../logging/logger';
+// import logger from '../logging/logger';
+import errHandler from './services/error.handler';
 import * as db from '../datastorage';
 // @ts-ignore
 import ldap from './business-logic/ldap.controler';
 
 export function user_show(req, res, next) {
   if (req.params['userid']) {
-    logger.info(`User_show controller test`);
     let email;
     let rzKennung;
     if (ldap.isEmailAddress(req.params['userid'])) {
@@ -26,19 +26,12 @@ export function user_show(req, res, next) {
           userObj: user
         });
       } else {
-        res.status(404).json({
-          message: 'User not found'
-        });
+        errHandler.errResponse(res, 'User not found', 404);
       }
     }).catch(err => {
-      logger.info(err);
-      res.status(409).json({
-        message: 'User not present',
-      });
+      errHandler.errResponse(res, err.message, 404);
     });
   } else {
-    res.status(409).json({
-      message: 'User not present',
-    });
+    errHandler.errResponse(res, 'User not present', 404);
   }
 }
