@@ -3,14 +3,14 @@
  * @license UNLICENSED
  */
 
-import {Component, OnInit} from '@angular/core';
-import {TabSelectionService} from '../../@core/services/tab-selection.service';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {SearchCustomValidators, validationMessagesDE} from './search.validators';
-import {MyErrorStateMatcher} from '../../@core/models/error-state-matcher.model';
-import {NotificationService} from '../../@core/services/notification.service';
-import {SearchService} from '../../@core/services/search.service';
-import {ResultsService} from '../../@core/services/results.service';
+import { Component, OnInit } from '@angular/core';
+import { TabSelectionService } from '../../@core/services/tab-selection.service';
+import { FormControl, FormGroup } from '@angular/forms';
+import { SearchCustomValidators, validationMessagesEN } from './search.validators';
+import { MyErrorStateMatcher } from '../../@core/models/error-state-matcher.model';
+import { NotificationService } from '../../@core/services/notification.service';
+import { SearchService } from '../../@core/services/search.service';
+import { ResultsService } from '../../@core/services/results.service';
 import route from '../../@core/enums/route.enum';
 
 @Component({
@@ -27,7 +27,7 @@ export class SearchComponent implements OnInit {
   studysubjects: any = [];
   filteredstudysubjects: any = [];
   readonly customValidators = new SearchCustomValidators();
-  readonly errorMessages = validationMessagesDE();
+  readonly errorMessages = validationMessagesEN();
   readonly matcher = new MyErrorStateMatcher();
 
   searchTimeout: any;
@@ -39,8 +39,7 @@ export class SearchComponent implements OnInit {
     private readonly notificationService: NotificationService,
     public readonly searchService: SearchService,
     private readonly resultsService: ResultsService,
-  ) {
-  }
+  ) { }
 
   async ngOnInit() {
     this.initForm();
@@ -69,7 +68,7 @@ export class SearchComponent implements OnInit {
       }).catch(err => {
         this.errHandling(err);
       });
-    await this.searchService.getSearchHistory()
+      await this.searchService.getSearchHistory()
       .then(result => {
         this.searchService.updateSearchHistory(result);
       }).catch(err => {
@@ -82,12 +81,14 @@ export class SearchComponent implements OnInit {
     this.searchForm = new FormGroup({
       'server': new FormControl(this.searchService.searchObj['server'], []),
       'gender': new FormControl(this.searchService.searchObj['gender'], []),
-      'id': new FormControl(this.searchService.searchObj['id'], [
-        Validators.required,
-      ]),
+      'id': new FormControl(this.searchService.searchObj['id'], []),
       'email': new FormControl(this.searchService.searchObj['email'], []),
       'faculty': new FormControl(this.searchService.searchObj['faculty'], []),
       'subjectordegree': new FormControl(this.searchService.searchObj['subjectordegree'], []),
+    }, {
+      validators: [
+        this.customValidators.idOrEmailRequired.bind(this),
+      ],
     });
   }
 
@@ -117,8 +118,8 @@ export class SearchComponent implements OnInit {
           );
         }, 250);
       }).catch(err => {
-      this.errHandling(err);
-    });
+        this.errHandling(err);
+      });
   }
 
   onFacultyChange() {

@@ -13,14 +13,16 @@
 const sqlConnection = require('sqlite3').verbose()
 const data = require('./data.js')
 const path = require('path')
-const dbPath = path.join(process.cwd()).split('datastorage')[0] + 'datastorage\\db\\halt.db'
+console.log(__dirname)
+const dbPath = path.join(__dirname, 'db/halt.db')
 
 //open database --> uses create/readwrite per default
 let db = new sqlConnection.Database(dbPath, (err) => {
+  console.log(dbPath)
   if (err) {
     console.error('Error connecting to database')
-  }
-  console.log('Connected to the chinook database.')
+  } else
+    console.log('Connected to the chinook database.')
 })
 
 //todo ggf
@@ -91,6 +93,8 @@ function updateUser (email, rzKennung) {
 }
 
 function getUser (email, rzKennung) {
+  console.log('get user')
+  console.log(dbPath)
   let statement
   if (email) {
     statement = 'SELECT * FROM user WHERE e_mail == ' + email
@@ -100,6 +104,7 @@ function getUser (email, rzKennung) {
   return new Promise((resolve, reject) => {
     db.get(statement, (err, row) => {
       if (err) {
+        console.log('reject')
         reject(false)
         return
       }

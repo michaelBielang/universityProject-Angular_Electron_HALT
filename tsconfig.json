@@ -10,8 +10,10 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noUnusedParameters": false,
+    "allowJs": true,
     "typeRoots": [
-      "node_modules/@types"
+      "node_modules/@types",
+      "./types"
     ],
     "lib": [
       "es2017",

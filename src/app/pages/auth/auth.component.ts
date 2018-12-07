@@ -3,13 +3,13 @@
  * @license UNLICENSED
  */
 
-import {Component, OnInit} from '@angular/core';
-import {AuthService} from '../../@core/services/auth.service';
-import {TabSelectionService} from '../../@core/services/tab-selection.service';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {AuthCustomValidators, validationMessagesDE} from './auth.validators';
-import {MyErrorStateMatcher} from '../../@core/models/error-state-matcher.model';
-import {NotificationService} from '../../@core/services/notification.service';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../@core/services/auth.service';
+import { TabSelectionService } from '../../@core/services/tab-selection.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AuthCustomValidators, validationMessagesDE } from './auth.validators';
+import { MyErrorStateMatcher } from '../../@core/models/error-state-matcher.model';
+import { NotificationService } from '../../@core/services/notification.service';
 import route from '../../@core/enums/route.enum';
 
 @Component({
@@ -23,13 +23,13 @@ export class AuthComponent implements OnInit {
   readonly customValidators = new AuthCustomValidators();
   readonly errorMessages = validationMessagesDE();
   readonly matcher = new MyErrorStateMatcher();
+  loginTimeout;
 
   constructor(
     private readonly authService: AuthService,
     private readonly tabSelectionService: TabSelectionService,
     private readonly notificationService: NotificationService,
-  ) {
-  }
+  ) { }
 
   ngOnInit() {
     this.initForm();
@@ -50,10 +50,18 @@ export class AuthComponent implements OnInit {
 
   onAuth() {
     this.tabSelectionService.loadingEvent.next(true);
-    this.authService.authRequest(this.authForm.get('id')['value'], this.authForm.get('pw')['value'])
-      .then(userObj => {
-        if (userObj) {
-          this.authService.setSession(userObj);
+    const id = this.authForm.get('id')['value'];
+    const pw = this.authForm.get('pw')['value'];
+
+    if (id == undefined || id === '' || pw == undefined || pw === '') {
+      this.tabSelectionService.loadingEvent.next(false);
+    } else {
+      if (this.loginTimeout) {
+        clearTimeout(this.loginTimeout);
+      }
+      this.loginTimeout = setTimeout(() => {
+        this.authService.authRequest(id, pw).subscribe(res => {
+          this.authService.setSession(res.json()['userObj']);
           this.notificationService.showNotification(
             'success',
             null,
@@ -61,32 +69,19 @@ export class AuthComponent implements OnInit {
           );
           setTimeout(() => {
             this.tabSelectionService.tabSwitchEvent.next(route.SEARCH);
+            this.tabSelectionService.loadingEvent.next(false);
           }, 250);
-        } else {
+
+        }, err => {
           this.notificationService.showNotification(
             'error',
-            null,
             'login failed!',
+            err['message'] || '',
           );
-        }
-        this.tabSelectionService.loadingEvent.next(false);
-      }).catch(err => {
-      console.error(err['message']);
-      this.notificationService.showNotification(
-        'error',
-        null,
-        err['message'],
-      );
-      this.tabSelectionService.loadingEvent.next(false);
-    });
-  }
-
-  ObjKeys(input) {
-    // Make Object.keys() available to DOM
-    if (input && input !== 'undefined' && typeof input === 'object') {
-      return Object.keys(input);
+          this.tabSelectionService.loadingEvent.next(false);
+        });
+      }, 250);
     }
-    return undefined;
   }
 
   private mailAddressRegex() {
@@ -95,5 +90,13 @@ export class AuthComponent implements OnInit {
     const reMiddle = /(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]{1,})*/;
     const reSuffix = /(?:@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.){2,}[a-z0-9](?:[a-z0-9-]{2,}[a-z0-9])?)?/;
     return new RegExp(rePrefix.source + reMiddle.source + reSuffix.source);
+  }
+
+  ObjKeys(input) {
+    // Make Object.keys() available to DOM
+    if (input && input !== 'undefined' && typeof input === 'object') {
+      return Object.keys(input);
+    }
+    return undefined;
   }
 }
