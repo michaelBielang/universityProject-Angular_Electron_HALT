@@ -20,7 +20,6 @@ import route from '../../@core/enums/route.enum';
 })
 export class SearchComponent implements OnInit {
   searchForm: FormGroup;
-  serverGroups: any = [];
   getFacultiesWithStudysubjects: any = [];
   faculties: any = [];
   filteredfaculties: any = [];
@@ -44,12 +43,6 @@ export class SearchComponent implements OnInit {
   async ngOnInit() {
     this.initForm();
     this.tabSelectionService.loadingEvent.next(true);
-    await this.searchService.getServerGroups()
-      .then(result => {
-        this.serverGroups = result;
-      }).catch(err => {
-        this.errHandling(err);
-      });
     await this.searchService.getFacultiesWithStudysubjects()
       .then(result => {
         this.getFacultiesWithStudysubjects = result;
@@ -79,9 +72,9 @@ export class SearchComponent implements OnInit {
 
   initForm() {
     this.searchForm = new FormGroup({
-      'server': new FormControl(this.searchService.searchObj['server'], []),
       'gender': new FormControl(this.searchService.searchObj['gender'], []),
       'id': new FormControl(this.searchService.searchObj['id'], []),
+      'name': new FormControl(this.searchService.searchObj['name'], []),
       'email': new FormControl(this.searchService.searchObj['email'], []),
       'faculty': new FormControl(this.searchService.searchObj['faculty'], []),
       'subjectordegree': new FormControl(this.searchService.searchObj['subjectordegree'], []),
@@ -95,9 +88,9 @@ export class SearchComponent implements OnInit {
   onSearchBtnClick() {
     this.tabSelectionService.loadingEvent.next(true);
     this.searchService.updateSearchObj({
-      server: this.searchForm.get('server')['value'],
       gender: this.searchForm.get('gender')['value'],
       id: this.searchForm.get('id')['value'],
+      name: this.searchForm.get('name')['value'],
       email: this.searchForm.get('email')['value'],
       faculty: this.searchForm.get('faculty')['value'],
       subjectordegree: this.searchForm.get('subjectordegree')['value']
@@ -153,9 +146,9 @@ export class SearchComponent implements OnInit {
   onHistoryClick(index) {
     const hist = this.searchService.searchHistory[index];
     this.searchService.updateSearchObj({
-      server: hist['server'],
       gender: hist['gender'],
       id: hist['id'],
+      name: hist['name'],
       email: hist['email'],
       faculty: hist['faculty'],
       subjectordegree: hist['subjectordegree']

@@ -6,9 +6,9 @@
 import {Injectable} from '@angular/core';
 
 interface SearchObj {
-  server;
   gender;
   id;
+  name;
   email;
   faculty;
   subjectordegree;
@@ -18,9 +18,9 @@ interface SearchObj {
 export class SearchService {
   searchHistory: SearchObj[] = [];
   searchObj: SearchObj = {
-    server: '',
     gender: 0,
     id: '',
+    name: '',
     email: '',
     faculty: '',
     subjectordegree: ''
@@ -35,21 +35,6 @@ export class SearchService {
 
   updateSearchHistory(histObjs: SearchObj[]) {
     this.searchHistory = histObjs;
-  }
-
-  getServerGroups(): Promise<any> {
-    return new Promise((resolve, reject) => {
-      // return mock data
-      setTimeout(() => {
-        resolve([
-          'HS-Augsburg',
-          'UNI Augsburg',
-          'HS München'
-        ]);
-
-        reject(undefined);
-      }, 250);
-    });
   }
 
   getFacultiesWithStudysubjects(): Promise<any> {
@@ -102,33 +87,33 @@ export class SearchService {
       setTimeout(() => {
         resolve([
           {
-            server: '',
-            gender: 0,
-            id: 'Max Mustermann',
-            email: '',
-            faculty: '',
-            subjectordegree: ''
-          },
-          {
-            server: '',
-            gender: 2,
-            id: 'Mustermann Maria',
-            email: '',
-            faculty: '',
-            subjectordegree: ''
-          },
-          {
-            server: '',
-            gender: 0,
-            id: 'Anna',
-            email: '',
-            faculty: '',
-            subjectordegree: ''
-          },
-          {
-            server: 'HS-Augsburg',
             gender: 0,
             id: '',
+            name: 'Max Mustermann',
+            email: '',
+            faculty: '',
+            subjectordegree: ''
+          },
+          {
+            gender: 2,
+            id: '',
+            name: 'Mustermann Maria',
+            email: '',
+            faculty: '',
+            subjectordegree: ''
+          },
+          {
+            gender: 0,
+            id: 'Anna',
+            name: '',
+            email: '',
+            faculty: '',
+            subjectordegree: ''
+          },
+          {
+            gender: 0,
+            id: '',
+            name: '',
             email: 'anna.mueller@hs-augsburg.de',
             faculty: '',
             subjectordegree: ''
@@ -141,7 +126,7 @@ export class SearchService {
 
   searchRequest(): Promise<any> {
     return new Promise((resolve, reject) => {
-      if (this.searchObj['id'] || this.searchObj['email']) {
+      if (this.searchObj['id'] || this.searchObj['name'] || this.searchObj['email']) {
         // return mock data
         resolve([
           {

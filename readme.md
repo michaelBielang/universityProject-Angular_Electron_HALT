@@ -38,6 +38,7 @@ Users should not need to know long and complicated LDAP commands. This tool ther
   - use latest node version (10.x)
 ```
 npm i -g node-gyp
+npm rebuild node-sass
 npm i
 ```
 - simply run: `npm start`

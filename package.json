@@ -22,6 +22,7 @@
     "copy": "node copy-static.js",
     "clear": "node clear-dist.js",
     "test": "ng test",
+    "db-test": "mocha src/api/datastorage/test/dbInterface_test.js",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
