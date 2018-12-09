@@ -5,7 +5,7 @@
 
 import logger from '../logging/logger';
 
-//alle todo michi
+// alle TODO michi
 export function searchhistory_index(req, res, next) {
   logger.info(`searchhistory_index controler test`);
 
@@ -15,7 +15,7 @@ export function searchhistory_index(req, res, next) {
 }
 
 
-//bestimmte todo
+// bestimmte todo
 export function searchhistory_show(req, res, next) {
   logger.info(`searchhistory_show controler test`);
 
@@ -24,7 +24,7 @@ export function searchhistory_show(req, res, next) {
   });
 }
 
-//todo
+
 export function searchhistory_create(req, res, next) {
   logger.info(`searchhistory_index controler test`);
 

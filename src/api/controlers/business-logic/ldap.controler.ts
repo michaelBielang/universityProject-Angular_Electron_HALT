@@ -56,9 +56,12 @@ class LDAP {
           scope: 'sub'
         };
         client.search(this.ldapOptions()['orgUnit'], opts, (err, res) => {
-          const entries = [];
-          res.on('error', err => {
+          if (err) {
             reject(err);
+          }
+          const entries = [];
+          res.on('error', searchErr => {
+            reject(searchErr);
           });
           res.on('searchEntry', entry => {
             entries.push(entry.object);
@@ -149,6 +152,7 @@ class LDAP {
   }
 
   isEmailAddress(email) {
+    // @ts-ignore
     const regex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
     return regex.test(email);
   }

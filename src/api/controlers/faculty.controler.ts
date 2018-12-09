@@ -5,7 +5,7 @@
 
 import logger from '../logging/logger';
 
-//todo michi
+// TODO michi
 export function faculty_index(req, res, next) {
   logger.info(`faculty_index controler test`);
 

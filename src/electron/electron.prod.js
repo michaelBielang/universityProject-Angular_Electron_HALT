@@ -10,14 +10,11 @@ const {
 const fs = require('fs');
 const url = require('url');
 const {
-  fork
-} = require('child_process');
-const {
+  fork,
   exec
-} = require('sudo-prompt');
-
+} = require('child_process');
+const sudo = require('sudo-prompt').exec;
 const path = require('path');
-const fs = require('fs');
 const logger = require('electron-log');
 logger.transports.file.level = 'info';
 const loggingPath = path.join(__dirname, 'logging');

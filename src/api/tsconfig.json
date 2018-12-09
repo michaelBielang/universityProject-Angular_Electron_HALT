@@ -9,10 +9,10 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "skipLibCheck": true,
-    "allowJs": true,
-    "jsx": "preserve"
+    "allowJs": false
   },
   "include": [
-    "./**/*.ts"
+    "./**/*.ts",
+    "./datastorage/**/*.js"
   ]
 }
