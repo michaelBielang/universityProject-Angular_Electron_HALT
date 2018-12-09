@@ -12,10 +12,9 @@ import ldap from './business-logic/ldap.controler';
 import vpn from './business-logic/vpn.controler';
 
 
-//todo chris
 export async function auth_login(req, res, next) {
-  let userid = req.body['id'].toLowerCase();
-  let pw = req.body['pw'];
+  const userid = req.body['id'].toLowerCase();
+  const pw = req.body['pw'];
   let email;
   let rzKennung;
   if (ldap.isEmailAddress(userid)) {
@@ -32,6 +31,7 @@ export async function auth_login(req, res, next) {
         rzKennung = user['pk_user_id'].toLowerCase();
       }
     }).catch(err => {
+      logger.error(err);
       errHandler.errResponse(res, err.message);
     });
   }
@@ -39,7 +39,7 @@ export async function auth_login(req, res, next) {
   if (rzKennung) {
     vpn.connectHsaVpn({ id: rzKennung, pw: pw }).then(() => {
       ldap.getLdapClient().then(client => {
-        ldap.auth(client, rzKennung, pw).then(async re => {
+        ldap.auth(client, rzKennung, pw).then(async () => {
           let newUserObj;
           if (userObj) {
             await db.dbInterface.dbFunctions.updateUser(email, rzKennung).catch(err => {
@@ -51,11 +51,24 @@ export async function auth_login(req, res, next) {
                 newUserObj = ldapUser['data'][0];
               }
             }).catch(err => {
+              logger.error(err);
               errHandler.errResponse(res, err.message);
             });
           }
 
+
+
           // DEBUG
+          if (!userObj && newUserObj) {
+            await db.dbInterface.dbFunctions.addUser(
+              newUserObj['uid'],
+              newUserObj['givenName'],
+              newUserObj['sn'],
+              newUserObj['mail']).catch(err => {
+              throw new Error(err['message']);
+            });
+          }
+
           console.info('getting User');
           await db.dbInterface.dbFunctions.getUser(email, rzKennung).then(dbUser => {
             userObj = dbUser;
@@ -63,23 +76,25 @@ export async function auth_login(req, res, next) {
             throw new Error(err['message']);
           });
 
-          if (!userObj && newUserObj) {
-            await db.dbInterface.dbFunctions.addUser(newUserObj['uid'], newUserObj['givenName'], newUserObj['sn'], newUserObj['mail']).catch(err => {
-              throw new Error(err['message']);
-            });
-          }
+          // // DEBUG
+          // userObj = {
+          //   id: userid
+          // };
 
           res.status(200).json({
             message: 'Auth successful',
             userObj: userObj,
           });
         }).catch(err => {
+          logger.error(err);
           errHandler.errResponse(res, err['message']);
         });
       }).catch(err => {
+        logger.error(err);
         errHandler.errResponse(res, err['message']);
       });
     }).catch(err => {
+      logger.error(err);
       errHandler.errResponse(res, err['message']);
     });
   } else {

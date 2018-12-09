@@ -11,11 +11,10 @@
 
 /** @noinspection SqlResolve */
 const fs = require('fs');
-const sqlConnection = require('sqlite3').verbose()
-const data = require('./data.js')
-const path = require('path')
-console.log(__dirname)
-const dbPath = path.join(__dirname, 'db/halt.db')
+const sqlConnection = require('sqlite3').verbose();
+const data = require('./data.js');
+const path = require('path');
+const dbPath = path.join(__dirname, 'db/halt.db');
 
 //open database --> uses create/readwrite per default
 let db;

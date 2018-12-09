@@ -8,7 +8,7 @@ import * as os from 'os';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as moment from 'moment';
-import { exec } from 'sudo-prompt';
+import * as sudo from 'sudo-prompt';
 
 class VPN {
   private vpnTimoutThreshold = 10000; // in ms
@@ -24,7 +24,7 @@ class VPN {
         const rotationFileTarget = moment().year() + '-' + moment().month() + '-' + moment().day() + '_' +
           moment().hour() + '.' + moment().minute() + '.' + moment().second() + '_' + this.tmpFileName;
         this.createTmpKeyFile(credentials, rotationFileTarget).then(rotationFileName => {
-            exec('openvpn --config \"' + path.join(this.sourcePath, 'openvpn-hs-augsburg.ovpn') +
+            sudo.exec('openvpn --config \"' + path.join(this.sourcePath, 'openvpn-hs-augsburg.ovpn') +
               '\"' + ' --auth-user-pass \"' + path.join(this.sourcePath, rotationFileTarget) + '\"',
               err => {
                 if (err) {
@@ -82,7 +82,9 @@ class VPN {
           fs.unlinkSync(localTargetPath);
         } else {
           const targetFolderPath = path.dirname(localTargetPath);
-          if (!fs.existsSync(targetFolderPath)) fs.mkdirSync(targetFolderPath);
+          if (!fs.existsSync(targetFolderPath)) {
+            fs.mkdirSync(targetFolderPath);
+          }
         }
         const tmpFileRef = fs.createWriteStream(localTargetPath, { flags: 'a' });
         tmpFileRef.write(credentials['id'] + '\n');
@@ -98,8 +100,8 @@ class VPN {
 
   isInHsaSubnet() {
     const netInterfaces = os.networkInterfaces();
-    for (let ifname of Object.keys(netInterfaces)) {
-      for (let iface of netInterfaces[ifname]) {
+    for (const ifname of Object.keys(netInterfaces)) {
+      for (const iface of netInterfaces[ifname]) {
         if ('IPv4' !== iface.family || iface.internal !== false) {
           // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
           continue;

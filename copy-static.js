@@ -5,15 +5,13 @@
 
 const fs = require('fs');
 const path = require('path');
-const filesToCopy = [
-  {
-    source: 'package.json',
-    target: 'dist/package.json'
-  },{
-      source: 'src/api/controlers/business-logic/vpn-config-files/openvpn-hs-augsburg.ovpn',
-      target: 'vpn-config-files/openvpn-hs-augsburg.ovpn'
-  },
-];
+const filesToCopy = [{
+  source: 'package.json',
+  target: 'dist/package.json'
+}, {
+  source: 'src/api/controlers/business-logic/vpn-config-files/openvpn-hs-augsburg.ovpn',
+  target: 'dist/vpn-config-files/openvpn-hs-augsburg.ovpn'
+}];
 
 for (let entry of filesToCopy) {
   copyFile(path.join(__dirname, entry['source']), path.join(__dirname, entry['target']));
