@@ -15,6 +15,7 @@ const request = require('request')
 const expect = require('chai').expect
 const createTableStatements = require('../data')
 
+/*
 describe('test get subjects', function () {
   let db
   before(function () {
@@ -62,31 +63,11 @@ describe('test get history present', function () {
         return db.dbFunctions.getHistory(1)
       })
       .then(result => {
-        console.log(result)
         expect(result.includes('informatik')).to.equal(true)
       }).then(resolve => {
-        function dropNow () {
-          return db.dbFunctions.dropAll()
-        }
-
-        awaitDrop()
-
-        async function awaitDrop () {
-          await dropNow()
-
-          return Promise.resolve()
-        }
+        return db.dbFunctions.dropAll()
       }).catch(reject => {
-          function dropNow () {
-            return db.dbFunctions.dropAll()
-          }
-
-          awaitDrop()
-
-          async function awaitDrop () {
-            await dropNow()
-            resolve1()
-          }
+          return db.dbFunctions.dropAll()
         }
       )
   })
@@ -113,37 +94,43 @@ describe('test get history not present', function () {
       .then(result => {
         expect(result.includes('informatik')).to.equal(false)
       }).then(resolve => {
-        function dropNow () {
+        return db.dbFunctions.dropAll()
+      }).catch(reject => {
           return db.dbFunctions.dropAll()
         }
-
-        awaitDrop()
-
-        async function awaitDrop () {
-          await dropNow()
-
-          return Promise.resolve()
+      )
+  })
+})
+*/
+// todo expect also in catch block
+describe('test update user', function () {
+  const db = require('../dbInterface')
+  it('test history should be completed', function () {
+    return db.dbFunctions.dropAll()
+      .then(onResolve => {
+          return db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
         }
+      )
+      .then(() => {
+        return db.dbFunctions.addUser(1, 'firstName', 'lastName', 'email')
+      })
+      .then(resolve => {
+        return db.dbFunctions.updateUser('email')
+      })
+      .then(result => {
+        expect(true).to.equal(true)
+      }).then(resolve => {
+        return db.dbFunctions.dropAll()
       }).catch(reject => {
-          function dropNow () {
-            return db.dbFunctions.dropAll()
-          }
-
-          awaitDrop()
-
-          async function awaitDrop () {
-            await dropNow()
-            resolve1()
-          }
+          // todo im catch block muss die Bedingung auch jedes mal rein
+          expect(true).to.equal(true)
+          return db.dbFunctions.dropAll()
         }
       )
   })
 })
 
-describe('test update user', function () {
-
-})
-
+/*
 describe('test remove last history entry', function () {
 
 })
@@ -220,8 +207,6 @@ describe('test user present false', function () {
       }).then(resolve => {
         return db.dbFunctions.userPresent('2')
       }).then(resolve => {
-
-        console.log('result: ' + resolve)
         expect(resolve.toString()).to.eql('false')
       }).then(resolve => {
         return db.dbFunctions.dropAll()
@@ -230,4 +215,4 @@ describe('test user present false', function () {
   )
 })
 
-
+*/

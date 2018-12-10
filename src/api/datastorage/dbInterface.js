@@ -95,14 +95,18 @@ function init_db () {
 }
 
 function updateUser (email, rzKennung) {
+  let date = dateManager.format(new Date(), 'YYYY-MM-DD HH:mm:ss')
   let statement
+  let argument
   if (email) {
-    statement = 'UPDATE user SET last_login = datetime(\'now\') WHERE e_mail == ' + email
+    statement = 'UPDATE user SET last_action = ? WHERE e_mail = ?'
+    argument = email
   } else {
-    statement = 'UPDATE user SET last_login = datetime(\'now\') WHERE pk_user_id == ' + rzKennung
+    statement = 'UPDATE user SET last_action = ? WHERE pk_user_id = ?'
+    argument = rzKennung
   }
   return new Promise((resolve, reject) => {
-    db.run(statement, err => {
+    db.run(statement, [date, argument], err => {
       if (err) {
         reject(err)
         return
