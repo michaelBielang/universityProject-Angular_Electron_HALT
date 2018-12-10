@@ -37,7 +37,7 @@ export async function auth_login(req, res, next) {
   }
 
   if (rzKennung) {
-    vpn.connectHsaVpn({ id: rzKennung, pw: pw }).then(() => {
+    vpn.connectHsaVpn({id: rzKennung, pw: pw}).then(() => {
       ldap.getLdapClient().then(client => {
         ldap.auth(client, rzKennung, pw).then(async () => {
           let newUserObj;
@@ -55,7 +55,6 @@ export async function auth_login(req, res, next) {
               errHandler.errResponse(res, err.message);
             });
           }
-
 
 
           // DEBUG
