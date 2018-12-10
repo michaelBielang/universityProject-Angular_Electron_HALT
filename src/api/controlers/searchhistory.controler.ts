@@ -4,18 +4,25 @@
  */
 
 import logger from '../logging/logger';
+import * as db from '../datastorage';
 
-//alle todo michi
+// alle todo michi
 export function searchhistory_index(req, res, next) {
   logger.info(`searchhistory_index controler test`);
-
-  res.status(200).json({
-    message: 'searchhistory_index successful',
-  });
+  db.dbInterface.dbFunctions.getHistory(req.params['userId'])
+    .then(resolve => {
+      res.status(200).json({
+        message: 'searchhistory_index successful',
+        historyObj: resolve
+      });
+    })
+    .catch(err => {
+      logger.info(err);
+    })
+  ;
 }
 
-
-//bestimmte todo
+// bestimmte todo
 export function searchhistory_show(req, res, next) {
   logger.info(`searchhistory_show controler test`);
 
@@ -24,11 +31,6 @@ export function searchhistory_show(req, res, next) {
   });
 }
 
-//todo
 export function searchhistory_create(req, res, next) {
-  logger.info(`searchhistory_index controler test`);
-
-  res.status(200).json({
-    message: 'searchhistory_create successful',
-  });
+  // todo
 }

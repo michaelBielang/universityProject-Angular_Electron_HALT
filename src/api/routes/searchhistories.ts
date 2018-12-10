@@ -4,6 +4,7 @@
  */
 
 import * as express from 'express';
+import * as db from '../datastorage';
 
 import {
   searchhistory_index,

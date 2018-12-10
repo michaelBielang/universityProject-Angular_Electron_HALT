@@ -213,11 +213,11 @@ function showTableContent (table) {
   })
 }
 
-function addHistory (user_id, searched_rz_nr, name, e_mail, faculty, subject, server_group, gender) {
+function addHistory (user_id, searched_rz_nr, name, e_mail, faculty, subject, gender) {
   return new Promise((resolve, reject) => {
       // noinspection SqlResolve
-      const statement = 'INSERT INTO history(fk_user_id, searched_rz_nr, name, e_mail, faculty, subject, server_group, gender) VALUES (?,? ,? ,?,?,?,?,?)'
-      db.run(statement, [user_id, searched_rz_nr, name, e_mail, faculty, subject, server_group, gender], err => {
+      const statement = 'INSERT INTO history(fk_user_id, searched_rz_nr, name, e_mail, faculty, subject, gender) VALUES (?,? ,? ,?,?,?,?,)'
+      db.run(statement, [user_id, searched_rz_nr, name, e_mail, faculty, subject, gender], err => {
         if (err) {
           console.log('ERROR IS:')
           console.log(err)
