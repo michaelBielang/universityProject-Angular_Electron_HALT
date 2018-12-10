@@ -1,9 +1,9 @@
 # Hochschul Active Directory Lookup Tool (HALT)
 
 ## Project members
-- Bichlmeier Christoph [Master]: UI, Electron, Angular, LDAP, Auth
-- Bielang Michael [Bachelor]: DB, ORM, API
-- Schmid Steffen [Bachelor]: Testing, VPN
+- Bichlmeier Christoph [Master]: UI (Angular), Electron (process management), Auth, Packaging and Building (Webpack, NSIS)
+- Bielang Michael [Bachelor]: DB, DB-Interface, API
+- Schmid Steffen [Bachelor]: Testing, VPN, LDAP, Reporting
 
 
 ## Project description
@@ -26,16 +26,33 @@ Users should not need to know long and complicated LDAP commands. This tool ther
 ## Used collaboration tools
 - GitLab tickets
 - draw.io (broken, sockets do no longer work)
-- google docs
-- discord
-- teamspeak
-- teamviewer
-- whatsapp
+- Google Docs
+- Discord
+- Teamspeak 3
+- TeamViewer
+- WhatsApp
 
 
 ## How to start this tool, How to use it
-- simply run: `npm start`
-- ...
+- prepare dev env:
+  - use latest node version (10.x)
+```
+npm i -g node-gyp
+npm rebuild node-sass
+npm i
+```
+- For development simply run `npm start`
+-	For development api server only run: `npm run server`
+-	To build production and packaging run: `npm run package:all`
+- Build a win10 installer:
+```
+npm run package:win
+```
+  - then install NSIS
+  - install ZipDLL plugin (../NSIS/Plugins/x86-ansi/): https://nsis.sourceforge.io/ZipDLL_plug-in
+  - install AccessControl plugin: https://nsis.sourceforge.io/AccessControl_plug-in
+  - open .nsi script file with NSIS and build it
+
 
 
 ## RoadMap
@@ -48,31 +65,35 @@ Users should not need to know long and complicated LDAP commands. This tool ther
 - mockup of frontend
 - creation of user journey/user stories
 - angular-cli with electron project init
-- ...
+- for further information see tickets from milestone: %"Week 1 (27.11.)"
 
 ### week 2
-- ...
+- create route model
+- create express server route and controler boilerplate code
+- writing db Interface
+- compilation of study subjects at HSA
+- research of electron possibilities
+- create db model
+- for further information see tickets from milestone: %"Week 2 (04.12.)"
 
 ### week 3
-- ...
+- see tickets from milestone: %"Week 3 (11.12.)"
 
 ### week 4
-- ...
+- see tickets from milestone: %"Week 4 (18.12.)"
 
 ### week 5
-- ...
+- see tickets from milestone: %"Week 5 (25.12.)"
 
 ### week 6
-- ...
+- see tickets from milestone: %"Week 6 (01.01.)"
 
 ### week 7
-- ...
+- see tickets from milestone: %"Week 7 (08.01.)"
 
 ### week 8
-- ...
+- see tickets from milestone: %"Week 8 (15.01.)"
 - presentation of application/demo
-
-
 
 
 
