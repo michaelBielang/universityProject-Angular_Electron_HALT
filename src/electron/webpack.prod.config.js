@@ -15,7 +15,7 @@ const commonConfig = {
     filename: 'halt.js'
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
+    new webpack.HotModuleReplacementPlugin()
   ],
   module: {
     rules: [{

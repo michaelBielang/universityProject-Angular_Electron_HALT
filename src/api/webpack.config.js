@@ -14,35 +14,34 @@ const commonConfig = {
     path: path.resolve(__dirname, '../../dist'),
     filename: 'server.js'
   },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin()
+  ],
   module: {
     rules: [{
-        test: /\.ts$/,
-        enforce: 'pre',
-        loader: 'tslint-loader',
-        options: {
-          typeCheck: true,
-          emitErrors: true
-        }
-      },
-      {
-        test: /\.ts?$/,
-        loader: 'ts-loader'
+      test: /\.ts$/,
+      enforce: 'pre',
+      loader: 'tslint-loader',
+      options: {
+        typeCheck: true,
+        sourceMap: true,
+        emitErrors: true
       }
-    ]
+    }, {
+      test: /\.ts?$/,
+      loader: 'ts-loader'
+    }]
   },
   node: {
     __dirname: false,
     __filename: false
   },
   resolve: {
-    extensions: ['.js', '.ts', '.tsx', '.jsx', '.json'],
+    extensions: ['.mjs', '.js', '.ts', '.tsx', '.jsx', '.json'],
     modules: [
       'node_modules',
     ],
   },
-  plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-  ],
   stats: {
     all: false,
     modules: true,
