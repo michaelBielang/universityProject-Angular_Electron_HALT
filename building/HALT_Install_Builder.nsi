@@ -4,10 +4,11 @@
  */
 
 ; The name of the installer
-Name "HALT"
-
-; The file to write
+!define APPNAME "HALT"
+name "${APPNAME}"
+caption "$(^Name)"
 OutFile "Install_HALT.exe"
+ShowInstDetails show
 
 ; The default installation directory
 InstallDir $PROGRAMFILES64\HALT
@@ -24,11 +25,14 @@ RequestExecutionLevel admin
 
 ; Dependencies to install
 Section "Prerequisites"
-  MessageBox MB_YESNO "Install OpenVpn?"
-    File ".\Prerequisites\openvpn-install-2.4.6-I602.exe"
-    ExecWait "$INSTDIR\Prerequisites\openvpn-install-2.4.6-I602.exe"
-    Goto endOpenVpn
-  endOpenVpn:
+  StrCpy $INSTDIR "$PROGRAMFILES64\HALT"
+  ZipDLL::extractall "HALT.zip" "$INSTDIR"
+
+  MessageBox MB_YESNO "Install OpenVpn?" IDYES true IDNO false
+    true:
+      ExecWait "$INSTDIR\resources\app\Prerequisites\openvpn-install-2.4.6-I602.exe"
+    false:
+      DetailPrint "Does not install OpenVpn."
 SectionEnd
 
 
@@ -37,8 +41,6 @@ SectionEnd
 Section "HALT (required)"
   ; RO = read-only, meaning the user won't be able to change its state
   SectionIn RO
-
-  ZipDLL::extractall "HALT.zip" "$INSTDIR"
 
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
@@ -56,21 +58,24 @@ Section "HALT (required)"
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\HALT" "NoRepair" 1
   WriteUninstaller "uninstall.exe"
 
-  ; AccessControl::GrantOnFile "$INSTDIR" "(BU)" "FullAccess"
+  ; (S-1-5-32-545) = Group Users
   AccessControl::GrantOnFile  "$INSTDIR" "(S-1-5-32-545)" "FullAccess"
 SectionEnd
 
 
+
 ; Optional section (can be disabled by the user)
-Section "Create Shortcuts"
-  StrCpy $APPICON "building\Icons\haltv2_icon.ico"
+Section "Create Shortcuts" SecShortCutCreate
+  StrCpy $APPICON "\resources\app\Icons\haltv2_icon.ico"
   CreateDirectory "$SMPROGRAMS\HALT"
-  CreateShortcut "$SMPROGRAMS\HALT\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR$APPICON" 0
+  CreateShortcut "$SMPROGRAMS\HALT\Uninstall.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR$APPICON" 0
   ; CreateShortcut "$SMPROGRAMS\HALT\HALT_InstallScript.lnk" "$INSTDIR\HALT_InstallScript.nsi" "" "$INSTDIR\building\haltv2_icon.ico" 0
   CreateShortcut "$SMPROGRAMS\HALT\HALT.lnk" "$INSTDIR\HALT.exe" "" "$INSTDIR$APPICON" 0
   CreateShortcut "$DESKTOP\HALT.lnk" "$INSTDIR\HALT.exe" "" "$INSTDIR$APPICON" 0
+
+  MessageBox MB_OK "When used on your own PC (not on office machines of HSA_digit) you should set either the shortcut or the executable to require admin rights."
 SectionEnd
-;--------------------------------
+
 
 
 ; Uninstaller

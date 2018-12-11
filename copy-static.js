@@ -11,6 +11,12 @@ const filesToCopy = [{
 }, {
   source: 'src/api/controlers/business-logic/vpn-config-files/openvpn-hs-augsburg.ovpn',
   target: 'dist/vpn-config-files/openvpn-hs-augsburg.ovpn'
+}, {
+  source: 'building/Prerequisites/openvpn-install-2.4.6-I602.exe',
+  target: 'dist/Prerequisites/openvpn-install-2.4.6-I602.exe'
+}, {
+  source: 'building/Icons/haltv2_icon.ico',
+  target: 'dist/Icons/haltv2_icon.ico'
 }];
 
 for (let entry of filesToCopy) {
