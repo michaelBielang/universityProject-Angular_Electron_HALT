@@ -10,7 +10,7 @@ Name "HALT"
 OutFile "Install_HALT.exe"
 
 ; The default installation directory
-InstallDir $PROGRAMFILES\HALT
+InstallDir $PROGRAMFILES64\HALT
 
 Var APPICON
 
