@@ -24,15 +24,30 @@ RequestExecutionLevel admin
 
 
 ; Dependencies to install
-Section "Prerequisites"
+Section "Dependencies"
+  ; Set output path to the installation directory.
   StrCpy $INSTDIR "$PROGRAMFILES64\HALT"
-  ZipDLL::extractall "HALT.zip" "$INSTDIR"
+  SetOutPath $INSTDIR
 
-  MessageBox MB_YESNO "Install OpenVpn?" IDYES true IDNO false
-    true:
+  ; Include this files
+  File "HALT.zip"
+  File "HALT_Install_Builder.nsi"
+
+  ZipDLL::extractall "$INSTDIR\HALT.zip" "$INSTDIR"
+
+  MessageBox MB_YESNO "Install OpenVpn?" IDYES openVpnTrue IDNO openVpnFalse
+    openVpnTrue:
       ExecWait "$INSTDIR\resources\app\Prerequisites\openvpn-install-2.4.6-I602.exe"
-    false:
+    openVpnFalse:
       DetailPrint "Does not install OpenVpn."
+
+  MessageBox MB_YESNO "Install NodeJs?" IDYES nodeJsTrue IDNO nodeJsFalse
+    nodeJsTrue:
+      ExecWait '"$SYSDIR\msiExec" /i "$INSTDIR\resources\app\Prerequisites\node-v10.14.1-x64.msi"'
+    nodeJsFalse:
+      DetailPrint "Does not install NodeJs."
+
+  ExecWait '"$INSTDIR\resources\app\Prerequisites\npm-install.bat" "$INSTDIR\resources\app"'
 SectionEnd
 
 
@@ -41,12 +56,6 @@ SectionEnd
 Section "HALT (required)"
   ; RO = read-only, meaning the user won't be able to change its state
   SectionIn RO
-
-  ; Set output path to the installation directory.
-  SetOutPath $INSTDIR
-
-  ; Use this file
-  File "HALT_Install_Builder.nsi"
 
   ; Write the installation path into the registry
   WriteRegStr HKLM SOFTWARE\HALT "Install_Dir" "$INSTDIR"

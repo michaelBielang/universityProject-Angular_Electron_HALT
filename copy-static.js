@@ -15,6 +15,12 @@ const filesToCopy = [{
   source: 'building/Prerequisites/openvpn-install-2.4.6-I602.exe',
   target: 'dist/Prerequisites/openvpn-install-2.4.6-I602.exe'
 }, {
+  source: 'building/Prerequisites/node-v10.14.1-x64.msi',
+  target: 'dist/Prerequisites/node-v10.14.1-x64.msi'
+}, {
+  source: 'building/Prerequisites/npm-install.bat',
+  target: 'dist/Prerequisites/npm-install.bat'
+}, {
   source: 'building/Icons/haltv2_icon.ico',
   target: 'dist/Icons/haltv2_icon.ico'
 }];
