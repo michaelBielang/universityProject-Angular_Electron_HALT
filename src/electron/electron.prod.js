@@ -10,7 +10,7 @@ const {
 const fs = require('fs');
 const url = require('url');
 const {
-  fork,
+  spawn,
   exec
 } = require('child_process');
 const sudo = require('sudo-prompt').exec;
@@ -57,30 +57,25 @@ function createWindow() {
 function createServer() {
   logger.info('starting server child process...');
 
-
-  // TODO
-  logger.error('Test Error!');
-
-
   if (!server) {
-    // see https://dzone.com/articles/understanding-execfile-spawn-exec-and-fork-in-node
-    // https://stackoverflow.com/questions/33478696/how-to-pass-messages-as-well-as-stdout-from-child-to-parent-in-node-js-child-pro
-    server = fork(path.join(appDir, 'server.js'), [], { silent: true });
+    server = spawn('node', [path.join(appDir, 'server/server.js')]);
 
     server.on('error', err => {
       logger.error('api server: ', err);
     });
 
-    server.on('message', data => {
-      logger.error('api server message: ', data.toString('utf8'));
-    });
-
     server.stdout.on('data', data => {
-      logger.error('api server stdout: ', data.toString('utf8'));
+      logger.info('api server stdout: ', data.toString('utf8'));
     });
 
     server.stderr.on('data', data => {
       logger.error('api server stderr: ', data.toString('utf8'));
+    });
+
+    server.on('close', code => {
+      if (code !== 0) {
+        logger.error('api server exited with code: ', code);
+      }
     });
   }
 }
@@ -102,10 +97,13 @@ app.on('window-all-closed', () => {
     }
   }).catch(err => {
     logger.error(err);
+    if (process.platform !== 'darwin') {
+      app.quit();
+    }
   });
 });
 
-function cleanUpAndClose() {
+async function cleanUpAndClose() {
   const tmpFileName = 'tmp.key';
   const folderTarget = path.join(appDir, 'vpn-config-files');
 
@@ -116,37 +114,72 @@ function cleanUpAndClose() {
         try {
           fs.unlinkSync(file);
         } catch (e) {
-          // logger.info(e);
+          logger.error(e);
         }
       }
     });
   }
 
-  return new Promise((resolve, reject) => {
+  await new Promise((resolve, reject) => {
     checkIfOpenVpnIsRunning('openvpn').then(isRunning => {
       if (isRunning) {
-        if (process.platform.indexOf('win') !== -1) {
-          sudo('taskkill /im openvpn.exe /f /t', {
-            name: 'openvpnkill'
-          }, err => {
-            if (err) {
-              reject(err);
-            }
-            resolve();
-          });
-        } else {
-          sudo('pkill \"openvpn\"', {
-            name: 'openvpnkill'
-          }, err => {
-            if (err) {
-              reject(err);
-            }
-            resolve();
-          });
-        }
+        killProcesses('openvpn').then(msg => {
+          resolve(msg);
+        }).catch(err => {
+          reject(err);
+        });
+      } else {
+        resolve();
       }
     }).catch(err => {
       reject(err);
+    });
+  });
+
+  await new Promise((resolve, reject) => {
+    checkIfOpenVpnIsRunning('HALT').then(isRunning => {
+      if (isRunning) {
+        killProcesses('HALT').then(msg => {
+          resolve(msg);
+        }).catch(err => {
+          reject(err);
+        });
+      } else {
+        resolve();
+      }
+    }).catch(err => {
+      reject(err);
+    });
+  });
+
+  return;
+}
+
+function killProcesses(processName) {
+  return new Promise((resolve, reject) => {
+    const killMsg = 'killed all ' + processName + ' processes';
+    const killProcessName = 'haltcleanupkill';
+    let cmd = 'pkill \"' + processName + '\"';
+    if (process.platform.indexOf('win') !== -1) {
+      cmd = 'taskkill /im ' + processName + '.exe /f /t';
+    }
+    exec(cmd, {
+      name: killProcessName
+    }, err => {
+      if (err) {
+        logger.error('Elevating child process rights due to error...');
+        sudo(cmd, {
+          name: killProcessName
+        }, err => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(killMsg);
+          }
+        });
+      } else {
+        resolve(killMsg);
+      }
     });
   });
 }

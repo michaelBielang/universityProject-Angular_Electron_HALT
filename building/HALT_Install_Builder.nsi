@@ -47,6 +47,8 @@ Section "Dependencies"
     nodeJsFalse:
       DetailPrint "Does not install NodeJs."
 
+  ExecWait "$INSTDIR\resources\app\Prerequisites\npm-node-gyp-install.bat"
+
   ExecWait '"$INSTDIR\resources\app\Prerequisites\npm-install.bat" "$INSTDIR\resources\app"'
 SectionEnd
 

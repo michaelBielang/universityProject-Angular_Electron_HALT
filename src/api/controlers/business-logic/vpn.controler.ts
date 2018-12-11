@@ -24,40 +24,42 @@ class VPN {
         const rotationFileTarget = moment().year() + '-' + moment().month() + '-' + moment().day() + '_' +
           moment().hour() + '.' + moment().minute() + '.' + moment().second() + '_' + this.tmpFileName;
         this.createTmpKeyFile(credentials, rotationFileTarget).then(rotationFileName => {
-            sudo.exec('openvpn --config \"' + path.join(this.sourcePath, 'openvpn-hs-augsburg.ovpn') +
-              '\"' + ' --auth-user-pass \"' + path.join(this.sourcePath, rotationFileTarget) + '\"',
-              err => {
-                if (err) {
-                  logger.error(err);
-                  reject({
-                    message: 'openVPN failed to connect: '
-                  });
-                }
+          const cmd = 'openvpn --config \"' + path.join(this.sourcePath, 'openvpn-hs-augsburg.ovpn') +
+            '\"' + ' --auth-user-pass \"' + path.join(this.sourcePath, rotationFileTarget) + '\"';
+          sudo.exec(cmd, {
+            name: 'elevatedopenvpn'
+          }, err => {
+            if (err) {
+              logger.error(err);
+              reject({
+                message: 'openVPN failed to connect: '
               });
-
-            let timeSum = 0;
-            const testTimer = setInterval(() => {
-              if (timeSum >= this.vpnTimoutThreshold) {
-                this.removeTmpKeyFile();
-                clearInterval(testTimer);
-                logger.error('vpn connection timeout');
-                reject({
-                  message: 'vpn connection timeout'
-                });
-              }
-              if (this.isInHsaSubnet()) {
-                this.removeTmpKeyFile(rotationFileName);
-                clearInterval(testTimer);
-                resolve('Connection to HSA VPN established');
-              }
-              timeSum += this.checkIntervalTime;
-            }, this.checkIntervalTime);
-          }).catch(err => {
-            logger.error(err);
-            reject({
-              message: 'connectHsaVpn tmp.key creation failed'
-            });
+            }
           });
+
+          let timeSum = 0;
+          const testTimer = setInterval(() => {
+            if (timeSum >= this.vpnTimoutThreshold) {
+              this.removeTmpKeyFile();
+              clearInterval(testTimer);
+              logger.error('vpn connection timeout');
+              reject({
+                message: 'vpn connection timeout'
+              });
+            }
+            if (this.isInHsaSubnet()) {
+              this.removeTmpKeyFile(rotationFileName);
+              clearInterval(testTimer);
+              resolve('Connection to HSA VPN established');
+            }
+            timeSum += this.checkIntervalTime;
+          }, this.checkIntervalTime);
+        }).catch(err => {
+          logger.error(err);
+          reject({
+            message: 'connectHsaVpn tmp.key creation failed'
+          });
+        });
       } else {
         resolve('Is already in correct subnet');
       }
@@ -68,8 +70,12 @@ class VPN {
     return new Promise((resolve, reject) => {
       const localTargetPath = path.join(this.sourcePath, (rotationFileName ? rotationFileName : this.tmpFileName));
       if (fs.existsSync(localTargetPath)) {
-        fs.unlinkSync(localTargetPath);
-        resolve();
+        try {
+          fs.unlinkSync(localTargetPath);
+          resolve();
+        } catch (e) {
+          reject(e);
+        }
       }
     });
   }
@@ -107,7 +113,8 @@ class VPN {
           continue;
         }
         // 141.82. is the eduroam and vpn class B subnet of HSA
-        if (iface.address.match(/^141\.\d\.\d\.\d/)) {
+        if (iface.address.match(/^141\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/)) {
+          logger.error('is in HSA subnet!');
           return true;
         }
       }

@@ -3,8 +3,9 @@
   "compilerOptions": {
     "target": "es6",
     "module": "commonJs",
-    "baseUrl": ".",
+    "outDir": "../../dist/server",
     "noImplicitAny": false,
-    "sourceMap": false
+    "sourceMap": false,
+    "allowJs": true
   }
 }
