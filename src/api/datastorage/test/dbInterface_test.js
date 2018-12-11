@@ -103,7 +103,7 @@ describe('test get history not present', function () {
 })
 */
 // todo expect also in catch block
-describe('test update user', function () {
+/*describe('test update user', function () {
   const db = require('../dbInterface')
   it('test history should be completed', function () {
     return db.dbFunctions.dropAll()
@@ -128,13 +128,96 @@ describe('test update user', function () {
         }
       )
   })
-})
+})*/
+
+/*describe('test remove last history entry', function () {
+  const db = require('../dbInterface')
+
+  before(async function () {
+    await db.dbFunctions.initDbCon()
+    await db.dbFunctions.dropAll()
+  })
+
+  it('test history should complete', async function () {
+
+    this.timeout(10000)
+    await db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
+    await db.dbFunctions.createTable(createTableStatements.createTableStatements.history)
+    await db.dbFunctions.addUser(1, 'firstName', 'lastName', 'email')
+    await db.dbFunctions.addHistory(1, 2, 'firstName', 'lastName', 'email', 'toBeDeleted', 'toBeDeleted', 'hsa', 'm')
+    await new Promise(resolve => setTimeout(resolve, 1500))
+    await db.dbFunctions.addHistory(1, 2, 'firstName', 'lastName', 'email', 'NoDelete', 'NoDelete', 'hsa', 'm')
+    await new Promise(resolve => setTimeout(resolve, 1500))
+    await db.dbFunctions.addHistory(1, 2, 'firstName', 'lastName', 'email', 'NoDelete', 'NoDelete', 'hsa', 'm')
+    await db.dbFunctions.deleteLastHistoryEntry(1)
+    await db.dbFunctions.getHistory(1).then(resolve => {
+      expect(JSON.stringify(resolve).includes('NoDelete')).to.equal(true)
+    })
+  })
+
+  after(async function () {
+    await db.dbFunctions.dropAll()
+  })
+})*/
+
+/*describe('test remove last history entry', function () {
+  const db = require('../dbInterface')
+  it('test history should be completed', function () {
+    this.timeout(10000)
+    // todo asynch await probiere
+    return db.dbFunctions.dropAll()
+      .then(onResolve => {
+          return db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
+        }
+      )
+      .then(resolve => {
+        db.dbFunctions.createTable(createTableStatements.createTableStatements.history)
+      })
+      .then(() => {
+        return db.dbFunctions.addUser(1, 'firstName', 'lastName', 'email')
+      })
+      .then(() => {
+        return db.dbFunctions.addHistory(1, 2, 'firstName', 'lastName', 'email', 'toBeDeleted', 'toBeDeleted', 'hsa', 'm')
+      })
+      .then(resolve => {
+        console.log('timeout start')
+        return new Promise(resolve => {
+          setTimeout(resolve, 2000)
+        })
+      })
+      .then(() => {
+        console.log('timout end')
+        return db.dbFunctions.addHistory(1, 2, 'firstName', 'lastName', 'email', 'NoDelete', 'NoDelete', 'hsa', 'm')
+      })
+      .then(resolve => {
+        console.log('timeout start')
+        return new Promise(resolve => {
+          setTimeout(resolve, 2000)
+        })
+      })
+      .then(() => {
+        console.log('timout end')
+        return db.dbFunctions.addHistory(1, 2, 'firstName', 'lastName', 'email', 'NoDelete', 'NoDelete', 'hsa', 'm')
+      })
+      .then(resolve => {
+        return db.dbFunctions.deleteLastHistoryEntry(1)
+      })
+      .then(() => db.dbFunctions.getHistory(1))
+      .then(result => {
+        console.log('result check')
+        console.log(result)
+        expect(JSON.stringify(result).includes('NoDelete')).to.equal(true)
+      }).then(resolve => {
+        return db.dbFunctions.dropAll()
+      }).catch(reject => {
+          expect(false).to.equal(true)
+          return db.dbFunctions.dropAll()
+        }
+      )
+  })
+})*/
 
 /*
-describe('test remove last history entry', function () {
-
-})
-
 describe('test clear history', function () {
 
 })

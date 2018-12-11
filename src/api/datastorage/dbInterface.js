@@ -18,13 +18,20 @@ const dateManager = require('date-and-time')
 const dbPath = path.join(__dirname, 'db/halt.db')
 
 //open database --> uses create/readwrite per default
+
 let db
-getDbConnection().then(connection => {
-  db = connection
-  //init_db()
-}).catch(err => {
-  console.error(err)
-})
+
+function initDbCon () {
+  return new Promise((resolve, reject) => {
+    getDbConnection().then(connection => {
+      db = connection
+      resolve(db)
+      //init_db() todo
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}
 
 function getDbConnection () {
   const targetPath = path.dirname(dbPath)
@@ -47,6 +54,7 @@ function getDbConnection () {
 //const logger = require('../logging/logger.js')
 
 exports.dbFunctions = {
+  initDbCon: initDbCon,
   updateUser: updateUser,
   getUser: getUser,
   userPresent: userPresent,
@@ -59,7 +67,7 @@ exports.dbFunctions = {
   showTableContent: showTableContent,
   addHistory: addHistory,
   clearHistory: clearHistory,
-  removeLastHistoryEntry: removeLastHistoryEntry,
+  deleteLastHistoryEntry: deleteLastHistoryEntry,
   getHistory: getHistory,
   getFaculties: getFaculties,
   getSubjects: getSubjects
@@ -187,10 +195,15 @@ function dropTable (table) {
   })
 }
 
+/**
+ *
+ * @returns {Promise<any[]>}
+ */
 function dropAll () {
   return Promise.all(Object.keys(data.createTableStatements).map(tableName => {
+    // return another promise which always resolves to ensure that Promise all works with all tableNames!
     return new Promise(((re) => {
-      dropTable(tableName).then(resolve => {
+      dropTable(tableName).then(() => {
         re()
       }, reject => {
         re()
@@ -238,6 +251,7 @@ function showTableContent (table) {
   })
 }
 
+//todo server group raus
 function addHistory (user_id, searched_rz_nr, name, e_mail, faculty, subject, server_group, gender) {
   return new Promise((resolve, reject) => {
     // noinspection SqlResolve
@@ -248,6 +262,7 @@ function addHistory (user_id, searched_rz_nr, name, e_mail, faculty, subject, se
         return
       }
       resolve()
+      //resolve()
     })
   })
 }
@@ -266,12 +281,13 @@ function clearHistory () {
   })
 }
 
-function removeLastHistoryEntry () {
+function deleteLastHistoryEntry () {
   // noinspection SqlResolve
-  const statement = 'DELETE FROM history WHERE pk_history_id IN (SELECT pk_history_id FROM history ORDER BY pk_history_id ASC LIMIT 1)'
+  const statement = 'DELETE FROM history WHERE date_entry IN (SELECT date_entry FROM history ORDER BY date_entry ASC LIMIT 1)'
   return new Promise((resolve, reject) => {
     db.run(statement, err => {
       if (err) {
+        console.log('Error: \n' + err)
         reject(err)
         return
       }
@@ -289,7 +305,7 @@ function getHistory (user_id) {
         reject(err)
         return
       }
-      resolve(JSON.stringify(rows))
+      resolve(rows)
     })
   })
 }
