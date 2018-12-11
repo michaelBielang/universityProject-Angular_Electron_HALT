@@ -24,6 +24,8 @@ RequestExecutionLevel admin
 
 ; Dependencies to install
 Section "Prerequisites"
+  ZipDLL::extractall "HALT.zip" "$INSTDIR"
+
   MessageBox MB_YESNO "Install OpenVpn?"
     File ".\Prerequisites\openvpn-install-2.4.6-I602.exe"
     ExecWait "$INSTDIR\Prerequisites\openvpn-install-2.4.6-I602.exe"
@@ -37,8 +39,6 @@ SectionEnd
 Section "HALT (required)"
   ; RO = read-only, meaning the user won't be able to change its state
   SectionIn RO
-
-  ZipDLL::extractall "HALT.zip" "$INSTDIR"
 
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
@@ -63,7 +63,7 @@ SectionEnd
 
 ; Optional section (can be disabled by the user)
 Section "Create Shortcuts"
-  StrCpy $APPICON "building\Icons\haltv2_icon.ico"
+  StrCpy $APPICON "$INSTDIR\Icons\haltv2_icon.ico"
   CreateDirectory "$SMPROGRAMS\HALT"
   CreateShortcut "$SMPROGRAMS\HALT\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR$APPICON" 0
   ; CreateShortcut "$SMPROGRAMS\HALT\HALT_InstallScript.lnk" "$INSTDIR\HALT_InstallScript.nsi" "" "$INSTDIR\building\haltv2_icon.ico" 0
