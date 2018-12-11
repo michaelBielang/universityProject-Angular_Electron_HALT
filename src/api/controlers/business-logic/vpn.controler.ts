@@ -107,7 +107,7 @@ class VPN {
           continue;
         }
         // 141.82. is the eduroam and vpn class B subnet of HSA
-        if (iface.address.match(/^141\.82\.\d\.\d/)) {
+        if (iface.address.match(/^141\.\d\.\d\.\d/)) {
           return true;
         }
       }

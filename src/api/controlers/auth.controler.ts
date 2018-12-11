@@ -57,29 +57,29 @@ export async function auth_login(req, res, next) {
           }
 
 
+          // // DEBUG
+          // if (!userObj && newUserObj) {
+          //   await db.dbInterface.dbFunctions.addUser(
+          //     newUserObj['uid'],
+          //     newUserObj['givenName'],
+          //     newUserObj['sn'],
+          //     newUserObj['mail']).catch(err => {
+          //     throw err;
+          //   });
+          // }
+          //
+          // console.info('getting User');
+          // await db.dbInterface.dbFunctions.getUser(email, rzKennung).then(dbUser => {
+          //   userObj = dbUser;
+          // }).catch(err => {
+          //   throw new Error(err['message']);
+          // });
+
 
           // DEBUG
-          if (!userObj && newUserObj) {
-            await db.dbInterface.dbFunctions.addUser(
-              newUserObj['uid'],
-              newUserObj['givenName'],
-              newUserObj['sn'],
-              newUserObj['mail']).catch(err => {
-              throw new Error(err['message']);
-            });
-          }
-
-          console.info('getting User');
-          await db.dbInterface.dbFunctions.getUser(email, rzKennung).then(dbUser => {
-            userObj = dbUser;
-          }).catch(err => {
-            throw new Error(err['message']);
-          });
-
-          // // DEBUG
-          // userObj = {
-          //   id: userid
-          // };
+          userObj = {
+            id: userid
+          };
 
           res.status(200).json({
             message: 'Auth successful',

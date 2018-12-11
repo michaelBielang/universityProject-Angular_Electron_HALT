@@ -105,9 +105,9 @@ function init_db() {
 function updateUser(email, rzKennung) {
   let statement
   if (email) {
-    statement = 'UPDATE user SET last_login = datetime(\'now\') WHERE e_mail == ' + email
+    statement = 'UPDATE user SET last_login = datetime(\'now\') WHERE e_mail = ' + email
   } else {
-    statement = 'UPDATE user SET last_login = datetime(\'now\') WHERE pk_user_id == ' + rzKennung
+    statement = 'UPDATE user SET last_login = datetime(\'now\') WHERE pk_user_id = ' + rzKennung
   }
   return new Promise((resolve, reject) => {
     db.run(statement, err => {
@@ -126,9 +126,9 @@ function getUser(email, rzKennung) {
   console.log(dbPath)
   let statement
   if (email) {
-    statement = 'SELECT * FROM user WHERE e_mail == ' + email
+    statement = 'SELECT * FROM user WHERE e_mail = ' + email
   } else {
-    statement = 'SELECT * FROM user WHERE pk_user_id == ' + rzKennung
+    statement = 'SELECT * FROM user WHERE pk_user_id = ' + rzKennung
   }
   return new Promise((resolve, reject) => {
     db.get(statement, (err, row) => {
@@ -203,7 +203,7 @@ function dropAll() {
 function addUser(pk_user_id, firstName, lastName, eMail) {
   return new Promise(((resolve, reject) => {
     // noinspection SqlResolve
-    const statement = 'INSERT INTO user(pk_user_id, first_name, last_name, e_mail) VALUES (?,? ,? ,?)'
+    const statement = 'INSERT INTO user(pk_user_id, first_name, last_name, e_mail) VALUES (?, ?, ?, ?)'
     db.run(statement, [pk_user_id, firstName, lastName, eMail], (err) => {
       if (err) {
         console.log('Error adding new user: \n' + err)

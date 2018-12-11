@@ -17,7 +17,8 @@ const sudo = require('sudo-prompt').exec;
 const path = require('path');
 const logger = require('electron-log');
 logger.transports.file.level = 'info';
-const loggingPath = path.join(__dirname, 'logging');
+const appDir = __dirname;
+const loggingPath = path.join(appDir, 'logging');
 if (!fs.existsSync(loggingPath)) {
   fs.mkdirSync(loggingPath);
 }
@@ -32,12 +33,12 @@ function createWindow() {
     mainWindow = new BrowserWindow({
       width: 600,
       height: 650,
-      icon: path.join(__dirname, 'favicon.ico'),
+      icon: path.join(appDir, 'favicon.ico'),
       show: false,
     });
 
     mainWindow.loadURL(url.format({
-      pathname: path.join(__dirname, 'index.html'),
+      pathname: path.join(appDir, 'index.html'),
       protocol: 'file:',
       slashes: true
     }));
@@ -55,12 +56,31 @@ function createWindow() {
 
 function createServer() {
   logger.info('starting server child process...');
+
+
+  // TODO
+  logger.error('Test Error!');
+
+
   if (!server) {
     // see https://dzone.com/articles/understanding-execfile-spawn-exec-and-fork-in-node
-    server = fork(path.join(__dirname, 'server.js'));
+    // https://stackoverflow.com/questions/33478696/how-to-pass-messages-as-well-as-stdout-from-child-to-parent-in-node-js-child-pro
+    server = fork(path.join(appDir, 'server.js'), [], { silent: true });
 
     server.on('error', err => {
       logger.error('api server: ', err);
+    });
+
+    server.on('message', data => {
+      logger.error('api server message: ', data.toString('utf8'));
+    });
+
+    server.stdout.on('data', data => {
+      logger.error('api server stdout: ', data.toString('utf8'));
+    });
+
+    server.stderr.on('data', data => {
+      logger.error('api server stderr: ', data.toString('utf8'));
     });
   }
 }
@@ -87,7 +107,7 @@ app.on('window-all-closed', () => {
 
 function cleanUpAndClose() {
   const tmpFileName = 'tmp.key';
-  const folderTarget = path.join(__dirname, 'vpn-config-files');
+  const folderTarget = path.join(appDir, 'vpn-config-files');
 
   if (fs.existsSync(folderTarget)) {
     const files = fs.readdirSync(folderTarget);

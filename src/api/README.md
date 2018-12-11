@@ -9,3 +9,22 @@
 "experimentalDecorators": true,
 "noResolve": false
 "strict": true,
+
+
+
+"pretty": true,
+"inlineSources": true,
+"inlineSourceMap": true
+
+
+
+"include": [
+  "./**/*.ts",
+  "./datastorage/**/*.js"
+],
+
+
+, {
+  test: /\.m?js$/,
+  loader: 'babel-loader'
+}
