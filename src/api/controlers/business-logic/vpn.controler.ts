@@ -16,7 +16,8 @@ class VPN {
   private sourcePath = path.join(__dirname, 'vpn-config-files');
   private tmpFileName = 'tmp.key';
 
-  constructor() { }
+  constructor() {
+  }
 
   connectHsaVpn(credentials: { id: string, pw: string }): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -92,7 +93,7 @@ class VPN {
             fs.mkdirSync(targetFolderPath);
           }
         }
-        const tmpFileRef = fs.createWriteStream(localTargetPath, { flags: 'a' });
+        const tmpFileRef = fs.createWriteStream(localTargetPath, {flags: 'a'});
         tmpFileRef.write(credentials['id'] + '\n');
         tmpFileRef.write(credentials['pw']);
         resolve(rotationFileName);
@@ -104,6 +105,7 @@ class VPN {
     });
   }
 
+  //n
   isInHsaSubnet() {
     const netInterfaces = os.networkInterfaces();
     for (const ifname of Object.keys(netInterfaces)) {

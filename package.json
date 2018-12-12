@@ -60,7 +60,7 @@
     "rxjs-compat": "^6.0.0-rc.0",
     "sqlite3": "^4.0.4",
     "sudo-prompt": "^8.2.3",
-    "zone.js": "^0.8.19"
+    "zone.js": "^0.8.19",
     "winston": "^3.1.0"
   },
   "devDependencies": {
