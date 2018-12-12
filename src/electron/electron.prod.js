@@ -10,14 +10,15 @@ const {
 const fs = require('fs');
 const url = require('url');
 const {
-  fork,
+  spawn,
   exec
 } = require('child_process');
 const sudo = require('sudo-prompt').exec;
 const path = require('path');
 const logger = require('electron-log');
 logger.transports.file.level = 'info';
-const loggingPath = path.join(__dirname, 'logging');
+const appDir = __dirname;
+const loggingPath = path.join(appDir, 'logging');
 if (!fs.existsSync(loggingPath)) {
   fs.mkdirSync(loggingPath);
 }
@@ -32,12 +33,12 @@ function createWindow() {
     mainWindow = new BrowserWindow({
       width: 600,
       height: 650,
-      icon: path.join(__dirname, 'favicon.ico'),
+      icon: path.join(appDir, 'favicon.ico'),
       show: false,
     });
 
     mainWindow.loadURL(url.format({
-      pathname: path.join(__dirname, 'index.html'),
+      pathname: path.join(appDir, 'index.html'),
       protocol: 'file:',
       slashes: true
     }));
@@ -55,12 +56,26 @@ function createWindow() {
 
 function createServer() {
   logger.info('starting server child process...');
+
   if (!server) {
-    // see https://dzone.com/articles/understanding-execfile-spawn-exec-and-fork-in-node
-    server = fork(path.join(__dirname, 'server.js'));
+    server = spawn('node', [path.join(appDir, 'server/server.js')]);
 
     server.on('error', err => {
       logger.error('api server: ', err);
+    });
+
+    server.stdout.on('data', data => {
+      logger.info('api server stdout: ', data.toString('utf8'));
+    });
+
+    server.stderr.on('data', data => {
+      logger.error('api server stderr: ', data.toString('utf8'));
+    });
+
+    server.on('close', code => {
+      if (code !== 0) {
+        logger.error('api server exited with code: ', code);
+      }
     });
   }
 }
@@ -82,12 +97,15 @@ app.on('window-all-closed', () => {
     }
   }).catch(err => {
     logger.error(err);
+    if (process.platform !== 'darwin') {
+      app.quit();
+    }
   });
 });
 
-function cleanUpAndClose() {
+async function cleanUpAndClose() {
   const tmpFileName = 'tmp.key';
-  const folderTarget = path.join(__dirname, 'vpn-config-files');
+  const folderTarget = path.join(appDir, 'vpn-config-files');
 
   if (fs.existsSync(folderTarget)) {
     const files = fs.readdirSync(folderTarget);
@@ -96,37 +114,72 @@ function cleanUpAndClose() {
         try {
           fs.unlinkSync(file);
         } catch (e) {
-          // logger.info(e);
+          logger.error(e);
         }
       }
     });
   }
 
-  return new Promise((resolve, reject) => {
+  await new Promise((resolve, reject) => {
     checkIfOpenVpnIsRunning('openvpn').then(isRunning => {
       if (isRunning) {
-        if (process.platform.indexOf('win') !== -1) {
-          sudo('taskkill /im openvpn.exe /f /t', {
-            name: 'openvpnkill'
-          }, err => {
-            if (err) {
-              reject(err);
-            }
-            resolve();
-          });
-        } else {
-          sudo('pkill \"openvpn\"', {
-            name: 'openvpnkill'
-          }, err => {
-            if (err) {
-              reject(err);
-            }
-            resolve();
-          });
-        }
+        killProcesses('openvpn').then(msg => {
+          resolve(msg);
+        }).catch(err => {
+          reject(err);
+        });
+      } else {
+        resolve();
       }
     }).catch(err => {
       reject(err);
+    });
+  });
+
+  await new Promise((resolve, reject) => {
+    checkIfOpenVpnIsRunning('HALT').then(isRunning => {
+      if (isRunning) {
+        killProcesses('HALT').then(msg => {
+          resolve(msg);
+        }).catch(err => {
+          reject(err);
+        });
+      } else {
+        resolve();
+      }
+    }).catch(err => {
+      reject(err);
+    });
+  });
+
+  return;
+}
+
+function killProcesses(processName) {
+  return new Promise((resolve, reject) => {
+    const killMsg = 'killed all ' + processName + ' processes';
+    const killProcessName = 'haltcleanupkill';
+    let cmd = 'pkill \"' + processName + '\"';
+    if (process.platform.indexOf('win') !== -1) {
+      cmd = 'taskkill /im ' + processName + '.exe /f /t';
+    }
+    exec(cmd, {
+      name: killProcessName
+    }, err => {
+      if (err) {
+        logger.error('Elevating child process rights due to error...');
+        sudo(cmd, {
+          name: killProcessName
+        }, err => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(killMsg);
+          }
+        });
+      } else {
+        resolve(killMsg);
+      }
     });
   });
 }

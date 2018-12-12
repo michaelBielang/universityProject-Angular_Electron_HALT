@@ -54,6 +54,15 @@ npm run package:win
   - open .nsi script file with NSIS and build it
 
 
+## How to install production version
+- windows: simply use the installer
+- linux and mac: copy corresponding package to desired folder
+  - install nodejs
+  - install openvpn
+  - exec `npm i --save-prod` in ../HALT-linux-x64/resources/app
+  - run the HALT binary
+
+
 
 ## RoadMap
 
