@@ -15,38 +15,49 @@ const request = require('request')
 const expect = require('chai').expect
 const createTableStatements = require('../data')
 
-/*
 describe('test get subjects', function () {
-  let db
-  before(function () {
-    db = require('../dbInterface')
+  const db = require('../dbInterface')
+
+  before(async function () {
+    await db.dbFunctions.initDbCon()
+    await db.dbFunctions.dropAll()
   })
+
   it('should work', function () {
     expect(db.dbFunctions.getSubjects('hsa', 'Informatik')).to.be.an('array').that.does.include('Applied Research (Master)')
-
   })
 })
 
 describe('test get faculties', function () {
 
-  let db
-  before(function () {
-    db = require('../dbInterface')
+  const db = require('../dbInterface')
+
+  before(async function () {
+    await db.dbFunctions.initDbCon()
+    await db.dbFunctions.dropAll()
   })
+
   it('should work', function () {
     expect(db.dbFunctions.getFaculties('hsa')).to.be.an('array').that.does.include('Informatik')
+  })
+
+  after(async function () {
+    await db.dbFunctions.dropAll()
   })
 })
 
 describe('test get history present', function () {
 
   const db = require('../dbInterface')
+
+  before(async function () {
+    await db.dbFunctions.initDbCon()
+    await db.dbFunctions.dropAll()
+  })
+
   it('test history should be completed', function () {
-    return db.dbFunctions.dropAll()
-      .then(onResolve => {
-          return db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
-        }
-      )
+
+    return db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
       .then(resolve => {
         db.dbFunctions.createTable(createTableStatements.createTableStatements.history)
       })
@@ -63,25 +74,29 @@ describe('test get history present', function () {
         return db.dbFunctions.getHistory(1)
       })
       .then(result => {
-        expect(result.includes('informatik')).to.equal(true)
-      }).then(resolve => {
-        return db.dbFunctions.dropAll()
+        expect(JSON.stringify(result).includes('informatik')).to.equal(true)
       }).catch(reject => {
-          return db.dbFunctions.dropAll()
+          // logic of false == true: if reject -> show test failed
+          expect((false).to.equal(true))
         }
       )
+  })
+
+  after(async function () {
+    await db.dbFunctions.dropAll()
   })
 })
 
 describe('test get history not present', function () {
 
   const db = require('../dbInterface')
+
+  before(async function () {
+    await db.dbFunctions.initDbCon()
+    await db.dbFunctions.dropAll()
+  })
   it('test history should be completed', function () {
-    return db.dbFunctions.dropAll()
-      .then(onResolve => {
-          return db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
-        }
-      )
+    return db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
       .then(resolve => {
         db.dbFunctions.createTable(createTableStatements.createTableStatements.history)
       })
@@ -93,24 +108,28 @@ describe('test get history not present', function () {
       })
       .then(result => {
         expect(result.includes('informatik')).to.equal(false)
-      }).then(resolve => {
-        return db.dbFunctions.dropAll()
       }).catch(reject => {
+          // logic of false == true: if reject -> show test failed
+          expect((false).to.equal(true))
           return db.dbFunctions.dropAll()
         }
       )
   })
+
+  after(async function () {
+    await db.dbFunctions.dropAll()
+  })
 })
-*/
-// todo expect also in catch block
-/*describe('test update user', function () {
+
+describe('test update user', function () {
   const db = require('../dbInterface')
+
+  before(async function () {
+    await db.dbFunctions.initDbCon()
+    await db.dbFunctions.dropAll()
+  })
   it('test history should be completed', function () {
-    return db.dbFunctions.dropAll()
-      .then(onResolve => {
-          return db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
-        }
-      )
+    return db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
       .then(() => {
         return db.dbFunctions.addUser(1, 'firstName', 'lastName', 'email')
       })
@@ -118,19 +137,22 @@ describe('test get history not present', function () {
         return db.dbFunctions.updateUser('email')
       })
       .then(result => {
+        // if rejected this will not be called
         expect(true).to.equal(true)
-      }).then(resolve => {
-        return db.dbFunctions.dropAll()
       }).catch(reject => {
-          // todo im catch block muss die Bedingung auch jedes mal rein
-          expect(true).to.equal(true)
+          // logic of false == true: if reject -> show test failed
+          expect((false).to.equal(true))
           return db.dbFunctions.dropAll()
         }
       )
   })
-})*/
 
-/*describe('test remove last history entry', function () {
+  after(async function () {
+    await db.dbFunctions.dropAll()
+  })
+})
+
+describe('test remove last history entry', function () {
   const db = require('../dbInterface')
 
   before(async function () {
@@ -158,97 +180,137 @@ describe('test get history not present', function () {
   after(async function () {
     await db.dbFunctions.dropAll()
   })
-})*/
+})
 
-/*describe('test remove last history entry', function () {
-  const db = require('../dbInterface')
-  it('test history should be completed', function () {
-    this.timeout(10000)
-    // todo asynch await probiere
-    return db.dbFunctions.dropAll()
-      .then(onResolve => {
-          return db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
-        }
-      )
-      .then(resolve => {
-        db.dbFunctions.createTable(createTableStatements.createTableStatements.history)
-      })
-      .then(() => {
-        return db.dbFunctions.addUser(1, 'firstName', 'lastName', 'email')
-      })
-      .then(() => {
-        return db.dbFunctions.addHistory(1, 2, 'firstName', 'lastName', 'email', 'toBeDeleted', 'toBeDeleted', 'hsa', 'm')
-      })
-      .then(resolve => {
-        console.log('timeout start')
-        return new Promise(resolve => {
-          setTimeout(resolve, 2000)
-        })
-      })
-      .then(() => {
-        console.log('timout end')
-        return db.dbFunctions.addHistory(1, 2, 'firstName', 'lastName', 'email', 'NoDelete', 'NoDelete', 'hsa', 'm')
-      })
-      .then(resolve => {
-        console.log('timeout start')
-        return new Promise(resolve => {
-          setTimeout(resolve, 2000)
-        })
-      })
-      .then(() => {
-        console.log('timout end')
-        return db.dbFunctions.addHistory(1, 2, 'firstName', 'lastName', 'email', 'NoDelete', 'NoDelete', 'hsa', 'm')
-      })
-      .then(resolve => {
-        return db.dbFunctions.deleteLastHistoryEntry(1)
-      })
-      .then(() => db.dbFunctions.getHistory(1))
-      .then(result => {
-        console.log('result check')
-        console.log(result)
-        expect(JSON.stringify(result).includes('NoDelete')).to.equal(true)
-      }).then(resolve => {
-        return db.dbFunctions.dropAll()
-      }).catch(reject => {
-          expect(false).to.equal(true)
-          return db.dbFunctions.dropAll()
-        }
-      )
-  })
-})*/
-
-/*
 describe('test clear history', function () {
+  const db = require('../dbInterface')
+
+  before(async function () {
+    await db.dbFunctions.initDbCon()
+    await db.dbFunctions.dropAll()
+  })
+
+  it('test history should complete', async function () {
+
+    this.timeout(10000)
+    await db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
+    await db.dbFunctions.createTable(createTableStatements.createTableStatements.history)
+    await db.dbFunctions.addUser(1, 'firstName', 'lastName', 'email')
+    await db.dbFunctions.addHistory(1, 2, 'firstName', 'lastName', 'email', 'toBeDeleted', 'toBeDeleted', 'hsa', 'm')
+    await new Promise(resolve => setTimeout(resolve, 1500))
+    await db.dbFunctions.addHistory(1, 2, 'firstName', 'lastName', 'email', 'NoDelete', 'NoDelete', 'hsa', 'm')
+    await new Promise(resolve => setTimeout(resolve, 1500))
+    await db.dbFunctions.addHistory(1, 2, 'firstName', 'lastName', 'email', 'NoDelete', 'NoDelete', 'hsa', 'm')
+    await db.dbFunctions.clearHistory()
+    await db.dbFunctions.getHistory(1).then(resolve => {
+      expect(JSON.stringify(resolve).includes('NoDelete')).to.equal(false)
+    })
+  })
+
+  after(async function () {
+    await db.dbFunctions.dropAll()
+  })
 
 })
 
-describe('test add history', function () {
+describe('test add user', function () {
+  const db = require('../dbInterface')
 
-})
+  before(async function () {
+    await db.dbFunctions.initDbCon()
+    await db.dbFunctions.dropAll()
+  })
 
-describe('test show table content', function () {
+  it('test history should complete', async function () {
 
+    this.timeout(10000)
+    await db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
+    await db.dbFunctions.addUser(1, 'firstName', 'lastName', 'email')
+    await db.dbFunctions.userPresent(1).then(resolve => {
+      expect(resolve).to.equal(true)
+    })
+  })
+
+  after(async function () {
+    await db.dbFunctions.dropAll()
+  })
 })
 
 describe('test delete user', function () {
+  const db = require('../dbInterface')
 
+  before(async function () {
+    await db.dbFunctions.initDbCon()
+    await db.dbFunctions.dropAll()
+  })
+
+  it('test history should complete', async function () {
+
+    await db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
+    await db.dbFunctions.addUser(1, 'firstName', 'lastName', 'email')
+    await db.dbFunctions.deleteUser(1)
+    await db.dbFunctions.userPresent(1).then(resolve => {
+      expect(resolve).to.equal(false)
+    })
+  })
+
+  after(async function () {
+    await db.dbFunctions.dropAll()
+  })
+})
+
+describe('test table not present', function () {
+  const db = require('../dbInterface')
+
+  before(async function () {
+    await db.dbFunctions.initDbCon()
+    await db.dbFunctions.dropAll()
+  })
+
+  it('test history should complete', async function () {
+
+    await db.dbFunctions.tablePresent(createTableStatements.createTableStatements.user).then(resolve => {
+      expect(resolve).to.equal(false)
+    })
+  })
+
+  after(async function () {
+    await db.dbFunctions.dropAll()
+  })
 })
 
 describe('test table present', function () {
+  const db = require('../dbInterface')
 
-})
+  before(async function () {
+    await db.dbFunctions.initDbCon()
+    await db.dbFunctions.dropAll()
+  })
 
-describe('test create table', function () {
+  it('test history should complete', async function () {
 
+    await db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
+    await db.dbFunctions.tablePresent('user').then(resolve => {
+      expect(resolve).to.equal(true)
+    })
+  })
+
+  after(async function () {
+    await db.dbFunctions.dropAll()
+  })
 })
 
 describe('test get user', function () {
+
   const db = require('../dbInterface')
+
+  before(async function () {
+    await db.dbFunctions.initDbCon()
+    await db.dbFunctions.dropAll()
+  })
+
   it('should work', function () {
-    return db.dbFunctions.dropAll()
-      .then(onResolve => {
-        return db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
-      })
+    return db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
       .then(() => {
         return db.dbFunctions.addUser('1', 'firstName', 'lastName', 'email')
       })
@@ -256,46 +318,70 @@ describe('test get user', function () {
         return db.dbFunctions.getUser('email', undefined)
       })
       .then(resolve => {
-        expect(resolve.includes('firstName')).to.equal(true)
-        return db.dbFunctions.dropAll()
+        expect(JSON.stringify(resolve).includes('firstName')).to.equal(true)
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        // logic of false == true: if reject -> show test failed
+        expect((false).to.equal(true))
+        console.log(err)
+      })
+  })
+
+  after(async function () {
+    await db.dbFunctions.dropAll()
   })
 })
 
 describe('test user present true', function () {
+
   const db = require('../dbInterface')
+
+  before(async function () {
+    await db.dbFunctions.initDbCon()
+    await db.dbFunctions.dropAll()
+  })
+
+  // it doesn't need a catch statement since userPresent is forced to resolve with either true/false
   it('should test true', function () {
-    return db.dbFunctions.dropAll().then(resolve => {
-      return db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
-    }).then(resolve => {
-      return db.dbFunctions.addUser('1', 'firstName', 'lastName', 'email')
-    }).then(resolve => {
-      return db.dbFunctions.userPresent('1')
-    }).then(resolve => {
-      expect(resolve.toString()).to.eql('true')
-    }).then(resolve => {
-      return db.dbFunctions.dropAll()
-    })
+    return db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
+      .then(resolve => {
+        return db.dbFunctions.addUser('1', 'firstName', 'lastName', 'email')
+      }).then(resolve => {
+        return db.dbFunctions.userPresent('1')
+      }).then(resolve => {
+        expect(resolve.toString()).to.eql('true')
+      })
+  })
+
+  after(async function () {
+    await db.dbFunctions.dropAll()
   })
 })
 
 describe('test user present false', function () {
   const db = require('../dbInterface')
+
+  before(async function () {
+    await db.dbFunctions.initDbCon()
+    await db.dbFunctions.dropAll()
+  })
+
+  // it doesn't need a catch statement since userPresent is forced to resolve with either true/false
   it('should test false', function () {
-      return db.dbFunctions.dropAll().then(resolve => {
-        return db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
-      }).then(resolve => {
-        return db.dbFunctions.addUser('1', 'firstName', 'lastName', 'email')
-      }).then(resolve => {
-        return db.dbFunctions.userPresent('2')
-      }).then(resolve => {
-        expect(resolve.toString()).to.eql('false')
-      }).then(resolve => {
-        return db.dbFunctions.dropAll()
-      })
+      return db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
+        .then(resolve => {
+          return db.dbFunctions.addUser('1', 'firstName', 'lastName', 'email')
+        }).then(resolve => {
+          return db.dbFunctions.userPresent('2')
+        }).then(resolve => {
+          expect(resolve).to.eql(false)
+        })
     }
   )
+
+  after(async function () {
+    await db.dbFunctions.dropAll()
+  })
 })
 
-*/
+

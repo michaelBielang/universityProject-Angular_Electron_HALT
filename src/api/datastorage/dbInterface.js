@@ -14,45 +14,12 @@ const fs = require('fs')
 const sqlConnection = require('sqlite3').verbose()
 const data = require('./data.js')
 const path = require('path')
-const dateManager = require('date-and-time')
+const dateManager = require('date-and-t' +
+  'ime')
 const dbPath = path.join(__dirname, 'db/halt.db')
 
-//open database --> uses create/readwrite per default
-
-let db
-
-function initDbCon () {
-  return new Promise((resolve, reject) => {
-    getDbConnection().then(connection => {
-      db = connection
-      resolve(db)
-      //init_db() todo
-    }).catch(err => {
-      reject(err)
-    })
-  })
-}
-
-function getDbConnection () {
-  const targetPath = path.dirname(dbPath)
-  if (!fs.existsSync(targetPath)) fs.mkdirSync(targetPath)
-  return new Promise((resolve, reject) => {
-    const con = new sqlConnection.Database(dbPath, (err) => {
-      console.log(dbPath)
-      if (err) {
-        console.error('Error connecting to database')
-        reject(err)
-      } else {
-        console.log('Connected to the chinook database.')
-        resolve(con)
-      }
-    })
-  })
-}
-
-//todo ggf
+//todo
 //const logger = require('../logging/logger.js')
-
 exports.dbFunctions = {
   initDbCon: initDbCon,
   updateUser: updateUser,
@@ -73,17 +40,49 @@ exports.dbFunctions = {
   getSubjects: getSubjects
 }
 
-function userPresent (id) {
-  // noinspection SqlResolve
-  return getUser(undefined, id).then(resolve => {
-    if (resolve) {
-      return 'true'
-    }
-    return 'false'
+let db
+
+/**
+ * Init database connection
+ * @returns {Promise<any>} with db connection or err
+ */
+function initDbCon (production) {
+  return new Promise((resolve, reject) => {
+    getDbConnection().then(connection => {
+      db = connection
+      resolve(db)
+      if (production)
+        addDefaultTablesToDb()
+    }).catch(err => {
+      reject(err)
+    })
   })
 }
 
-function init_db () {
+/**
+ * Just relevant for initDB.
+ * Handles different system paths (win/unix)
+ * @returns {Promise<any>}
+ */
+function getDbConnection () {
+  const targetPath = path.dirname(dbPath)
+  if (!fs.existsSync(targetPath)) fs.mkdirSync(targetPath)
+  return new Promise((resolve, reject) => {
+    const con = new sqlConnection.Database(dbPath, (err) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(con)
+      }
+    })
+  })
+}
+
+/**
+ * Adds default tables to the database if there is no user present
+ * (case: app launched for the first time)
+ */
+function addDefaultTablesToDb () {
   tablePresent('user').then(() => {
     return Promise.resolve()
   }).catch(async () => {
@@ -102,15 +101,39 @@ function init_db () {
   })
 }
 
+/**
+ *
+ * @param userID
+ * @returns true / false
+ */
+function userPresent (userID) {
+  // noinspection SqlResolve
+  return getUser(undefined, userID).then(resolve => {
+    return !!resolve
+  })
+}
+
+/**
+ *
+ * @param email
+ * @param rzKennung
+ * @returns {Promise<any>}
+ */
 function updateUser (email, rzKennung) {
   let date = dateManager.format(new Date(), 'YYYY-MM-DD HH:mm:ss')
   let statement
   let argument
   if (email) {
-    statement = 'UPDATE user SET last_action = ? WHERE e_mail = ?'
+    // noinspection SqlResolve
+    statement = `UPDATE user
+                 SET last_action = ?
+                 WHERE e_mail = ?`
     argument = email
   } else {
-    statement = 'UPDATE user SET last_action = ? WHERE pk_user_id = ?'
+    // noinspection SqlResolve
+    statement = `UPDATE user
+                 SET last_action = ?
+                 WHERE pk_user_id = ?`
     argument = rzKennung
   }
   return new Promise((resolve, reject) => {
@@ -134,11 +157,13 @@ function getUser (email, rzKennung) {
   let sql
   let argument
   if (email) {
+    // noinspection SqlResolve
     sql = `SELECT *
            FROM user
            WHERE e_mail = ?`
     argument = email
   } else {
+    // noinspection SqlResolve
     sql = `SELECT *
            FROM user
            WHERE pk_user_id = ?`
@@ -150,12 +175,17 @@ function getUser (email, rzKennung) {
         reject()
         return
       }
-      resolve(JSON.stringify(row))
+      resolve(row)
     })
   })
 
 }
 
+/**
+ * Creates particular table
+ * @param table
+ * @returns {Promise<any>}
+ */
 function createTable (table) {
   return new Promise((resolve, reject) => {
     db.run(table, err => {
@@ -163,17 +193,22 @@ function createTable (table) {
         reject(err)
         return
       }
-      resolve('creating table ok')
+      resolve()
     })
   })
 }
 
+/**
+ *
+ * @param tableName
+ * @returns {Promise<any>} returns either true or false. Forced to resolve!
+ */
 function tablePresent (tableName) {
   const statement = 'SELECT * FROM ' + tableName
   return new Promise((resolve, reject) => {
     db.run(statement, (err) => {
       if (err) {
-        reject(err)
+        resolve(false)
         return
       }
       resolve(true)
@@ -181,7 +216,11 @@ function tablePresent (tableName) {
   })
 }
 
-//works
+/**
+ * drops a particular table
+ * @param table
+ * @returns {Promise<any>}
+ */
 function dropTable (table) {
   const statement = 'DROP TABLE ' + table
   return new Promise((resolve, reject) => {
@@ -190,13 +229,15 @@ function dropTable (table) {
         reject(err)
         return
       }
-      resolve('Success')
+      resolve()
     })
   })
 }
 
 /**
- *
+ * drop all tables in the db
+ * Implemented a nested promise by intention which always resolves to
+ * ensure that Promise.all resolves even when a table was not present in the db.
  * @returns {Promise<any[]>}
  */
 function dropAll () {
@@ -212,11 +253,19 @@ function dropAll () {
   }))
 }
 
-// works
+/**
+ * Add an User to the db
+ * @param pk_user_id
+ * @param firstName
+ * @param lastName
+ * @param eMail
+ * @returns {Promise<any>}
+ */
 function addUser (pk_user_id, firstName, lastName, eMail) {
   return new Promise(((resolve, reject) => {
     // noinspection SqlResolve
-    const statement = 'INSERT INTO user(pk_user_id, first_name, last_name, e_mail, last_action) VALUES (?,? ,? ,?, ?)'
+    const statement = `INSERT INTO user(pk_user_id, first_name, last_name, e_mail, last_action)
+                       VALUES (?, ?, ?, ?, ?)`
     db.run(statement, [pk_user_id, firstName, lastName, eMail, dateManager.format(new Date(), 'YYYY-MM-DD HH:mm:ss')], (err) => {
       if (err) {
         reject(err)
@@ -227,12 +276,18 @@ function addUser (pk_user_id, firstName, lastName, eMail) {
   }))
 }
 
-//works
+/**
+ * Delets a particular user
+ * @param pk_user_id
+ * @returns {Promise<any>}
+ */
 function deleteUser (pk_user_id) {
   return new Promise(((resolve, reject) => {
     // noinspection SqlResolve
-    const statement = 'DELETE FROM user WHERE pk_user_id == ' + pk_user_id
-    db.all(statement, (err) => {
+    const statement = `DELETE
+                       FROM user
+                       WHERE pk_user_id == ?`
+    db.all(statement, [pk_user_id], (err) => {
       if (err) {
         reject(err)
         return
@@ -242,34 +297,55 @@ function deleteUser (pk_user_id) {
   }))
 }
 
-//works
+/**
+ * Was relevant for the first implementation step of this interface
+ * @param table
+ */
 function showTableContent (table) {
   // noinspection SqlResolve
-  const statement = 'SELECT * FROM ' + table
-  db.get(statement, (err, row) => {
+  const statement = `SELECT *
+                     FROM ?`
+  db.get(statement, [table], (err, row) => {
     console.log(row)
   })
 }
 
-//todo server group raus
-function addHistory (user_id, searched_rz_nr, name, e_mail, faculty, subject, server_group, gender) {
+/**
+ * Adds a new history entry
+ * @param user_id
+ * @param searched_rz_nr
+ * @param name
+ * @param e_mail
+ * @param faculty
+ * @param subject
+ * @param gender
+ * @returns {Promise<any>}
+ */
+function addHistory (user_id, searched_rz_nr, name, e_mail, faculty, subject, gender) {
   return new Promise((resolve, reject) => {
     // noinspection SqlResolve
-    const statement = 'INSERT INTO history(fk_user_id, searched_rz_nr, name, e_mail, faculty, subject, server_group, gender, date_entry) VALUES (?,?,?,?,?,?,?,?,?)'
-    db.run(statement, [user_id, searched_rz_nr, name, e_mail, faculty, subject, server_group, gender, dateManager.format(new Date(), 'YYYY-MM-DD HH:mm:ss')], err => {
+    const statement = `INSERT INTO history(fk_user_id, searched_rz_nr, name, e_mail, faculty, subject,
+                                           gender, date_entry)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+    db.run(statement, [user_id, searched_rz_nr, name, e_mail, faculty, subject, gender, dateManager.format(new Date(), 'YYYY-MM-DD HH:mm:ss')], err => {
       if (err) {
         reject(err)
         return
       }
       resolve()
-      //resolve()
     })
   })
 }
 
+/**
+ * Clears the history
+ * @returns {Promise<any>}
+ */
 function clearHistory () {
   // noinspection SqlResolve
-  const statement = 'DELETE FROM history WHERE pk_history_id IS NOT NULL;'
+  const statement = `DELETE
+                     FROM history
+                     WHERE pk_history_id IS NOT NULL;`
   return new Promise((resolve, reject) => {
     db.run(statement, err => {
       if (err) {
@@ -281,9 +357,16 @@ function clearHistory () {
   })
 }
 
+/**
+ * Deletes the last history entry.
+ * Needed since our UI works FIFO principle to deliver the four last recent queries.
+ * @returns {Promise<any>}
+ */
 function deleteLastHistoryEntry () {
   // noinspection SqlResolve
-  const statement = 'DELETE FROM history WHERE date_entry IN (SELECT date_entry FROM history ORDER BY date_entry ASC LIMIT 1)'
+  const statement = `DELETE
+                     FROM history
+                     WHERE date_entry IN (SELECT date_entry FROM history ORDER BY date_entry ASC LIMIT 1)`
   return new Promise((resolve, reject) => {
     db.run(statement, err => {
       if (err) {
@@ -296,11 +379,18 @@ function deleteLastHistoryEntry () {
   })
 }
 
+/**
+ * Gets the last search history
+ * @param user_id
+ * @returns {Promise<any>}
+ */
 function getHistory (user_id) {
   return new Promise((resolve, reject) => {
     // noinspection SqlResolve
-    const statement = 'SELECT * FROM history'
-    db.all(statement, [], (err, rows) => {
+    const statement = `SELECT *
+                       FROM history
+                       WHERE fk_user_id = ?`
+    db.all(statement, [user_id], (err, rows) => {
       if (err) {
         reject(err)
         return
@@ -310,6 +400,13 @@ function getHistory (user_id) {
   })
 }
 
+/**
+ * This function could be extended with other servers later
+ * if necessary.
+ * So far it only returns hsa faculties.
+ * @param ldapServer
+ * @returns all faculties
+ */
 function getFaculties (ldapServer) {
   if (ldapServer === 'hsa') {
     return data.HSAFaculties()
@@ -318,6 +415,14 @@ function getFaculties (ldapServer) {
   }
 }
 
+/**
+ * This function could be extended with other servers later
+ * if necessary.
+ * So far it only returns hsa subjects.
+ * @param ldapServer
+ * @param faculty
+ * @returns {*}
+ */
 function getSubjects (ldapServer, faculty) {
   if (ldapServer === 'hsa') {
     return data.HSAStudies(faculty)
