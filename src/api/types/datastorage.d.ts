@@ -19,7 +19,7 @@
 //   showTableContent: showTableContent,
 //   addHistory: addHistory,
 //   clearHistory: clearHistory,
-//   removeLastHistoryEntry: removeLastHistoryEntry,
+//   deleteLastHistoryEntry: deleteLastHistoryEntry,
 //   getHistory: getHistory,
 //   getFaculties: getFaculties,
 //   getSubjects: getSubjects
