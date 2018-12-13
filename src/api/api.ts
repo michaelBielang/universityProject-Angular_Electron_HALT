@@ -36,7 +36,8 @@ class Api {
 
     const urlOrigins = [
       'http://localhost',
-      'http://127.0.0.1'
+      'http://127.0.0.1',
+      'file://'
     ];
 
     this.express.use(cors(

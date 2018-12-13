@@ -11,9 +11,10 @@
     "server": "nodemon",
     "electron:dev": "electron ./src/electron/electron.dev",
     "electron:prod": "electron ./src/electron/electron.prod",
-    "build:OBSOLETE": "npm run clear && ng build --prod && tsc -p ./src/api/tsconfig.json && npm run copy",
+    "build:ATTEMPT1": "npm run clear && ng build --prod && tsc -p ./src/api/tsconfig.json && npm run copy",
+    "build:server:ATTEMPT2": "webpack --progress --config src/api/webpack.config.js",
     "build": "npm run clear && ng build --prod && npm run build:server && npm run build:electron && npm run copy",
-    "build:server": "webpack --progress --config src/api/webpack.config.js",
+    "build:server": "tsc -p ./src/api/tsconfig.json",
     "build:electron": "webpack --progress --config src/electron/webpack.prod.config.js",
     "package:win": "npm run build && electron-packager dist HALT --out=packages --platform=win32 --arch=x64 --overwrite && npm run zip:win64",
     "package:linux": "npm run build && electron-packager dist HALT --out=packages --platform=linux --arch=x64 --overwrite",
@@ -59,8 +60,8 @@
     "rxjs-compat": "^6.0.0-rc.0",
     "sqlite3": "^4.0.4",
     "sudo-prompt": "^8.2.3",
-    "winston": "^3.1.0",
-    "zone.js": "^0.8.19"
+    "zone.js": "^0.8.19",
+    "winston": "^3.1.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.10.7",
