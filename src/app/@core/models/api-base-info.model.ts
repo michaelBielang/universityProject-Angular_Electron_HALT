@@ -13,6 +13,7 @@ const apiBaseUrl = 'http://localhost:8787';
 const apiHealthCheckUrl = apiBaseUrl + '/api/healthcheck';
 const apiUsersUrl = apiBaseUrl + '/api/users';
 const apiAuthUrl = apiBaseUrl + '/api/auth';
+const apiSearchUrl = apiBaseUrl + '/api/search';
 
 export default {
   headers: jsonHeader,
@@ -20,4 +21,5 @@ export default {
   healthcheck: apiHealthCheckUrl,
   users: apiUsersUrl,
   auth: apiAuthUrl,
+  search: apiSearchUrl,
 }

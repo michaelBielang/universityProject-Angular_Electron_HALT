@@ -4,7 +4,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { Http } from '@angular/http';
 import api from '../models/api-base-info.model';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class AuthService {
   userObj;
 
   constructor(
-    private http: Http,
+    private readonly http: Http,
   ) { }
 
   getUserRequest(userid) {
@@ -27,14 +27,18 @@ export class AuthService {
   }
 
   authRequest(id, pw) {
-    const req = {
+    const body = {
       id: id,
       pw: pw
     }
-    return this.http.post(api.auth, req, {
+    return this.http.post(api.auth, body, {
       headers: api.headers,
       withCredentials: true,
     });
+  }
+
+  getUserID() {
+    return this.userObj['pk_user_id'];
   }
 
   setSession(user) {
