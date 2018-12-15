@@ -65,10 +65,10 @@ describe('test get history present', function () {
         return db.dbFunctions.addUser(1, 'firstName', 'lastName', 'email')
       })
       .then(() => {
-        return db.dbFunctions.addHistory(1, 2, 'firstName', 'lastName', 'email', 'informatik', 'informatik', 'hsa', 'm')
+        return db.dbFunctions.addHistory(1, 2, 'firstName', 'email', 'informatik', 'informatik', 1)
       })
       .then(() => {
-        return db.dbFunctions.addHistory(1, 2, 'firstName', 'lastName', 'email', 'Mathe', 'Mathe', 'hsa', 'm')
+        return db.dbFunctions.addHistory(1, 2, 'firstName', 'email', 'Mathe', 'Mathe', 'hsa', 1)
       })
       .then(resolve => {
         return db.dbFunctions.getHistory(1)
