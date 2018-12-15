@@ -20,7 +20,7 @@ export function search_exec(req, res, next) {
     faculty: req.body['faculty'],
     subjectordegree: req.body['subjectordegree'],
   }
-  db.dbInterface.dbFunctions.addHistory(req.params['userId'], searchObj['id'],
+  db.dbInterface.dbFunctions.addHistory(req.params['userid'], searchObj['id'],
     searchObj['name'], searchObj['email'], searchObj['faculty'],
     searchObj['subjectordegree'], searchObj['gender'])
     .then(() => {

@@ -3,9 +3,7 @@
     <div class="row">
       <div class="">Results for:&nbsp;&nbsp;</div>
       <div class="search-output">
-        {{ resultsService.currentSearchObj['id'] && resultsService.currentSearchObj['id'] !== '' ?
-        resultsService.currentSearchObj['id'] + '; ' + resultsService?.currentSearchObj['email'] :
-        resultsService?.currentSearchObj['email'] }}
+        {{ getSearchInput() }}
       </div>
     </div>
     <div class="row">

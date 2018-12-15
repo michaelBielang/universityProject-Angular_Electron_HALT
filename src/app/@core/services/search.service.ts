@@ -3,21 +3,16 @@
  * @license UNLICENSED
  */
 
-import {Injectable} from '@angular/core';
-
-interface SearchObj {
-  gender;
-  id;
-  name;
-  email;
-  faculty;
-  subjectordegree;
-}
+import { Injectable } from '@angular/core';
+import { AuthService } from './auth.service';
+import { Http } from '@angular/http';
+import api from '../models/api-base-info.model';
+import ISearchObj from '../models/search-obj.model';
 
 @Injectable()
 export class SearchService {
-  searchHistory: SearchObj[] = [];
-  searchObj: SearchObj = {
+  searchHistory: ISearchObj[] = [];
+  searchObj: ISearchObj = {
     gender: 0,
     id: '',
     name: '',
@@ -26,14 +21,16 @@ export class SearchService {
     subjectordegree: ''
   };
 
-  constructor() {
-  }
+  constructor(
+    private readonly authService: AuthService,
+    private readonly http: Http,
+  ) { }
 
-  updateSearchObj(obj: SearchObj) {
+  updateSearchObj(obj: ISearchObj) {
     this.searchObj = obj;
   }
 
-  updateSearchHistory(histObjs: SearchObj[]) {
+  updateSearchHistory(histObjs: ISearchObj[]) {
     this.searchHistory = histObjs;
   }
 
@@ -45,17 +42,17 @@ export class SearchService {
           {
             facultyname: 'Informatik',
             studysubjectObjs: [
-              {studysubjectname: 'Wirtschaftsinformatik (Bachelor)'},
-              {studysubjectname: 'Informatik (Bachelor)'},
-              {studysubjectname: 'Informatik (Master)'},
-              {studysubjectname: 'Interaktive Medien (Bachelor)'},
-              {studysubjectname: 'Interaktive Medien Systeme (Master)'},
+              { studysubjectname: 'Wirtschaftsinformatik (Bachelor)' },
+              { studysubjectname: 'Informatik (Bachelor)' },
+              { studysubjectname: 'Informatik (Master)' },
+              { studysubjectname: 'Interaktive Medien (Bachelor)' },
+              { studysubjectname: 'Interaktive Medien Systeme (Master)' },
             ]
           },
           {
             facultyname: 'Wirtschaft',
             studysubjectObjs: [
-              {studysubjectname: 'Wirtschaftswissenschaften (Bachelor)'},
+              { studysubjectname: 'Wirtschaftswissenschaften (Bachelor)' },
             ]
           },
           {
@@ -127,42 +124,14 @@ export class SearchService {
   searchRequest(): Promise<any> {
     return new Promise((resolve, reject) => {
       if (this.searchObj['id'] || this.searchObj['name'] || this.searchObj['email']) {
-        // return mock data
-        resolve([
-          {
-            gender: 1,
-            firstname: 'Max',
-            lastname: 'Mustermann',
-            emails: ['max.mustermann@hs-augsburg.de', 'max23@rz.fh-augsburg.de'],
-            studysubject: 'Informatik',
-            faculty: 'Informatik',
-            degree: 'Bachelor',
-            university: 'HS-Augsburg',
-            identity: 'max23'
-          },
-          {
-            gender: 2,
-            firstname: 'Maria',
-            lastname: 'Mustermann',
-            emails: ['maria.mustermann@hs-augsburg.de'],
-            studysubject: 'Wirtschaftsinformatik',
-            faculty: 'Informatik',
-            degree: 'Bachelor',
-            university: 'HS-Augsburg',
-            identity: 'marmu'
-          },
-          {
-            gender: 2,
-            firstname: 'Anna',
-            lastname: 'Müller',
-            emails: ['anna.mueller@hs-augsburg.de'],
-            studysubject: 'Interaktive Medien',
-            faculty: 'Informatik',
-            degree: 'Bachelor',
-            university: 'HS-Augsburg',
-            identity: 'muell'
-          },
-        ]);
+        this.http.post(api.search + '/' + this.authService.getUserID(), this.searchObj, {
+          headers: api.headers,
+          withCredentials: true,
+        }).subscribe(res => {
+          resolve(res.json()['data']);
+        }, err => {
+          reject(err);
+        });
       } else {
         reject('no search identifier input was given');
       }
