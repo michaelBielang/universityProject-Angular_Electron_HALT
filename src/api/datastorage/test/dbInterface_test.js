@@ -383,5 +383,3 @@ describe('test user present false', function () {
     await db.dbFunctions.dropAll()
   })
 })
-
-

@@ -4,10 +4,13 @@
  */
 
 import * as express from 'express';
-import * as logger from 'morgan';
+import * as morganLogger from 'morgan';
+import logger from './logging/logger';
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 import env from './server-env';
+import * as db from './datastorage/dbInterface';
+
 // Subroutes
 import authRoutes from './routes/auth';
 import userRoutes from './routes/users';
@@ -20,6 +23,9 @@ class Api {
   public express: any;
 
   constructor() {
+    db.dbFunctions.initDbCon(env.mode).catch(err => {
+      logger.error(err);
+    });
     this.express = express();
     this.addMiddlewares();
     this.mountSubRoutes();
@@ -29,7 +35,7 @@ class Api {
 
   private addMiddlewares(): void {
     if (env.mode === 'dev') {
-      this.express.use(logger('dev')); // Use Morgan logger
+      this.express.use(morganLogger('dev')); // Use Morgan logger
     }
     this.express.use(bodyParser.urlencoded({extended: false}));
     this.express.use(bodyParser.json());
