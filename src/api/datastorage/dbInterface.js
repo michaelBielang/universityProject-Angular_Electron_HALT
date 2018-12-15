@@ -14,8 +14,8 @@ const fs = require('fs')
 const sqlConnection = require('sqlite3').verbose()
 const data = require('./data.js')
 const path = require('path')
-const dateManager = require('date-and-t' +
-  'ime')
+// const dateManager = require('date-and-time')
+const moment = require('moment')
 const dbPath = path.join(__dirname, 'db/halt.db')
 
 //todo
@@ -37,7 +37,8 @@ exports.dbFunctions = {
   deleteLastHistoryEntry: deleteLastHistoryEntry,
   getHistory: getHistory,
   getFaculties: getFaculties,
-  getSubjects: getSubjects
+  getSubjects: getSubjects,
+  addDefaultTablesToDb: addDefaultTablesToDb
 }
 
 let db
@@ -83,21 +84,23 @@ function getDbConnection () {
  * (case: app launched for the first time)
  */
 function addDefaultTablesToDb () {
-  tablePresent('user').then(() => {
-    return Promise.resolve()
-  }).catch(async () => {
-    const createStatements = [
-      data.createTableStatements.user,
-      data.createTableStatements.history,
-      data.createTableStatements.faculty,
-      data.createTableStatements.studySubject
-    ]
-    for (let statement of createStatements) {
-      await createTable(statement).catch(err => {
-        console.error(err)
-      })
+  tablePresent('user').then(async result => {
+    if (!result) {
+      const createStatements = [
+        data.createTableStatements.user,
+        data.createTableStatements.history,
+        data.createTableStatements.faculty,
+        data.createTableStatements.studySubject
+      ]
+      for (let statement of createStatements) {
+        await createTable(statement).catch(err => {
+          console.error(err)
+        })
+      }
     }
     return Promise.resolve()
+  }).catch(err => {
+    return Promise.reject(err);
   })
 }
 
@@ -120,7 +123,7 @@ function userPresent (userID) {
  * @returns {Promise<any>}
  */
 function updateUser (email, rzKennung) {
-  let date = dateManager.format(new Date(), 'YYYY-MM-DD HH:mm:ss')
+  let date = moment().format('YYYY-MM-DD HH:mm:ss')
   let statement
   let argument
   if (email) {
@@ -262,11 +265,14 @@ function dropAll () {
  * @returns {Promise<any>}
  */
 function addUser (pk_user_id, firstName, lastName, eMail) {
+  if (eMail) {
+    eMail = eMail.toLowerCase()
+  }
   return new Promise(((resolve, reject) => {
     // noinspection SqlResolve
     const statement = `INSERT INTO user(pk_user_id, first_name, last_name, e_mail, last_action)
                        VALUES (?, ?, ?, ?, ?)`
-    db.run(statement, [pk_user_id, firstName, lastName, eMail, dateManager.format(new Date(), 'YYYY-MM-DD HH:mm:ss')], (err) => {
+    db.run(statement, [pk_user_id, firstName, lastName, eMail, moment().format('YYYY-MM-DD HH:mm:ss')], (err) => {
       if (err) {
         reject(err)
         return
@@ -327,7 +333,7 @@ function addHistory (user_id, searched_rz_nr, name, e_mail, faculty, subject, ge
     const statement = `INSERT INTO history(fk_user_id, searched_rz_nr, name, e_mail, faculty, subject,
                                            gender, date_entry)
                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-    db.run(statement, [user_id, searched_rz_nr, name, e_mail, faculty, subject, gender, dateManager.format(new Date(), 'YYYY-MM-DD HH:mm:ss')], err => {
+    db.run(statement, [user_id, searched_rz_nr, name, e_mail, faculty, subject, gender, moment().format('YYYY-MM-DD HH:mm:ss')], err => {
       if (err) {
         reject(err)
         return

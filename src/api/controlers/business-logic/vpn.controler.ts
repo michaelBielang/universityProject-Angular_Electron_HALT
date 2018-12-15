@@ -11,7 +11,7 @@ import * as moment from 'moment';
 import * as sudo from 'sudo-prompt';
 
 class VPN {
-  private vpnTimoutThreshold = 10000; // in ms
+  private vpnTimoutThreshold = 25000; // in ms
   private checkIntervalTime = 250; // in ms
   private sourcePath = path.join(__dirname, 'vpn-config-files');
   private tmpFileName = 'tmp.key';
