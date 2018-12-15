@@ -25,17 +25,15 @@ export async function auth_login(req, res, next) {
   }
 
   let userObj;
-  if (email) {
-    await db.dbFunctions.getUser(email, rzKennung).then(user => {
-      if (user) {
-        userObj = user;
-        rzKennung = user['pk_user_id'].toLowerCase();
-      }
-    }).catch(err => {
-      logger.error(err);
-      errHandler.errResponse(res, err.message);
-    });
-  }
+  await db.dbFunctions.getUser(email, rzKennung).then(user => {
+    if (user) {
+      userObj = user;
+      rzKennung = user['pk_user_id'].toLowerCase();
+    }
+  }).catch(err => {
+    logger.error(err);
+    errHandler.errResponse(res, err.message);
+  });
 
   if (rzKennung) {
     vpn.connectHsaVpn({ id: rzKennung, pw: pw }).then(() => {

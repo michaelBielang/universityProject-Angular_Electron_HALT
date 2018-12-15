@@ -4,16 +4,18 @@
  */
 
 import * as Fuse from "fuse.js/dist/fuse.js";
+import ISearchObj from '../models/search-obj.model';
 
 class Fuzzy {
+  private maxRows: number = 10;
+
   constructor() { }
 
-  // DEBUG; TODO need to check returned object from ldap and extend e. g. "uid" like "ldapObj.uid"
+
   private fuseOptions() {
     return {
-      shouldSort: true,
       includeScore: true,
-      threshold: 0.5, // smaller would require better match, 1.0 would match everything
+      threshold: 1.0, // smaller would require better match, 1.0 would match everything
       location: 0,
       distance: 100,
       minMatchCharLength: 3,
@@ -39,14 +41,17 @@ class Fuzzy {
     };
   }
 
-  private fuseSearch(ldapArr, searchObj): Promise<any> {
+
+  private fuseSearch(ldapArr, searchObj: ISearchObj): Promise<any> {
     return new Promise((resolve, reject) => {
       if (searchObj) {
-        const fuse = new Fuse(ldapArr, this.fuseOptions);
+        const fuse = new Fuse(ldapArr, this.fuseOptions());
         const results = [];
         const keys = Object.keys(searchObj);
         for (const key of keys) {
-          results.concat(fuse.search(searchObj[key]));
+          if (searchObj[key]) {
+            results.push(...fuse.search(searchObj[key]));
+          }
         }
         resolve(results);
       } else {
@@ -54,6 +59,7 @@ class Fuzzy {
       }
     });
   }
+
 
   fuzzySearch(ldapArr, searchObj): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -66,7 +72,7 @@ class Fuzzy {
           for (const retRes of retResults) {
             if (retRes['uid'] === item['uid']) {
               containsItem = true;
-              retRes["fusescore"].push(1 - res["score"]);
+              retRes["fusescores"].push(1 - res["score"]);
               break;
             }
           }
@@ -82,12 +88,13 @@ class Fuzzy {
           retRes['avgscore'] = scoreSum / retRes['fusescores'].length;
         }
         resolve(retResults.sort((a, b) =>
-          (a['avgscore'] > b['avgscore'] ? 1 : a['avgscore'] < b['avgscore'] ? -1 : 0)));
+          (a['avgscore'] > b['avgscore'] ? -1 : a['avgscore'] < b['avgscore'] ? 1 : 0)).slice(0, this.maxRows));
       }).catch(err => {
         reject(err);
       });
     });
   }
 }
+
 
 export default new Fuzzy();

@@ -51,7 +51,10 @@ class VPN {
             if (this.isInHsaSubnet()) {
               this.removeTmpKeyFile(rotationFileName);
               clearInterval(testTimer);
-              resolve('Connection to HSA VPN established');
+              // wait for netsh dns flush
+              setTimeout(() => {
+                resolve('Connection to HSA VPN established');
+              }, 2000);
             }
             timeSum += this.checkIntervalTime;
           }, this.checkIntervalTime);
@@ -116,7 +119,7 @@ class VPN {
         }
         // 141.82. is the eduroam and vpn class B subnet of HSA
         if (iface.address.match(/^141\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/)) {
-          logger.error('is in HSA subnet!');
+          logger.info('is in HSA subnet!');
           return true;
         }
       }

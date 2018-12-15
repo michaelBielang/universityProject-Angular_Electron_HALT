@@ -319,7 +319,6 @@ function showTableContent (table) {
 /**
  * Adds a new history entry
  * @param user_id
- * @param searched_rz_nr
  * @param name
  * @param e_mail
  * @param faculty
@@ -327,13 +326,13 @@ function showTableContent (table) {
  * @param gender
  * @returns {Promise<any>}
  */
-function addHistory (user_id, searched_rz_nr, name, e_mail, faculty, subject, gender) {
+function addHistory (user_id, id_input, name, e_mail, faculty, subject, gender) {
   return new Promise((resolve, reject) => {
     // noinspection SqlResolve
-    const statement = `INSERT INTO history(fk_user_id, searched_rz_nr, name, e_mail, faculty, subject,
+    const statement = `INSERT INTO history(fk_user_id, id_input, name, e_mail, faculty, subject,
                                            gender, date_entry)
                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-    db.run(statement, [user_id, searched_rz_nr, name, e_mail, faculty, subject, gender, moment().format('YYYY-MM-DD HH:mm:ss')], err => {
+    db.run(statement, [user_id, id_input, name, e_mail, faculty, subject, gender, moment().format('YYYY-MM-DD HH:mm:ss')], err => {
       if (err) {
         reject(err)
         return

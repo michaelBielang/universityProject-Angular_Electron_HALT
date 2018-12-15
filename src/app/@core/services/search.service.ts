@@ -164,7 +164,7 @@ export class SearchService {
           },
         ]);
       } else {
-        reject('no search id input was given');
+        reject('no search identifier input was given');
       }
     });
   }
