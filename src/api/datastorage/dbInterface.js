@@ -82,13 +82,13 @@ function getDbConnection () {
  * Adds default tables to the database if there is no user present
  * (case: app launched for the first time)
  */
-function addDefaultTablesToDb() {
+function addDefaultTablesToDb () {
   tablePresent('user').then(async result => {
     if (!result) {
       const createStatements = [{
-          name: 'user',
-          statement: data.createTableStatements.user
-        },
+        name: 'user',
+        statement: data.createTableStatements.user
+      },
         {
           name: 'history',
           statement: data.createTableStatements.history
@@ -119,7 +119,7 @@ function addDefaultTablesToDb() {
  * @param statementObj
  * @returns {Promise<any>}
  */
-function testAndCreateSingleTable(statementObj) {
+function testAndCreateSingleTable (statementObj) {
   return new Promise((resolve, reject) => {
     tablePresent(statementObj.name).then(result => {
       if (!result) {
@@ -155,7 +155,7 @@ function userPresent (userID) {
  * @param rzKennung
  * @returns {Promise<any>}
  */
-function updateUser(email, rzKennung) {
+function updateUser (email, rzKennung) {
   let date = moment().format('YYYY-MM-DD HH:mm:ss')
   let statement
   let argument
@@ -297,7 +297,7 @@ function dropAll () {
  * @param eMail
  * @returns {Promise<any>}
  */
-function addUser(pk_user_id, firstName, lastName, eMail) {
+function addUser (pk_user_id, firstName, lastName, eMail) {
   if (eMail) {
     eMail = eMail.toLowerCase()
   }
@@ -352,7 +352,7 @@ function showTableContent (table) {
 /**
  * Adds a new history entry
  * @param user_id
- * @param searched_rz_nr
+ * @param id_input
  * @param name
  * @param e_mail
  * @param faculty
@@ -360,13 +360,13 @@ function showTableContent (table) {
  * @param gender
  * @returns {Promise<any>}
  */
-function addHistory (user_id, searched_rz_nr, name, e_mail, faculty, subject, gender) {
+function addHistory (user_id, id_input, name, e_mail, faculty, subject, gender) {
   return new Promise((resolve, reject) => {
     // noinspection SqlResolve
-    const statement = `INSERT INTO history(fk_user_id, searched_rz_nr, name, e_mail, faculty, subject,
+    const statement = `INSERT INTO history(fk_user_id, id_input, name, e_mail, faculty, subject,
                                            gender, date_entry)
                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-    db.run(statement, [user_id, searched_rz_nr, name, e_mail, faculty, subject, gender, dateManager.format(new Date(), 'YYYY-MM-DD HH:mm:ss')], err => {
+    db.run(statement, [user_id, id_input, name, e_mail, faculty, subject, gender, moment().format('YYYY-MM-DD HH:mm:ss')], err => {
       if (err) {
         reject(err)
         return
@@ -423,7 +423,7 @@ function deleteLastHistoryEntry () {
  * @param user_id
  * @returns {Promise<any>}
  */
-function getHistory (user_id) {
+function getAllHistoryEntries (user_id) {
   return new Promise((resolve, reject) => {
     // noinspection SqlResolve
     const statement = `SELECT *
@@ -446,21 +446,21 @@ function getHistory (user_id) {
  * @param ldapServer
  * @returns {Promise<any>}
  */
-function getFaculties(ldapServer) {
+function getFaculties (ldapServer) {
   if (ldapServer === 'hsa') {
     return new Promise((resolve, reject) => {
-      const faculties = data.HSAFaculties();
-      const facultyObjs = [];
+      const faculties = data.HSAFaculties()
+      const facultyObjs = []
       for (const fac of faculties) {
         facultyObjs.push({
           faculty: fac,
           studySubjectObjs: data.HSAStudies(fac)
-        });
+        })
       }
-      resolve(facultyObjs);
-    });
+      resolve(facultyObjs)
+    })
   } else if (ldapServer === '?') {
-    return Promise.resolve([]);
+    return Promise.resolve([])
   }
 }
 

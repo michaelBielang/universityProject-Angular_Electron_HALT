@@ -15,54 +15,54 @@ const request = require('request')
 const expect = require('chai').expect
 const createTableStatements = require('../data')
 
-describe('test get subjects', function() {
+describe('test get subjects', function () {
   const db = require('../dbInterface')
 
-  before(async function() {
+  before(async function () {
     await db.dbFunctions.initDbCon()
     await db.dbFunctions.dropAll()
   })
 
-  it('should work', function() {
+  it('should work', function () {
     expect(db.dbFunctions.getSubjects('hsa', 'Informatik')).to.be.an('array').that.does.include('Applied Research (Master)')
   })
 })
 
-describe('test get faculties', function() {
+describe('test get faculties', function () {
 
   const db = require('../dbInterface')
 
-  before(async function() {
+  before(async function () {
     await db.dbFunctions.initDbCon()
     await db.dbFunctions.dropAll()
   })
 
-  it('should work', async function() {
+  it('should work', async function () {
     await db.dbFunctions.getFaculties('hsa')
       .then(faculties => {
         expect(faculties).to.be.an('array')
       })
   })
 
-  after(async function() {
+  after(async function () {
     await db.dbFunctions.dropAll()
   })
 })
 
-describe('test get history present', function() {
+describe('test get history present', function () {
 
   const db = require('../dbInterface')
 
-  before(async function() {
+  before(async function () {
     await db.dbFunctions.initDbCon()
     await db.dbFunctions.dropAll()
   })
 
-  it('test history should be completed', function() {
+  it('test history should be completed', function () {
 
     return db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
       .then(resolve => {
-        db.dbFunctions.createTable(createTableStatements.createTableStatements.history)
+        return db.dbFunctions.createTable(createTableStatements.createTableStatements.history)
       })
       .then(() => {
         return db.dbFunctions.addUser(1, 'firstName', 'lastName', 'email')
@@ -84,23 +84,23 @@ describe('test get history present', function() {
       })
   })
 
-  after(async function() {
+  after(async function () {
     await db.dbFunctions.dropAll()
   })
 })
 
-describe('test get history not present', function() {
+describe('test get history not present', function () {
 
   const db = require('../dbInterface')
 
-  before(async function() {
+  before(async function () {
     await db.dbFunctions.initDbCon()
     await db.dbFunctions.dropAll()
   })
-  it('test history should be completed', function() {
+  it('test history should be completed', function () {
     return db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
       .then(resolve => {
-        db.dbFunctions.createTable(createTableStatements.createTableStatements.history)
+        return db.dbFunctions.createTable(createTableStatements.createTableStatements.history)
       })
       .then(() => {
         return db.dbFunctions.addUser(1, 'firstName', 'lastName', 'email')
@@ -117,19 +117,19 @@ describe('test get history not present', function() {
       })
   })
 
-  after(async function() {
+  after(async function () {
     await db.dbFunctions.dropAll()
   })
 })
 
-describe('test update user', function() {
+describe('test update user', function () {
   const db = require('../dbInterface')
 
-  before(async function() {
+  before(async function () {
     await db.dbFunctions.initDbCon()
     await db.dbFunctions.dropAll()
   })
-  it('test history should be completed', function() {
+  it('test history should be completed', function () {
     return db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
       .then(() => {
         return db.dbFunctions.addUser(1, 'firstName', 'lastName', 'email')
@@ -147,20 +147,20 @@ describe('test update user', function() {
       })
   })
 
-  after(async function() {
+  after(async function () {
     await db.dbFunctions.dropAll()
   })
 })
 
-describe('test remove last history entry', function() {
+describe('test remove last history entry', function () {
   const db = require('../dbInterface')
 
-  before(async function() {
+  before(async function () {
     await db.dbFunctions.initDbCon()
     await db.dbFunctions.dropAll()
   })
 
-  it('test history should complete', async function() {
+  it('test history should complete', async function () {
 
     this.timeout(10000)
     await db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
@@ -177,20 +177,20 @@ describe('test remove last history entry', function() {
     })
   })
 
-  after(async function() {
+  after(async function () {
     await db.dbFunctions.dropAll()
   })
 })
 
-describe('test clear history', function() {
+describe('test clear history', function () {
   const db = require('../dbInterface')
 
-  before(async function() {
+  before(async function () {
     await db.dbFunctions.initDbCon()
     await db.dbFunctions.dropAll()
   })
 
-  it('test history should complete', async function() {
+  it('test history should complete', async function () {
 
     this.timeout(10000)
     await db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
@@ -207,21 +207,21 @@ describe('test clear history', function() {
     })
   })
 
-  after(async function() {
+  after(async function () {
     await db.dbFunctions.dropAll()
   })
 
 })
 
-describe('test add user', function() {
+describe('test add user', function () {
   const db = require('../dbInterface')
 
-  before(async function() {
+  before(async function () {
     await db.dbFunctions.initDbCon()
     await db.dbFunctions.dropAll()
   })
 
-  it('test history should complete', async function() {
+  it('test history should complete', async function () {
 
     this.timeout(10000)
     await db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
@@ -231,20 +231,20 @@ describe('test add user', function() {
     })
   })
 
-  after(async function() {
+  after(async function () {
     await db.dbFunctions.dropAll()
   })
 })
 
-describe('test delete user', function() {
+describe('test delete user', function () {
   const db = require('../dbInterface')
 
-  before(async function() {
+  before(async function () {
     await db.dbFunctions.initDbCon()
     await db.dbFunctions.dropAll()
   })
 
-  it('test history should complete', async function() {
+  it('test history should complete', async function () {
 
     await db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
     await db.dbFunctions.addUser(1, 'firstName', 'lastName', 'email')
@@ -254,40 +254,40 @@ describe('test delete user', function() {
     })
   })
 
-  after(async function() {
+  after(async function () {
     await db.dbFunctions.dropAll()
   })
 })
 
-describe('test table not present', function() {
+describe('test table not present', function () {
   const db = require('../dbInterface')
 
-  before(async function() {
+  before(async function () {
     await db.dbFunctions.initDbCon()
     await db.dbFunctions.dropAll()
   })
 
-  it('test history should complete', async function() {
+  it('test history should complete', async function () {
 
     await db.dbFunctions.tablePresent(createTableStatements.createTableStatements.user).then(resolve => {
       expect(resolve).to.equal(false)
     })
   })
 
-  after(async function() {
+  after(async function () {
     await db.dbFunctions.dropAll()
   })
 })
 
-describe('test table present', function() {
+describe('test table present', function () {
   const db = require('../dbInterface')
 
-  before(async function() {
+  before(async function () {
     await db.dbFunctions.initDbCon()
     await db.dbFunctions.dropAll()
   })
 
-  it('test history should complete', async function() {
+  it('test history should complete', async function () {
 
     await db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
     await db.dbFunctions.tablePresent('user').then(resolve => {
@@ -295,21 +295,21 @@ describe('test table present', function() {
     })
   })
 
-  after(async function() {
+  after(async function () {
     await db.dbFunctions.dropAll()
   })
 })
 
-describe('test get user', function() {
+describe('test get user', function () {
 
   const db = require('../dbInterface')
 
-  before(async function() {
+  before(async function () {
     await db.dbFunctions.initDbCon()
     await db.dbFunctions.dropAll()
   })
 
-  it('should work', function() {
+  it('should work', function () {
     return db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
       .then(() => {
         return db.dbFunctions.addUser('1', 'firstName', 'lastName', 'email')
@@ -327,22 +327,22 @@ describe('test get user', function() {
       })
   })
 
-  after(async function() {
+  after(async function () {
     await db.dbFunctions.dropAll()
   })
 })
 
-describe('test user present true', function() {
+describe('test user present true', function () {
 
   const db = require('../dbInterface')
 
-  before(async function() {
+  before(async function () {
     await db.dbFunctions.initDbCon()
     await db.dbFunctions.dropAll()
   })
 
   // it doesn't need a catch statement since userPresent is forced to resolve with either true/false
-  it('should test true', function() {
+  it('should test true', function () {
     return db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
       .then(resolve => {
         return db.dbFunctions.addUser('1', 'firstName', 'lastName', 'email')
@@ -353,21 +353,21 @@ describe('test user present true', function() {
       })
   })
 
-  after(async function() {
+  after(async function () {
     await db.dbFunctions.dropAll()
   })
 })
 
-describe('test user present false', function() {
+describe('test user present false', function () {
   const db = require('../dbInterface')
 
-  before(async function() {
+  before(async function () {
     await db.dbFunctions.initDbCon()
     await db.dbFunctions.dropAll()
   })
 
   // it doesn't need a catch statement since userPresent is forced to resolve with either true/false
-  it('should test false', function() {
+  it('should test false', function () {
     return db.dbFunctions.createTable(createTableStatements.createTableStatements.user)
       .then(resolve => {
         return db.dbFunctions.addUser('1', 'firstName', 'lastName', 'email')
@@ -378,7 +378,7 @@ describe('test user present false', function() {
       })
   })
 
-  after(async function() {
+  after(async function () {
     await db.dbFunctions.dropAll()
   })
 })

@@ -10,7 +10,7 @@ import errHandler from './services/error.handler';
 // alle todo michi
 export function searchhistory_index(req, res, next) {
   logger.info(`searchhistory_index controler test`);
-  db.dbInterface.dbFunctions.getHistory(req.params['userId'])
+  db.dbInterface.dbFunctions.getAllHistoryEntries(req.params['userId'])
     .then(resolve => {
       res.status(200).json({
         message: 'searchhistory_index successful',
