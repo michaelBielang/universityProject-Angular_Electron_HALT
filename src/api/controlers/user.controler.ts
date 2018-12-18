@@ -9,6 +9,7 @@ import * as db from '../datastorage';
 import ldap from './business-logic/ldap.controler';
 
 export function user_show(req, res, next) {
+  // todo @chris: Warum erste if Abfrage notwendig?
   if (req.params['userid']) {
     let email;
     let rzKennung;
