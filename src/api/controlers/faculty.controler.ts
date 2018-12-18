@@ -3,14 +3,17 @@
  * @license UNLICENSED
  */
 
-import logger from '../logging/logger';
+import * as db from '../datastorage';
+import errHandler from './services/error.handler';
 
-// TODO michi
 export function faculty_index(req, res, next) {
-  logger.info(`faculty_index controler test`);
-
-  res.status(200).json({
-    message: 'faculty_index successful',
-    userObj: {},
-  });
+  db.dbInterface.dbFunctions.getFaculties('hsa')
+    .then(faculties => {
+      res.status(200).json({
+        message: 'faculty_index successful',
+        facultyObjs: faculties,
+      });
+    }).catch(err => {
+      errHandler.errResponse(res, err.message);
+    });
 }

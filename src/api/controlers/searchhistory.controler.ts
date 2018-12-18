@@ -1,36 +1,20 @@
 /**
- * @author Christoph Bichlmeier
+ * @author Christoph Bichlmeier, Michael Bielang
  * @license UNLICENSED
  */
 
-import logger from '../logging/logger';
 import * as db from '../datastorage';
+import errHandler from './services/error.handler';
 
-// alle todo michi
 export function searchhistory_index(req, res, next) {
-  logger.info(`searchhistory_index controler test`);
-  db.dbInterface.dbFunctions.getHistory(req.params['userId'])
+  db.dbInterface.dbFunctions.getHistory(req.params['userid'])
     .then(resolve => {
       res.status(200).json({
         message: 'searchhistory_index successful',
-        historyObj: resolve
+        historyObjs: resolve
       });
     })
     .catch(err => {
-      logger.info(err);
-    })
-  ;
-}
-
-// bestimmte todo
-export function searchhistory_show(req, res, next) {
-  logger.info(`searchhistory_show controler test`);
-
-  res.status(200).json({
-    message: 'searchhistory_show successful',
-  });
-}
-
-export function searchhistory_create(req, res, next) {
-  // todo
+      errHandler.errResponse(res, err.message);
+    });
 }

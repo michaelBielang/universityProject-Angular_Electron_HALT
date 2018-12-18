@@ -3,7 +3,6 @@
  * @license UNLICENSED
  */
 
-// import logger from '../logging/logger';
 import errHandler from './services/error.handler';
 import * as db from '../datastorage';
 // @ts-ignore
@@ -22,14 +21,13 @@ export function user_show(req, res, next) {
       if (user) {
         res.status(200).json({
           message: 'Retrieved user ' + req.params.userid + ' (API Test)',
-          // todo test user
           userObj: user
         });
       } else {
         errHandler.errResponse(res, 'User not found', 404);
       }
     }).catch(err => {
-      errHandler.errResponse(res, err.message, 404);
+      errHandler.errResponse(res, err.message);
     });
   } else {
     errHandler.errResponse(res, 'User not present', 404);

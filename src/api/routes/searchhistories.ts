@@ -4,12 +4,9 @@
  */
 
 import * as express from 'express';
-import * as db from '../datastorage';
 
 import {
   searchhistory_index,
-  searchhistory_show,
-  searchhistory_create,
 } from '../controlers/searchhistory.controler';
 
 class SearchHistoryRoutes {
@@ -23,11 +20,7 @@ class SearchHistoryRoutes {
   private mountRoutes(): void {
     const userRoutes = express.Router();
 
-    userRoutes.get('/', searchhistory_index);
-
-    userRoutes.get('/:searchhistoryid', searchhistory_show);
-
-    userRoutes.post('/', searchhistory_create);
+    userRoutes.get('/:userid', searchhistory_index);
 
     this.express.use('/', userRoutes);
   }

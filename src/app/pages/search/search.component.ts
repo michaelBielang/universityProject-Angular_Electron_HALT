@@ -49,10 +49,10 @@ export class SearchComponent implements OnInit {
         this.faculties = [];
         this.studysubjects = [];
         result.forEach(entry => {
-          this.faculties.push(entry['facultyname']);
-          if (entry['studysubjectObjs'] && entry['studysubjectObjs'].length) {
-            entry['studysubjectObjs'].forEach(subject => {
-              this.studysubjects.push(subject['studysubjectname']);
+          this.faculties.push(entry['faculty']);
+          if (entry['studySubjectObjs'] && entry['studySubjectObjs'].length) {
+            entry['studySubjectObjs'].forEach(subject => {
+              this.studysubjects.push(subject);
             });
           }
         });
@@ -123,10 +123,10 @@ export class SearchComponent implements OnInit {
       });
       this.studysubjects = [];
       this.getFacultiesWithStudysubjects.forEach(facStud => {
-        const facIndex = this.filteredfaculties.indexOf(facStud['facultyname']);
+        const facIndex = this.filteredfaculties.indexOf(facStud['faculty']);
         if (facIndex !== -1) {
-          facStud['studysubjectObjs'].forEach(subj => {
-            this.studysubjects.push(subj['studysubjectname']);
+          facStud['studySubjectObjs'].forEach(subj => {
+            this.studysubjects.push(subj);
           });
         }
       });
@@ -147,11 +147,11 @@ export class SearchComponent implements OnInit {
     const hist = this.searchService.searchHistory[index];
     this.searchService.updateSearchObj({
       gender: hist['gender'],
-      id: hist['id'],
+      id: hist['id_input'],
       name: hist['name'],
-      email: hist['email'],
+      email: hist['e_mail'],
       faculty: hist['faculty'],
-      subjectordegree: hist['subjectordegree']
+      subjectordegree: hist['subject']
     });
     this.initForm();
   }

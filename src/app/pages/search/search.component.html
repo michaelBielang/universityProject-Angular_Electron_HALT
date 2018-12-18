@@ -70,6 +70,6 @@
 
   <div class="search-history" *ngIf="searchService.searchHistory.length">
     <p class="history-label">Search history:</p>
-    <div class="row history-block" *ngFor="let hist of searchService.searchHistory; let i = index" (click)="onHistoryClick(i)">{{ hist['id'] || hist['name'] || hist['email'] }}</div>
+    <div class="row history-block" *ngFor="let hist of searchService.searchHistory; let i = index" (click)="onHistoryClick(i)">{{ hist['name'] || hist['e_mail'] || hist['id_input'] }}</div>
   </div>
 </div>
