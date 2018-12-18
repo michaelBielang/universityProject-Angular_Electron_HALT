@@ -35,10 +35,9 @@ exports.dbFunctions = {
   addHistory: addHistory,
   clearHistory: clearHistory,
   deleteLastHistoryEntry: deleteLastHistoryEntry,
-  getHistory: getHistory,
+  getAllHistoryEntries: getAllHistoryEntries,
   getFaculties: getFaculties,
-  getSubjects: getSubjects,
-  addDefaultTablesToDb: addDefaultTablesToDb
+  getSubjects: getSubjects
 }
 
 let db
@@ -47,7 +46,7 @@ let db
  * Init database connection
  * @returns {Promise<any>} with db connection or err
  */
-function initDbCon(production) {
+function initDbCon (production) {
   return new Promise((resolve, reject) => {
     getDbConnection().then(connection => {
       db = connection
@@ -65,7 +64,7 @@ function initDbCon(production) {
  * Handles different system paths (win/unix)
  * @returns {Promise<any>}
  */
-function getDbConnection() {
+function getDbConnection () {
   const targetPath = path.dirname(dbPath)
   if (!fs.existsSync(targetPath)) fs.mkdirSync(targetPath)
   return new Promise((resolve, reject) => {
@@ -83,13 +82,13 @@ function getDbConnection() {
  * Adds default tables to the database if there is no user present
  * (case: app launched for the first time)
  */
-function addDefaultTablesToDb() {
+function addDefaultTablesToDb () {
   tablePresent('user').then(async result => {
     if (!result) {
       const createStatements = [{
-          name: 'user',
-          statement: data.createTableStatements.user
-        },
+        name: 'user',
+        statement: data.createTableStatements.user
+      },
         {
           name: 'history',
           statement: data.createTableStatements.history
@@ -120,7 +119,7 @@ function addDefaultTablesToDb() {
  * @param statementObj
  * @returns {Promise<any>}
  */
-function testAndCreateSingleTable(statementObj) {
+function testAndCreateSingleTable (statementObj) {
   return new Promise((resolve, reject) => {
     tablePresent(statementObj.name).then(result => {
       if (!result) {
@@ -143,7 +142,7 @@ function testAndCreateSingleTable(statementObj) {
  * @param userID
  * @returns true / false
  */
-function userPresent(userID) {
+function userPresent (userID) {
   // noinspection SqlResolve
   return getUser(undefined, userID).then(resolve => {
     return !!resolve
@@ -156,7 +155,7 @@ function userPresent(userID) {
  * @param rzKennung
  * @returns {Promise<any>}
  */
-function updateUser(email, rzKennung) {
+function updateUser (email, rzKennung) {
   let date = moment().format('YYYY-MM-DD HH:mm:ss')
   let statement
   let argument
@@ -190,7 +189,7 @@ function updateUser(email, rzKennung) {
  * @param rzKennung
  * @returns Promise if user present or undefined if not
  */
-function getUser(email, rzKennung) {
+function getUser (email, rzKennung) {
   let sql
   let argument
   if (email) {
@@ -223,7 +222,7 @@ function getUser(email, rzKennung) {
  * @param table
  * @returns {Promise<any>}
  */
-function createTable(table) {
+function createTable (table) {
   return new Promise((resolve, reject) => {
     db.run(table, err => {
       if (err) {
@@ -240,7 +239,7 @@ function createTable(table) {
  * @param tableName
  * @returns {Promise<any>} returns either true or false. Forced to resolve!
  */
-function tablePresent(tableName) {
+function tablePresent (tableName) {
   const statement = 'SELECT * FROM ' + tableName
   return new Promise((resolve, reject) => {
     db.run(statement, (err) => {
@@ -258,7 +257,7 @@ function tablePresent(tableName) {
  * @param table
  * @returns {Promise<any>}
  */
-function dropTable(table) {
+function dropTable (table) {
   const statement = 'DROP TABLE ' + table
   return new Promise((resolve, reject) => {
     db.run(statement, err => {
@@ -277,7 +276,7 @@ function dropTable(table) {
  * ensure that Promise.all resolves even when a table was not present in the db.
  * @returns {Promise<any[]>}
  */
-function dropAll() {
+function dropAll () {
   return Promise.all(Object.keys(data.createTableStatements).map(tableName => {
     // return another promise which always resolves to ensure that Promise all works with all tableNames!
     return new Promise(((re) => {
@@ -298,7 +297,7 @@ function dropAll() {
  * @param eMail
  * @returns {Promise<any>}
  */
-function addUser(pk_user_id, firstName, lastName, eMail) {
+function addUser (pk_user_id, firstName, lastName, eMail) {
   if (eMail) {
     eMail = eMail.toLowerCase()
   }
@@ -321,7 +320,7 @@ function addUser(pk_user_id, firstName, lastName, eMail) {
  * @param pk_user_id
  * @returns {Promise<any>}
  */
-function deleteUser(pk_user_id) {
+function deleteUser (pk_user_id) {
   return new Promise(((resolve, reject) => {
     // noinspection SqlResolve
     const statement = `DELETE
@@ -341,7 +340,7 @@ function deleteUser(pk_user_id) {
  * Was relevant for the first implementation step of this interface
  * @param table
  */
-function showTableContent(table) {
+function showTableContent (table) {
   // noinspection SqlResolve
   const statement = `SELECT *
                      FROM ?`
@@ -353,6 +352,7 @@ function showTableContent(table) {
 /**
  * Adds a new history entry
  * @param user_id
+ * @param id_input
  * @param name
  * @param e_mail
  * @param faculty
@@ -360,7 +360,7 @@ function showTableContent(table) {
  * @param gender
  * @returns {Promise<any>}
  */
-function addHistory(user_id, id_input, name, e_mail, faculty, subject, gender) {
+function addHistory (user_id, id_input, name, e_mail, faculty, subject, gender) {
   return new Promise((resolve, reject) => {
     // noinspection SqlResolve
     const statement = `INSERT INTO history(fk_user_id, id_input, name, e_mail, faculty, subject,
@@ -380,7 +380,7 @@ function addHistory(user_id, id_input, name, e_mail, faculty, subject, gender) {
  * Clears the history
  * @returns {Promise<any>}
  */
-function clearHistory() {
+function clearHistory () {
   // noinspection SqlResolve
   const statement = `DELETE
                      FROM history
@@ -401,7 +401,7 @@ function clearHistory() {
  * Needed since our UI works FIFO principle to deliver the four last recent queries.
  * @returns {Promise<any>}
  */
-function deleteLastHistoryEntry() {
+function deleteLastHistoryEntry () {
   // noinspection SqlResolve
   const statement = `DELETE
                      FROM history
@@ -423,7 +423,7 @@ function deleteLastHistoryEntry() {
  * @param user_id
  * @returns {Promise<any>}
  */
-function getHistory(user_id) {
+function getAllHistoryEntries (user_id) {
   return new Promise((resolve, reject) => {
     // noinspection SqlResolve
     const statement = `SELECT *
@@ -446,21 +446,21 @@ function getHistory(user_id) {
  * @param ldapServer
  * @returns {Promise<any>}
  */
-function getFaculties(ldapServer) {
+function getFaculties (ldapServer) {
   if (ldapServer === 'hsa') {
     return new Promise((resolve, reject) => {
-      const faculties = data.HSAFaculties();
-      const facultyObjs = [];
+      const faculties = data.HSAFaculties()
+      const facultyObjs = []
       for (const fac of faculties) {
         facultyObjs.push({
           faculty: fac,
           studySubjectObjs: data.HSAStudies(fac)
-        });
+        })
       }
-      resolve(facultyObjs);
-    });
+      resolve(facultyObjs)
+    })
   } else if (ldapServer === '?') {
-    return Promise.resolve([]);
+    return Promise.resolve([])
   }
 }
 
@@ -472,7 +472,7 @@ function getFaculties(ldapServer) {
  * @param faculty
  * @returns {*}
  */
-function getSubjects(ldapServer, faculty) {
+function getSubjects (ldapServer, faculty) {
   if (ldapServer === 'hsa') {
     return data.HSAStudies(faculty)
   } else if (ldapServer === '?') {
