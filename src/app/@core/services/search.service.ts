@@ -3,21 +3,16 @@
  * @license UNLICENSED
  */
 
-import {Injectable} from '@angular/core';
-
-interface SearchObj {
-  gender;
-  id;
-  name;
-  email;
-  faculty;
-  subjectordegree;
-}
+import { Injectable } from '@angular/core';
+import { AuthService } from './auth.service';
+import { Http } from '@angular/http';
+import api from '../models/api-base-info.model';
+import ISearchObj from '../models/search-obj.model';
 
 @Injectable()
 export class SearchService {
-  searchHistory: SearchObj[] = [];
-  searchObj: SearchObj = {
+  searchHistory: ISearchObj[] = [];
+  searchObj: ISearchObj = {
     gender: 0,
     id: '',
     name: '',
@@ -25,146 +20,67 @@ export class SearchService {
     faculty: '',
     subjectordegree: ''
   };
+  maxHistoryCount = 5;
 
-  constructor() {
-  }
+  constructor(
+    private readonly authService: AuthService,
+    private readonly http: Http,
+  ) { }
 
-  updateSearchObj(obj: SearchObj) {
+  updateSearchObj(obj: ISearchObj) {
     this.searchObj = obj;
   }
 
-  updateSearchHistory(histObjs: SearchObj[]) {
-    this.searchHistory = histObjs;
+  updateSearchHistory(histObjs: ISearchObj[]) {
+    this.searchHistory = [];
+    let count = 0;
+    for (let i = histObjs.length - 1; i >= 0; --i) {
+      if (count++ >= this.maxHistoryCount) {
+        break;
+      }
+      this.searchHistory.push(histObjs[i]);
+    }
   }
 
   getFacultiesWithStudysubjects(): Promise<any> {
     return new Promise((resolve, reject) => {
-      // return mock data
-      setTimeout(() => {
-        resolve([
-          {
-            facultyname: 'Informatik',
-            studysubjectObjs: [
-              {studysubjectname: 'Wirtschaftsinformatik (Bachelor)'},
-              {studysubjectname: 'Informatik (Bachelor)'},
-              {studysubjectname: 'Informatik (Master)'},
-              {studysubjectname: 'Interaktive Medien (Bachelor)'},
-              {studysubjectname: 'Interaktive Medien Systeme (Master)'},
-            ]
-          },
-          {
-            facultyname: 'Wirtschaft',
-            studysubjectObjs: [
-              {studysubjectname: 'Wirtschaftswissenschaften (Bachelor)'},
-            ]
-          },
-          {
-            facultyname: 'Gestaltung',
-            studysubjectObjs: []
-          },
-          {
-            facultyname: 'Maschinenbau',
-            studysubjectObjs: []
-          },
-          {
-            facultyname: 'Architektur und Bau',
-            studysubjectObjs: []
-          },
-          {
-            facultyname: 'Elektrotechnik',
-            studysubjectObjs: []
-          }
-        ]);
-
-        reject(undefined);
-      }, 250);
+      this.http.get(api.faculty, {
+        headers: api.headers,
+        withCredentials: true,
+      }).subscribe(res => {
+        resolve(res.json()['facultyObjs']);
+      }, err => {
+        reject(err);
+      });
     });
   }
 
   getSearchHistory(): Promise<any> {
     return new Promise((resolve, reject) => {
-      // return mock data
-      setTimeout(() => {
-        resolve([
-          {
-            gender: 0,
-            id: '',
-            name: 'Max Mustermann',
-            email: '',
-            faculty: '',
-            subjectordegree: ''
-          },
-          {
-            gender: 2,
-            id: '',
-            name: 'Mustermann Maria',
-            email: '',
-            faculty: '',
-            subjectordegree: ''
-          },
-          {
-            gender: 0,
-            id: 'Anna',
-            name: '',
-            email: '',
-            faculty: '',
-            subjectordegree: ''
-          },
-          {
-            gender: 0,
-            id: '',
-            name: '',
-            email: 'anna.mueller@hs-augsburg.de',
-            faculty: '',
-            subjectordegree: ''
-          },
-        ]);
-        reject(undefined);
-      }, 250);
+      this.http.get(api.history + '/' + this.authService.getUserID(), {
+        headers: api.headers,
+        withCredentials: true,
+      }).subscribe(res => {
+        resolve(res.json()['historyObjs']);
+      }, err => {
+        reject(err);
+      });
     });
   }
 
   searchRequest(): Promise<any> {
     return new Promise((resolve, reject) => {
       if (this.searchObj['id'] || this.searchObj['name'] || this.searchObj['email']) {
-        // return mock data
-        resolve([
-          {
-            gender: 1,
-            firstname: 'Max',
-            lastname: 'Mustermann',
-            emails: ['max.mustermann@hs-augsburg.de', 'max23@rz.fh-augsburg.de'],
-            studysubject: 'Informatik',
-            faculty: 'Informatik',
-            degree: 'Bachelor',
-            university: 'HS-Augsburg',
-            identity: 'max23'
-          },
-          {
-            gender: 2,
-            firstname: 'Maria',
-            lastname: 'Mustermann',
-            emails: ['maria.mustermann@hs-augsburg.de'],
-            studysubject: 'Wirtschaftsinformatik',
-            faculty: 'Informatik',
-            degree: 'Bachelor',
-            university: 'HS-Augsburg',
-            identity: 'marmu'
-          },
-          {
-            gender: 2,
-            firstname: 'Anna',
-            lastname: 'Müller',
-            emails: ['anna.mueller@hs-augsburg.de'],
-            studysubject: 'Interaktive Medien',
-            faculty: 'Informatik',
-            degree: 'Bachelor',
-            university: 'HS-Augsburg',
-            identity: 'muell'
-          },
-        ]);
+        this.http.post(api.search + '/' + this.authService.getUserID(), this.searchObj, {
+          headers: api.headers,
+          withCredentials: true,
+        }).subscribe(res => {
+          resolve(res.json()['data']);
+        }, err => {
+          reject(err);
+        });
       } else {
-        reject('no search id input was given');
+        reject('no search identifier input was given');
       }
     });
   }

@@ -21,7 +21,7 @@ class SearchRoutes {
   private mountRoutes(): void {
     const userRoutes = express.Router();
 
-    userRoutes.post('/', search_exec);
+    userRoutes.post('/:userid', search_exec);
 
     this.express.use('/', userRoutes);
   }

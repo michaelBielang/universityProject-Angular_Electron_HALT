@@ -11,7 +11,7 @@ import * as moment from 'moment';
 import * as sudo from 'sudo-prompt';
 
 class VPN {
-  private vpnTimoutThreshold = 10000; // in ms
+  private vpnTimoutThreshold = 25000; // in ms
   private checkIntervalTime = 250; // in ms
   private sourcePath = path.join(__dirname, 'vpn-config-files');
   private tmpFileName = 'tmp.key';
@@ -51,7 +51,10 @@ class VPN {
             if (this.isInHsaSubnet()) {
               this.removeTmpKeyFile(rotationFileName);
               clearInterval(testTimer);
-              resolve('Connection to HSA VPN established');
+              // wait for netsh dns flush
+              setTimeout(() => {
+                resolve('Connection to HSA VPN established');
+              }, 2000);
             }
             timeSum += this.checkIntervalTime;
           }, this.checkIntervalTime);
@@ -116,7 +119,7 @@ class VPN {
         }
         // 141.82. is the eduroam and vpn class B subnet of HSA
         if (iface.address.match(/^141\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/)) {
-          logger.error('is in HSA subnet!');
+          logger.info('is in HSA subnet!');
           return true;
         }
       }

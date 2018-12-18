@@ -3,9 +3,9 @@
  * @license UNLICENSED
  */
 
-import {AfterViewInit, Component} from '@angular/core';
-import {DetailsService} from '../../@core/services/details.service';
-import {NotificationService} from '../../@core/services/notification.service';
+import { AfterViewInit, Component } from '@angular/core';
+import { DetailsService } from '../../@core/services/details.service';
+import { NotificationService } from '../../@core/services/notification.service';
 import * as Clipboard from 'clipboard';
 
 @Component({
@@ -51,8 +51,8 @@ export class DetailsComponent implements AfterViewInit {
     this.objClipboard['lastname'].on('success', (e) => success(e, this.notificationService));
     this.objClipboard['lastname'].on('error', (e) => fail(e, this.notificationService));
 
-    const emails = this.detailsService.detailsObj['emails'];
-    for (let i = 0; i < emails.length; ++i) {
+    const emails = this.detailsService.detailsObj['mailLocalAddress'];
+    for (let i = 0; i < emails.length; ++i) { // + 2 due to initial two entries - mail and mailRoutingAddress
       this.objClipboard['email' + i] = new Clipboard('.email-info' + i, {
         text: trigger => {
           return trigger.innerHTML.trim();
@@ -119,6 +119,22 @@ export class DetailsComponent implements AfterViewInit {
       );
       e.clearSelection();
     }
+  }
+
+  getStudySubject(): string {
+    const subject = this.detailsService.detailsObj['dfnEduPersonFieldOfStudyString'];
+    if (subject.indexOf('(') !== -1) {
+      return subject.split('(')[0].trim();
+    }
+    return subject;
+  }
+
+  getDegree(): string {
+    const subject = this.detailsService.detailsObj['dfnEduPersonFieldOfStudyString'];
+    if (subject.indexOf('(') !== -1) {
+      return subject.split('(')[1].replace(')', '').trim();
+    }
+    return subject;
   }
 
   ngOnDestroy() {

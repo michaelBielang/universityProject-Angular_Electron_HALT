@@ -14,8 +14,8 @@ const fs = require('fs')
 const sqlConnection = require('sqlite3').verbose()
 const data = require('./data.js')
 const path = require('path')
-const dateManager = require('date-and-t' +
-  'ime')
+// const dateManager = require('date-and-time')
+const moment = require('moment')
 const dbPath = path.join(__dirname, 'db/halt.db')
 
 //todo
@@ -82,22 +82,58 @@ function getDbConnection () {
  * Adds default tables to the database if there is no user present
  * (case: app launched for the first time)
  */
-function addDefaultTablesToDb () {
-  tablePresent('user').then(() => {
-    return Promise.resolve()
-  }).catch(async () => {
-    const createStatements = [
-      data.createTableStatements.user,
-      data.createTableStatements.history,
-      data.createTableStatements.faculty,
-      data.createTableStatements.studySubject
-    ]
-    for (let statement of createStatements) {
-      await createTable(statement).catch(err => {
-        console.error(err)
-      })
+function addDefaultTablesToDb() {
+  tablePresent('user').then(async result => {
+    if (!result) {
+      const createStatements = [{
+          name: 'user',
+          statement: data.createTableStatements.user
+        },
+        {
+          name: 'history',
+          statement: data.createTableStatements.history
+        },
+        {
+          name: 'faculty',
+          statement: data.createTableStatements.faculty
+        },
+        {
+          name: 'studySubject',
+          statement: data.createTableStatements.studySubject
+        }
+      ]
+      for (let statementObj of createStatements) {
+        await testAndCreateSingleTable(statementObj).catch(err => {
+          console.error(err)
+        })
+      }
     }
     return Promise.resolve()
+  }).catch(err => {
+    return Promise.reject(err)
+  })
+}
+
+/**
+ *
+ * @param statementObj
+ * @returns {Promise<any>}
+ */
+function testAndCreateSingleTable(statementObj) {
+  return new Promise((resolve, reject) => {
+    tablePresent(statementObj.name).then(result => {
+      if (!result) {
+        createTable(statementObj.statement).then(() => {
+          resolve()
+        }).catch(err => {
+          reject(err)
+        })
+      }
+      resolve()
+    }).catch(err => {
+      if (err)
+        reject(err)
+    })
   })
 }
 
@@ -119,8 +155,8 @@ function userPresent (userID) {
  * @param rzKennung
  * @returns {Promise<any>}
  */
-function updateUser (email, rzKennung) {
-  let date = dateManager.format(new Date(), 'YYYY-MM-DD HH:mm:ss')
+function updateUser(email, rzKennung) {
+  let date = moment().format('YYYY-MM-DD HH:mm:ss')
   let statement
   let argument
   if (email) {
@@ -261,12 +297,15 @@ function dropAll () {
  * @param eMail
  * @returns {Promise<any>}
  */
-function addUser (pk_user_id, firstName, lastName, eMail) {
+function addUser(pk_user_id, firstName, lastName, eMail) {
+  if (eMail) {
+    eMail = eMail.toLowerCase()
+  }
   return new Promise(((resolve, reject) => {
     // noinspection SqlResolve
     const statement = `INSERT INTO user(pk_user_id, first_name, last_name, e_mail, last_action)
                        VALUES (?, ?, ?, ?, ?)`
-    db.run(statement, [pk_user_id, firstName, lastName, eMail, dateManager.format(new Date(), 'YYYY-MM-DD HH:mm:ss')], (err) => {
+    db.run(statement, [pk_user_id, firstName, lastName, eMail, moment().format('YYYY-MM-DD HH:mm:ss')], (err) => {
       if (err) {
         reject(err)
         return
@@ -384,7 +423,7 @@ function deleteLastHistoryEntry () {
  * @param user_id
  * @returns {Promise<any>}
  */
-function getAllHistoryEntries (user_id) {
+function getHistory (user_id) {
   return new Promise((resolve, reject) => {
     // noinspection SqlResolve
     const statement = `SELECT *
@@ -405,13 +444,23 @@ function getAllHistoryEntries (user_id) {
  * if necessary.
  * So far it only returns hsa faculties.
  * @param ldapServer
- * @returns all faculties
+ * @returns {Promise<any>}
  */
-function getFaculties (ldapServer) {
+function getFaculties(ldapServer) {
   if (ldapServer === 'hsa') {
-    return data.HSAFaculties()
+    return new Promise((resolve, reject) => {
+      const faculties = data.HSAFaculties();
+      const facultyObjs = [];
+      for (const fac of faculties) {
+        facultyObjs.push({
+          faculty: fac,
+          studySubjectObjs: data.HSAStudies(fac)
+        });
+      }
+      resolve(facultyObjs);
+    });
   } else if (ldapServer === '?') {
-    return '....'
+    return Promise.resolve([]);
   }
 }
 

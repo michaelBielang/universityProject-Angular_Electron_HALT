@@ -3,7 +3,7 @@
  * @license UNLICENSED
  */
 
-import * as db from '../datastorage';
+import * as db from '../datastorage/dbInterface';
 import logger from '../logging/logger';
 import errHandler from './services/error.handler';
 // @ts-ignore
@@ -17,6 +17,7 @@ export async function auth_login(req, res, next) {
   const pw = req.body['pw'];
   let email;
   let rzKennung;
+
   if (ldap.isEmailAddress(userid)) {
     email = userid;
   } else {
@@ -24,17 +25,15 @@ export async function auth_login(req, res, next) {
   }
 
   let userObj;
-  if (email) {
-    await db.dbInterface.dbFunctions.getUser(email, rzKennung).then(user => {
-      if (user) {
-        userObj = user;
-        rzKennung = user['pk_user_id'].toLowerCase();
-      }
-    }).catch(err => {
-      logger.error(err);
-      errHandler.errResponse(res, err.message);
-    });
-  }
+  await db.dbFunctions.getUser(email, rzKennung).then(user => {
+    if (user) {
+      userObj = user;
+      rzKennung = user['pk_user_id'].toLowerCase();
+    }
+  }).catch(err => {
+    logger.error(err);
+    errHandler.errResponse(res, err.message);
+  });
 
   if (rzKennung) {
     vpn.connectHsaVpn({ id: rzKennung, pw: pw }).then(() => {
@@ -42,7 +41,7 @@ export async function auth_login(req, res, next) {
         ldap.auth(client, rzKennung, pw).then(async () => {
           let newUserObj;
           if (userObj) {
-            await db.dbInterface.dbFunctions.updateUser(email, rzKennung).catch(err => {
+            await db.dbFunctions.updateUser(email, rzKennung).catch(err => {
               errHandler.errResponse(res, err.message);
             });
           } else {
@@ -56,30 +55,21 @@ export async function auth_login(req, res, next) {
             });
           }
 
+          if (!userObj && newUserObj) {
+            await db.dbFunctions.addUser(
+              newUserObj['uid'],
+              newUserObj['givenName'],
+              newUserObj['sn'],
+              newUserObj['mail']).catch(err => {
+                throw err;
+              });
+          }
 
-          // // DEBUG
-          // if (!userObj && newUserObj) {
-          //   await db.dbInterface.dbFunctions.addUser(
-          //     newUserObj['uid'],
-          //     newUserObj['givenName'],
-          //     newUserObj['sn'],
-          //     newUserObj['mail']).catch(err => {
-          //     throw err;
-          //   });
-          // }
-          //
-          // console.info('getting User');
-          // await db.dbInterface.dbFunctions.getUser(email, rzKennung).then(dbUser => {
-          //   userObj = dbUser;
-          // }).catch(err => {
-          //   throw new Error(err['message']);
-          // });
-
-
-          // DEBUG
-          userObj = {
-            id: userid
-          };
+          await db.dbFunctions.getUser(email, rzKennung).then(dbUser => {
+            userObj = dbUser;
+          }).catch(err => {
+            throw new Error(err['message']);
+          });
 
           res.status(200).json({
             message: 'Auth successful',

@@ -1,5 +1,6 @@
 <mat-card>
-  <h6>{{ userData['firstname'] + ' ' + userData['lastname'] }}</h6>
-  <p [ngClass]="'email-output' + userIndex">{{ userData['emails'] ? userData['emails'][0] : '' }}</p>
+  <h6>{{ userData['givenName'] + ' ' + userData['sn'] }}</h6>
+  <p [ngClass]="'email-output' + userIndex">{{ userData['mail'] }}</p>
+  <div class="probability">{{ userData['avgscore'] | percent: '1.2' }}</div>
   <mat-icon (click)="onDetailsClick()">search</mat-icon>
 </mat-card>
