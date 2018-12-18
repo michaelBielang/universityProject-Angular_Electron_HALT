@@ -71,7 +71,7 @@ describe('test get history present', function () {
         return db.dbFunctions.addHistory(1, 2, 'firstName', 'lastName', 'email', 'Mathe', 'Mathe', 'hsa', 'm')
       })
       .then(resolve => {
-        return db.dbFunctions.getHistory(1)
+        return db.dbFunctions.getAllHistoryEntries(1)
       })
       .then(result => {
         expect(JSON.stringify(result).includes('informatik')).to.equal(true)
@@ -104,7 +104,7 @@ describe('test get history not present', function () {
         return db.dbFunctions.addUser(1, 'firstName', 'lastName', 'email')
       })
       .then(resolve => {
-        return db.dbFunctions.getHistory(1)
+        return db.dbFunctions.getAllHistoryEntries(1)
       })
       .then(result => {
         expect(result.includes('informatik')).to.equal(false)
@@ -172,7 +172,7 @@ describe('test remove last history entry', function () {
     await new Promise(resolve => setTimeout(resolve, 1500))
     await db.dbFunctions.addHistory(1, 2, 'firstName', 'lastName', 'email', 'NoDelete', 'NoDelete', 'hsa', 'm')
     await db.dbFunctions.deleteLastHistoryEntry(1)
-    await db.dbFunctions.getHistory(1).then(resolve => {
+    await db.dbFunctions.getAllHistoryEntries(1).then(resolve => {
       expect(JSON.stringify(resolve).includes('NoDelete')).to.equal(true)
     })
   })
@@ -202,7 +202,7 @@ describe('test clear history', function () {
     await new Promise(resolve => setTimeout(resolve, 1500))
     await db.dbFunctions.addHistory(1, 2, 'firstName', 'lastName', 'email', 'NoDelete', 'NoDelete', 'hsa', 'm')
     await db.dbFunctions.clearHistory()
-    await db.dbFunctions.getHistory(1).then(resolve => {
+    await db.dbFunctions.getAllHistoryEntries(1).then(resolve => {
       expect(JSON.stringify(resolve).includes('NoDelete')).to.equal(false)
     })
   })

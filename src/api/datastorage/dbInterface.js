@@ -35,7 +35,7 @@ exports.dbFunctions = {
   addHistory: addHistory,
   clearHistory: clearHistory,
   deleteLastHistoryEntry: deleteLastHistoryEntry,
-  getHistory: getHistory,
+  getAllHistoryEntries: getAllHistoryEntries,
   getFaculties: getFaculties,
   getSubjects: getSubjects
 }
@@ -384,7 +384,7 @@ function deleteLastHistoryEntry () {
  * @param user_id
  * @returns {Promise<any>}
  */
-function getHistory (user_id) {
+function getAllHistoryEntries (user_id) {
   return new Promise((resolve, reject) => {
     // noinspection SqlResolve
     const statement = `SELECT *

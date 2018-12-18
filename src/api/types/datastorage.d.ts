@@ -20,7 +20,7 @@
 //   addHistory: addHistory,
 //   clearHistory: clearHistory,
 //   deleteLastHistoryEntry: deleteLastHistoryEntry,
-//   getHistory: getHistory,
+//   getAllHistoryEntries: getAllHistoryEntries,
 //   getFaculties: getFaculties,
 //   getSubjects: getSubjects
 // }
