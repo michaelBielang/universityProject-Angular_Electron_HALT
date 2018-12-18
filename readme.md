@@ -7,8 +7,14 @@
 
 
 ## Project description
-A Tool to simplify the college LDAP search.
+**A Tool to simplify the college LDAP search.**
+Previously it was required to use a linux emulation on Windows PCs within the HSA network which did provide e. g. openLDAP. Furthermore it was required to use a command like this:
+```
+ldapsearch -H ldap://ldap1.fh-augsburg.de -x -LLL -b "ou=People,dc=FH-Augsburg,dc=DE" "(objectClass=*)" | tee hs-augs-ldap.dump
+```
+After this command has been executed it will dump around 500k+ lines into the `hs-augs-ldap.dump` file, which have to search through opening that dump file. This isn't very user friendly and cannot be imposed on HSA staff that isn't very technically savvy.
 
+**Therefore the following requirements did emerge to compensate that:**
 Users should not need to know long and complicated LDAP commands. This tool therefore will enable them to only type in e. g. a firstname, lastname, or the college email address or a combination of them to perform the actual lookup. This includes additional search limitations for study subject, faculty, gender, or degree (Bachelor or Master) as well as limitation onto a specific college or university. With given input, the tool will then automatically look for fitting identities in the Active Directories of a preset list of colleges and universities. If at first a connection is not possible or no search result was found, it will try to establish a vpn connections to said list of colleges and universities.
 
 
@@ -20,7 +26,6 @@ Users should not need to know long and complicated LDAP commands. This tool ther
 - automated LDAP lookup
 - simple installation binary
 - A simple UI for users
-- ...
 
 
 ## Used collaboration tools

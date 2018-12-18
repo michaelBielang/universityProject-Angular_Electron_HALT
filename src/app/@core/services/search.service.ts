@@ -20,6 +20,7 @@ export class SearchService {
     faculty: '',
     subjectordegree: ''
   };
+  maxHistoryCount = 5;
 
   constructor(
     private readonly authService: AuthService,
@@ -31,93 +32,39 @@ export class SearchService {
   }
 
   updateSearchHistory(histObjs: ISearchObj[]) {
-    this.searchHistory = histObjs;
+    this.searchHistory = [];
+    let count = 0;
+    for (let i = histObjs.length - 1; i >= 0; --i) {
+      if (count++ >= this.maxHistoryCount) {
+        break;
+      }
+      this.searchHistory.push(histObjs[i]);
+    }
   }
 
   getFacultiesWithStudysubjects(): Promise<any> {
     return new Promise((resolve, reject) => {
-      // return mock data
-      setTimeout(() => {
-        resolve([
-          {
-            facultyname: 'Informatik',
-            studysubjectObjs: [
-              { studysubjectname: 'Wirtschaftsinformatik (Bachelor)' },
-              { studysubjectname: 'Informatik (Bachelor)' },
-              { studysubjectname: 'Informatik (Master)' },
-              { studysubjectname: 'Interaktive Medien (Bachelor)' },
-              { studysubjectname: 'Interaktive Medien Systeme (Master)' },
-            ]
-          },
-          {
-            facultyname: 'Wirtschaft',
-            studysubjectObjs: [
-              { studysubjectname: 'Wirtschaftswissenschaften (Bachelor)' },
-            ]
-          },
-          {
-            facultyname: 'Gestaltung',
-            studysubjectObjs: []
-          },
-          {
-            facultyname: 'Maschinenbau',
-            studysubjectObjs: []
-          },
-          {
-            facultyname: 'Architektur und Bau',
-            studysubjectObjs: []
-          },
-          {
-            facultyname: 'Elektrotechnik',
-            studysubjectObjs: []
-          }
-        ]);
-
-        reject(undefined);
-      }, 250);
+      this.http.get(api.faculty, {
+        headers: api.headers,
+        withCredentials: true,
+      }).subscribe(res => {
+        resolve(res.json()['facultyObjs']);
+      }, err => {
+        reject(err);
+      });
     });
   }
 
   getSearchHistory(): Promise<any> {
     return new Promise((resolve, reject) => {
-      // return mock data
-      setTimeout(() => {
-        resolve([
-          {
-            gender: 0,
-            id: '',
-            name: 'Max Mustermann',
-            email: '',
-            faculty: '',
-            subjectordegree: ''
-          },
-          {
-            gender: 2,
-            id: '',
-            name: 'Mustermann Maria',
-            email: '',
-            faculty: '',
-            subjectordegree: ''
-          },
-          {
-            gender: 0,
-            id: 'Anna',
-            name: '',
-            email: '',
-            faculty: '',
-            subjectordegree: ''
-          },
-          {
-            gender: 0,
-            id: '',
-            name: '',
-            email: 'anna.mueller@hs-augsburg.de',
-            faculty: '',
-            subjectordegree: ''
-          },
-        ]);
-        reject(undefined);
-      }, 250);
+      this.http.get(api.history + '/' + this.authService.getUserID(), {
+        headers: api.headers,
+        withCredentials: true,
+      }).subscribe(res => {
+        resolve(res.json()['historyObjs']);
+      }, err => {
+        reject(err);
+      });
     });
   }
 
