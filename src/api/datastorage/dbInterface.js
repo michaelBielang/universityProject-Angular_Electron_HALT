@@ -50,9 +50,11 @@ function initDbCon (production) {
   return new Promise((resolve, reject) => {
     getDbConnection().then(connection => {
       db = connection
-      resolve(db)
       if (production)
-        addDefaultTablesToDb()
+        return addDefaultTablesToDb
+      else {
+        resolve(db)
+      }
     }).catch(err => {
       reject(err)
     })
