@@ -9,9 +9,6 @@
 
 'use strict'
 
-const exec = require('child_process').exec
-const path = require('path')
-const request = require('request')
 const expect = require('chai').expect
 const createTableStatements = require('../data')
 
