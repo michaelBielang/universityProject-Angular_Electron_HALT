@@ -9,18 +9,15 @@ import * as server from '../../server';
 import * as request from 'supertest';
 import {createTableStatements} from '../../datastorage/data';
 import * as db from '../../datastorage/dbInterface';
-import {after, before} from 'selenium-webdriver/testing';
 
 describe('test clear history', function () {
 
-  before(async function () {
-    await db.dbFunctions.initDbCon();
-    await db.dbFunctions.dropAll();
-  });
 
   this.timeout(10000);
   it('test history should be completed', async function () {
 
+    await db.dbFunctions.initDbCon();
+    await db.dbFunctions.dropAll();
     await db.dbFunctions.createTable(createTableStatements.user);
     await db.dbFunctions.addUser(1, 'firstName', 'lastName', 'email');
     return request(server.default.api)
@@ -30,10 +27,6 @@ describe('test clear history', function () {
       }).then(() => {
         server.default.apiObj.close();
       }).catch(err => console.log('error: \n' + err));
-  });
-
-  after(async function f() {
-    await db.dbFunctions.dropAll();
   });
 });
 

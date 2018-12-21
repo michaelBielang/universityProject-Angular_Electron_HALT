@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "Hochschul Active Directory Lookup Tool",
   "main": "halt",
-  "author": "Bichlmeier Christoph, Bielang Michael, Schmid Steffen",
+  "author": "Bichlmeier Christoph, Bielang Michael",
   "license": "UNLICENSED",
   "scripts": {
     "ng": "ng",
