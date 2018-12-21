@@ -5,9 +5,7 @@
 
 import * as express from 'express';
 
-import {
-  faculty_index,
-} from '../controlers/faculty.controler';
+import {faculty_index,} from '../controlers/faculty.controler';
 
 class FacultyRoutes {
   public express;
@@ -19,7 +17,6 @@ class FacultyRoutes {
 
   private mountRoutes(): void {
     const userRoutes = express.Router();
-
     userRoutes.get('/', faculty_index);
 
     this.express.use('/', userRoutes);

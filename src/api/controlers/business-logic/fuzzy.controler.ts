@@ -3,13 +3,15 @@
  * @license UNLICENSED
  */
 
-import * as Fuse from "fuse.js/dist/fuse.js";
+// @ts-ignore
+import * as Fuse from 'fuse.js/dist/fuse.js';
 import ISearchObj from '../models/search-obj.model';
 
 class Fuzzy {
   private maxRows: number = 10;
 
-  constructor() { }
+  constructor() {
+  }
 
 
   private fuseOptions() {
@@ -22,21 +24,21 @@ class Fuzzy {
       maxPatternLength: 25,
       keys: [
         // RZ-Kennung
-        { name: "uid", weight: 0.2 }, // example: chris87
+        {name: 'uid', weight: 0.2}, // example: chris87
         // Email Addresses
-        { name: "mail", weight: 0.1 }, // example: Christoph.Bichlmeier@HS-Augsburg.DE
-        { name: "mailLocalAddress", weight: 0.05 }, // example: chris87@RZ.FH-Augsburg.DE, Christoph.Bichlmeier@FH-Augsburg.DE
-        { name: "mailRoutingAddress", weight: 0.03 }, // example: chris87@RZ.FH-Augsburg.DE
-        { name: "eduPersonPrincipalName", weight: 0.05 }, // example: chris87@hs-augsburg.de
+        {name: 'mail', weight: 0.1}, // example: Christoph.Bichlmeier@HS-Augsburg.DE
+        {name: 'mailLocalAddress', weight: 0.05}, // example: chris87@RZ.FH-Augsburg.DE, Christoph.Bichlmeier@FH-Augsburg.DE
+        {name: 'mailRoutingAddress', weight: 0.03}, // example: chris87@RZ.FH-Augsburg.DE
+        {name: 'eduPersonPrincipalName', weight: 0.05}, // example: chris87@hs-augsburg.de
         // Names
-        { name: "givenName", weight: 0.15 }, // example: Christoph
-        { name: "sn", weight: 0.15 }, // example: Christoph
+        {name: 'givenName', weight: 0.15}, // example: Christoph
+        {name: 'sn', weight: 0.15}, // example: Christoph
         // Faculty
-        { name: "ou", weight: 0.1 }, // example: Elektrotechnik
+        {name: 'ou', weight: 0.1}, // example: Elektrotechnik
         // StudySubject
-        { name: "dfnEduPersonFieldOfStudyString", weight: 0.13 }, // example: Applied Research (Master)
+        {name: 'dfnEduPersonFieldOfStudyString', weight: 0.13}, // example: Applied Research (Master)
         // Gender
-        { name: "schacGender", weight: 0.04 }, // example: 1   (1 = male, 2 = female)
+        {name: 'schacGender', weight: 0.04}, // example: 1   (1 = male, 2 = female)
       ],
     };
   }
@@ -67,12 +69,12 @@ class Fuzzy {
         const retResults = [];
         for (const res of results) {
           const item = res['item'];
-          item["fusescores"] = [1 - res["score"]];
+          item['fusescores'] = [1 - res['score']];
           let containsItem = false;
           for (const retRes of retResults) {
             if (retRes['uid'] === item['uid']) {
               containsItem = true;
-              retRes["fusescores"].push(1 - res["score"]);
+              retRes['fusescores'].push(1 - res['score']);
               break;
             }
           }
