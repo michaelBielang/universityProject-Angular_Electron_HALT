@@ -6,7 +6,7 @@
 import * as express from 'express';
 
 import {
-  searchhistory_index,
+  searchHistory_index,
 } from '../controlers/searchhistory.controler';
 
 class SearchHistoryRoutes {
@@ -20,7 +20,7 @@ class SearchHistoryRoutes {
   private mountRoutes(): void {
     const userRoutes = express.Router();
 
-    userRoutes.get('/:userid', searchhistory_index);
+    userRoutes.get('/:userid', searchHistory_index);
 
     this.express.use('/', userRoutes);
   }

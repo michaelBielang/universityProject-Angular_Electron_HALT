@@ -11,7 +11,7 @@ import {createTableStatements} from '../../datastorage/data';
 import * as db from '../../datastorage/dbInterface';
 
 
-describe('test clear history', function () {
+describe('test user controller', function () {
 
   this.timeout(10000);
   it('test username valid', async function () {
@@ -20,6 +20,7 @@ describe('test clear history', function () {
     await db.dbFunctions.dropAll();
     await db.dbFunctions.createTable(createTableStatements.user);
     await db.dbFunctions.addUser(1, 'firstName', 'lastName', 'email');
+    await db.dbFunctions.addHistory(1, 2, 'Elena', 'elena@email.de', 'Kunst', 'malen', 1);
     return request(server.default.api)
       .get('/api/users/1')
       .then(res => {
@@ -36,7 +37,7 @@ describe('test clear history', function () {
 });
 
 
-describe('test clear history', function () {
+describe('test user controller', function () {
 
   this.timeout(10000);
   it('test rzKennung valid', async function () {
@@ -60,7 +61,7 @@ describe('test clear history', function () {
   });
 });
 
-describe('test clear history', function () {
+describe('test user controller', function () {
 
   this.timeout(10000);
   it('test nothing valid', async function () {
