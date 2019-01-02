@@ -89,7 +89,7 @@ class Api {
     const apiRoutes = express.Router();
     apiRoutes.get('/api/', (req, res) => {
       res.json({
-        message: 'Welcome, this is an API for the Hochschul Active Directory Lookup Tool',
+        message: 'Welcome! This is an API for the Hochschul Active Directory Lookup Tool',
       });
     });
     this.express.use('/', apiRoutes);

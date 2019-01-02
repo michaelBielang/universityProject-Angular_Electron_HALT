@@ -10,18 +10,17 @@ import * as request from 'supertest';
 import * as db from '../../datastorage/dbInterface';
 
 
-describe('test faculties', function () {
+describe('test healthcheck', function () {
 
   this.timeout(10000);
-  it('test if faculties are callable', async function () {
+  it('test should return 200', async function () {
 
     await db.dbFunctions.initDbCon();
     return request(server.default.api)
-      .get('/api/faculties/')
+      .get('/api/healthcheck/')
       .then(res => {
         const status = res.status === 200;
-        const contentPresent = JSON.stringify(res.body.facultyObjs).includes('Mechatronik');
-        expect(contentPresent && status).to.eql(true);
+        expect(status).to.eql(true);
       }).then(() => {
         server.default.apiObj.close();
       }).catch(err => {

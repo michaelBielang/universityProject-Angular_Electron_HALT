@@ -64,5 +64,29 @@ describe('test history', function () {
   });
 });
 
+describe('test history', function () {
+
+  this.timeout(10000);
+  it('test history user not present', async function () {
+
+    await db.dbFunctions.initDbCon();
+    await db.dbFunctions.dropAll();
+    await db.dbFunctions.createTable(createTableStatements.user);
+    await db.dbFunctions.createTable(createTableStatements.history);
+    await db.dbFunctions.addUser(1, 'firstName', 'lastName', 'email');
+
+    return request(server.default.api)
+      .get('/api/searchhistories/2')
+      .then(res => {
+        expect(false).to.eql(true);
+      }).then(() => {
+        server.default.apiObj.close();
+      }).catch(err => {
+        //should reach this part since reject should be returned
+        expect(true).to.eql(true);
+        server.default.apiObj.close();
+      });
+  });
+});
 
 
