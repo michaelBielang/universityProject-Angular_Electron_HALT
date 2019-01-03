@@ -52,7 +52,7 @@ class LDAP {
           ldapSearchObj['subject'] = this.getLdapStudySubjectType() + '*' + sub.toLowerCase() + '*)';
         }
 
-        if (searchObj['gender'] && searchObj['gender'].length) {
+        if (searchObj['gender']) {
           let gen: number = parseInt(searchObj['gender']);
           if (isNaN(gen)) {
             gen = searchObj['gender'].indexOf('f') !== -1 ? 2 : 1;
@@ -75,6 +75,7 @@ class LDAP {
           const keys = Object.keys(ldapSearchObj);
           const ldapResults = [];
           for (const key of keys) {
+            // don't explicitly search for gender alone, it will try to get gender if it's available in makeLdapFilterString
             if (key !== 'gender') {
               const type: string = toString.call(ldapSearchObj[key]);
               if (type === "[object Array]") {
@@ -297,7 +298,8 @@ class LDAP {
 
 
   private makeLdapFilterString(filter: string, gender?: string): string {
-    return gender ? '(&' + gender + filter + ')' : filter;
+    const filterStr = gender ? '(&' + gender + filter + ')' : filter;
+    return filterStr;
   }
 
 

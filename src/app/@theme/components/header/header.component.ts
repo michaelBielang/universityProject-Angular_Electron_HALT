@@ -3,13 +3,14 @@
  * @license UNLICENSED
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {TabSelectionService} from '../../../@core/services/tab-selection.service';
-import {DetailsService} from '../../../@core/services/details.service';
-import {ResultsService} from '../../../@core/services/results.service';
-import {AuthService} from '../../../@core/services/auth.service';
-import {Subscription} from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { NotificationService } from '../../../@core/services/notification.service';
+import { TabSelectionService } from '../../../@core/services/tab-selection.service';
+import { DetailsService } from '../../../@core/services/details.service';
+import { ResultsService } from '../../../@core/services/results.service';
+import { AuthService } from '../../../@core/services/auth.service';
+import { Subscription } from 'rxjs';
 import route from '../../../@core/enums/route.enum';
 
 @Component({
@@ -33,17 +34,34 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private readonly resultsService: ResultsService,
     private readonly detailsService: DetailsService,
     private readonly authService: AuthService,
+    private readonly notificationService: NotificationService,
   ) {
   }
 
   ngOnInit() {
     this.updateTabs();
     this.tabSwitchSubscription = this.tabSelectionService.tabSwitchEvent.subscribe(index => {
-      this.selectedTabIndex = index;
       this.updateTabs();
       setTimeout(() => {
+        if (index === route.RESULTS) {
+          let hasResults = false;
+          for (const tab of this.tabs) {
+            if (tab['label'] === 'Results') {
+              hasResults = true;
+              break;
+            }
+          }
+          if (!hasResults) {
+            this.notificationService.showNotification(
+              'info',
+              null,
+              'has no results',
+            );
+          }
+        }
         if (this.tabs[index]) {
           this.router.navigate([this.tabs[index]['route']]);
+          this.selectedTabIndex = index;
         }
       }, 50);
     });
@@ -54,9 +72,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   updateTabs() {
     this.tabs = [
-      {label: 'Search', disabled: this.getSearchValidation(), route: 'search', enum: route.SEARCH},
-      {label: 'Results', disabled: this.getResultsValidation(), route: 'results', enum: route.RESULTS},
-      {label: 'Details', disabled: this.getDetailsValidation(), route: 'details', enum: route.DETAILS}
+      { label: 'Search', disabled: this.getSearchValidation(), route: 'search', enum: route.SEARCH },
+      { label: 'Results', disabled: this.getResultsValidation(), route: 'results', enum: route.RESULTS },
+      { label: 'Details', disabled: this.getDetailsValidation(), route: 'details', enum: route.DETAILS }
     ];
     this.tabs = this.tabs.filter(entry => {
       return !entry['disabled'];

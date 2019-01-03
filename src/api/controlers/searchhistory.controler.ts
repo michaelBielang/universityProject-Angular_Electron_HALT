@@ -14,7 +14,6 @@ import errHandler from './services/error.handler';
  * @param next
  */
 export function searchHistory_index(req, res, next) {
-  logger.info(`searchhistory_index controler test`);
   db.dbInterface.dbFunctions.getAllHistoryEntries(req.params['userid'])
     .then(resolve => {
       res.status(200).json({

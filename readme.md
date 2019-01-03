@@ -1,9 +1,8 @@
 # Hochschul Active Directory Lookup Tool (HALT)
 
 ## Project members
-- Bichlmeier Christoph [Master]: UI (Angular), Electron (process management), Auth, Packaging and Building (Webpack, NSIS)
-- Bielang Michael [Bachelor]: DB, DB-Interface, API
-- Schmid Steffen [Bachelor]: Testing, VPN, LDAP, Reporting
+- Bichlmeier Christoph [Master]: UI (Angular), Electron (process management), Auth, Packaging and Building (Webpack, NSIS), LDAP, VPN
+- Bielang Michael [Bachelor]: DB, DB-Interface, API, Testing
 
 
 ## Project description
@@ -39,6 +38,7 @@ Users should not need to know long and complicated LDAP commands. This tool ther
 
 
 ## How to start this tool, How to use it
+If on windows, it's advised to use Powershell (to prevent port locking and processes from getting stuck)
 - prepare dev env:
   - use latest node version (10.x)
 ```
@@ -57,6 +57,16 @@ npm run package:win
   - install ZipDLL plugin (../NSIS/Plugins/x86-ansi/): https://nsis.sourceforge.io/ZipDLL_plug-in
   - install AccessControl plugin: https://nsis.sourceforge.io/AccessControl_plug-in
   - open .nsi script file with NSIS and build it
+
+
+## How to run Tests
+If on windows, it's advised to use Powershell
+- `npm run db-test` Test sqlite3 database interface
+- `npm run user-test` Test if prepared mock user does get returned as expected
+- `npm run searchhistory-test` Test if prepared search history entry gets returned as expected
+- `npm run faculty-test` Check if faculty information gets return as expected from api controller
+- `npm run healthCheck-test` If api healthCheck controller returns correct healthy info
+- `npm run search-test` Will try to connect vpn and tests ldap lookup. It needs to be closed with ctrl + c due to ldap service keeping it open.
 
 
 ## How to install production version

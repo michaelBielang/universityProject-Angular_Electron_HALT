@@ -3,14 +3,14 @@
  * @license UNLICENSED
  */
 
-import {Component, OnInit} from '@angular/core';
-import {TabSelectionService} from '../../@core/services/tab-selection.service';
-import {FormControl, FormGroup} from '@angular/forms';
-import {SearchCustomValidators, validationMessagesEN} from './search.validators';
-import {MyErrorStateMatcher} from '../../@core/models/error-state-matcher.model';
-import {NotificationService} from '../../@core/services/notification.service';
-import {SearchService} from '../../@core/services/search.service';
-import {ResultsService} from '../../@core/services/results.service';
+import { Component, OnInit } from '@angular/core';
+import { TabSelectionService } from '../../@core/services/tab-selection.service';
+import { FormControl, FormGroup } from '@angular/forms';
+import { SearchCustomValidators, validationMessagesEN } from './search.validators';
+import { MyErrorStateMatcher } from '../../@core/models/error-state-matcher.model';
+import { NotificationService } from '../../@core/services/notification.service';
+import { SearchService } from '../../@core/services/search.service';
+import { ResultsService } from '../../@core/services/results.service';
 import route from '../../@core/enums/route.enum';
 
 @Component({
@@ -80,10 +80,10 @@ export class SearchComponent implements OnInit {
       'faculty': new FormControl(this.searchService.searchObj['faculty'], []),
       'subjectordegree': new FormControl(this.searchService.searchObj['subjectordegree'], []),
     }, {
-      validators: [
-        this.customValidators.idOrEmailRequired.bind(this),
-      ],
-    });
+        validators: [
+          this.customValidators.idOrEmailRequired.bind(this),
+        ],
+      });
   }
 
   onSearchBtnClick() {
@@ -114,8 +114,8 @@ export class SearchComponent implements OnInit {
           );
         }, 250);
       }).catch(err => {
-      this.errHandling(err);
-    });
+        this.errHandling(err);
+      });
   }
 
   onFacultyChange() {
