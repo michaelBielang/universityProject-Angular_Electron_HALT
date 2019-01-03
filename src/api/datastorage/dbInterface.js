@@ -18,8 +18,6 @@ const path = require('path')
 const moment = require('moment')
 const dbPath = path.join(__dirname, 'db/halt.db')
 
-//todo
-//const logger = require('../logging/logger.js')
 exports.dbFunctions = {
   initDbCon: initDbCon,
   updateUser: updateUser,
@@ -51,7 +49,7 @@ function initDbCon (production) {
     getDbConnection().then(connection => {
       db = connection
       if (production)
-        return addDefaultTablesToDb
+        addDefaultTablesToDb()
       else {
         resolve(db)
       }
@@ -411,7 +409,6 @@ function deleteLastHistoryEntry () {
   return new Promise((resolve, reject) => {
     db.run(statement, err => {
       if (err) {
-        console.log('Error: \n' + err)
         reject(err)
         return
       }

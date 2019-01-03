@@ -46,6 +46,9 @@ describe('test get faculties', function () {
   })
 })
 
+/**
+ * This function was done with promises on intention to get more practise with promises.
+ */
 describe('test get history present', function () {
 
   const db = require('../dbInterface')
@@ -86,6 +89,9 @@ describe('test get history present', function () {
   })
 })
 
+/**
+ * This function was done with promises on intention to get more practise with promises.
+ */
 describe('test get history not present', function () {
 
   const db = require('../dbInterface')
@@ -119,6 +125,9 @@ describe('test get history not present', function () {
   })
 })
 
+/**
+ * This function was done with promises on intention to get more practise with promises.
+ */
 describe('test update user', function () {
   const db = require('../dbInterface')
 
@@ -329,6 +338,9 @@ describe('test get user', function () {
   })
 })
 
+/**
+ * This function was done with promises on intention to get more practise with promises.
+ */
 describe('test user present true', function () {
 
   const db = require('../dbInterface')

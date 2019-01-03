@@ -19,7 +19,7 @@ export function search_exec(req, res, next) {
     email: req.body['email'] ? req.body['email'].toLowerCase() : undefined,
     faculty: req.body['faculty'],
     subjectordegree: req.body['subjectordegree'],
-  }
+  };
   db.dbInterface.dbFunctions.addHistory(req.params['userid'], searchObj['id'],
     searchObj['name'], searchObj['email'], searchObj['faculty'],
     searchObj['subjectordegree'], searchObj['gender'])
@@ -37,7 +37,7 @@ export function search_exec(req, res, next) {
         throw err;
       });
     }).catch(err => {
-      logger.error(err);
-      errHandler.errResponse(res, err.message);
-    });
+    logger.error(err);
+    errHandler.errResponse(res, err.message);
+  });
 }

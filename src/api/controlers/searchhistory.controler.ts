@@ -7,13 +7,18 @@ import logger from '../logging/logger';
 import * as db from '../datastorage';
 import errHandler from './services/error.handler';
 
-// alle todo michi
-export function searchhistory_index(req, res, next) {
+/**
+ * api/searchhistories
+ * @param req
+ * @param res
+ * @param next
+ */
+export function searchHistory_index(req, res, next) {
   logger.info(`searchhistory_index controler test`);
-  db.dbInterface.dbFunctions.getAllHistoryEntries(req.params['userId'])
+  db.dbInterface.dbFunctions.getAllHistoryEntries(req.params['userid'])
     .then(resolve => {
       res.status(200).json({
-        message: 'searchhistory_index successful',
+        message: 'searchHistory_index successful',
         historyObjs: resolve
       });
     })
