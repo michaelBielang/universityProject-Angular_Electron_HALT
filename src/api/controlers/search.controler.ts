@@ -12,9 +12,6 @@ import ISearchObj from './models/search-obj.model';
 
 
 export function search_exec(req, res, next) {
-  console.log('body');
-  console.log(req.body);
-  console.log('\n ##################### \n');
   const searchObj: ISearchObj = {
     gender: req.body['gender'],
     id: req.body['id'],
@@ -23,8 +20,6 @@ export function search_exec(req, res, next) {
     faculty: req.body['faculty'],
     subjectordegree: req.body['subjectordegree'],
   };
-
-  console.log(searchObj);
   db.dbInterface.dbFunctions.addHistory(req.params['userid'], searchObj['id'],
     searchObj['name'], searchObj['email'], searchObj['faculty'],
     searchObj['subjectordegree'], searchObj['gender'])

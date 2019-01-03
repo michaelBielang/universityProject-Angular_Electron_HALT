@@ -49,7 +49,7 @@ function initDbCon (production) {
     getDbConnection().then(connection => {
       db = connection
       if (production)
-        return addDefaultTablesToDb
+        addDefaultTablesToDb()
       else {
         resolve(db)
       }

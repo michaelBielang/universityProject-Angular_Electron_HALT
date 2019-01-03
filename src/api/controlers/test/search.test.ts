@@ -11,11 +11,10 @@ import {createTableStatements} from '../../datastorage/data';
 import * as db from '../../datastorage/dbInterface';
 import ISearchObj from '../models/search-obj.model';
 
-// TODO
-describe('test history', function () {
+describe('test search', function () {
 
   this.timeout(10000);
-  it('test history entry available', async function () {
+  it('test should work', async function () {
 
     await db.dbFunctions.initDbCon();
     await db.dbFunctions.dropAll();
@@ -31,13 +30,14 @@ describe('test history', function () {
       subjectordegree: 'malen',
     };
 
+    // use strg + c to terminate this test manually (seem to hang due to ldap search process)
     return request(server.default.api)
       .post('/api/search/1')
       .send(searchObj)
       .then(res => {
         const status = res.status === 200;
-        const nameValid = res.body.historyObjs[0].e_mail === 'elena@email.de';
-        expect(status && nameValid).to.eql(true);
+        const contentAvailable = (res.body.message).includes('Search successful');
+        expect(status && contentAvailable).to.eql(true);
       }).then(() => {
         server.default.apiObj.close();
       }).catch(err => {
