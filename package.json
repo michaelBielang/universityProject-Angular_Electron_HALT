@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "Hochschul Active Directory Lookup Tool",
   "main": "halt",
-  "author": "Bichlmeier Christoph, Bielang Michael, Schmid Steffen",
+  "author": "Bichlmeier Christoph, Bielang Michael",
   "license": "UNLICENSED",
   "scripts": {
     "ng": "ng",
@@ -24,6 +24,7 @@
     "copy": "node copy-static.js",
     "clear": "node clear-dist.js",
     "test": "ng test",
+    "api-test": "npm run build:server && mocha dist/server/controlers/test/user.test.js",
     "db-test": "mocha src/api/datastorage/test/dbInterface_test.js",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -65,7 +66,7 @@
     "zone.js": "^0.8.19"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "0.10.7",
+    "@angular-devkit/build-angular": "^0.11.4",
     "@angular/cli": "7.0.6",
     "@angular/compiler-cli": "7.1.0",
     "@angular/language-service": "7.1.0",
@@ -96,6 +97,7 @@
     "node-gyp": "^3.8.0",
     "protractor": "~5.4.1",
     "sqlite3": "^4.0.4",
+    "supertest": "^3.3.0",
     "ts-loader": "^5.3.1",
     "ts-node": "~7.0.1",
     "tslint": "~5.11.0",
