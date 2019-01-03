@@ -5,6 +5,7 @@
 - Bielang Michael [Bachelor]: DB, DB-Interface, API, Testing
 
 
+
 ## Project description
 **A Tool to simplify the college LDAP search.**
 Previously it was required to use a linux emulation on Windows PCs within the HSA network which did provide e. g. openLDAP. Furthermore it was required to use a command like this:
@@ -17,6 +18,7 @@ After this command has been executed it will dump around 500k+ lines into the `h
 Users should not need to know long and complicated LDAP commands. This tool therefore will enable them to only type in e. g. a firstname, lastname, or the college email address or a combination of them to perform the actual lookup. This includes additional search limitations for study subject, faculty, gender, or degree (Bachelor or Master) as well as limitation onto a specific college or university. With given input, the tool will then automatically look for fitting identities in the Active Directories of a preset list of colleges and universities. If at first a connection is not possible or no search result was found, it will try to establish a vpn connections to said list of colleges and universities.
 
 
+
 ## Requirements
 - Development with Unit-Tests
 - integrated database driver
@@ -27,6 +29,7 @@ Users should not need to know long and complicated LDAP commands. This tool ther
 - A simple UI for users
 
 
+
 ## Used collaboration tools
 - GitLab tickets
 - draw.io (broken, sockets do no longer work)
@@ -35,6 +38,7 @@ Users should not need to know long and complicated LDAP commands. This tool ther
 - Teamspeak 3
 - TeamViewer
 - WhatsApp
+
 
 
 ## How to start this tool, How to use it
@@ -59,6 +63,9 @@ npm run package:win
   - open .nsi script file with NSIS and build it
   - if the users needs to install OpenVPN, it alse requires the environment variable to be set
     - This PC -> right click, and properties -> Advanced System Settings -> Environment Variables -> look for "Path" in upper variables list (or add it) -> Edit -> New -> Expample entry: `C:\Programme\OpenVPN\bin` -> accept with ok and it should be good to go
+  - if windows shows a virus warning, that's due to not having the installer certified by microsoft...
+    - Compiled windows 64bit install candidate: https://drive.google.com/open?id=1yC23I01ytdzCSSU0KBVe2lNbxRMJ8Btq
+
 
 
 ## How to run Tests
@@ -69,6 +76,7 @@ If on windows, it's advised to use Powershell
 - `npm run faculty-test` Check if faculty information gets return as expected from api controller
 - `npm run healthCheck-test` If api healthCheck controller returns correct healthy info
 - `npm run search-test` Will try to connect vpn and tests ldap lookup. It needs to be closed with ctrl + c due to ldap service keeping it open.
+
 
 
 ## How to install production version
@@ -126,6 +134,7 @@ If on windows, it's advised to use Powershell
 - API Routes: https://drive.google.com/open?id=1mA8_dYpBGgLfX-3GVu8xeRJ3aJ0UyEKs
 - DB-Model: https://drive.google.com/open?id=1ZQS0EXhozjIOtZPlBilWsKoMHsfMSKS5
 - SW-Architecture: https://drive.google.com/open?id=13ZwsZ_9DXTizq_jddzv_BC6xSUcfg2nK
+
 
 
 # ADDITIONAL/OPTIONAL STUFF
