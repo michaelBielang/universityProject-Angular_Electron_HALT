@@ -32,11 +32,9 @@ export async function auth_login(req, res, next) {
     }
   }).catch(err => {
     logger.error(err);
-    errHandler.errResponse(res, err.message);
   });
-
   if (rzKennung) {
-    vpn.connectHsaVpn({ id: rzKennung, pw: pw }).then(() => {
+    vpn.connectHsaVpn({id: rzKennung, pw: pw}).then(() => {
       ldap.getLdapClient().then(client => {
         ldap.auth(client, rzKennung, pw).then(async () => {
           let newUserObj;
@@ -61,8 +59,8 @@ export async function auth_login(req, res, next) {
               newUserObj['givenName'],
               newUserObj['sn'],
               newUserObj['mail']).catch(err => {
-                throw err;
-              });
+              throw err;
+            });
           }
 
           await db.dbFunctions.getUser(email, rzKennung).then(dbUser => {

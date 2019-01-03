@@ -33,6 +33,7 @@ describe('test history', function () {
 
     return request(server.default.api)
       .post('/api/search/1')
+      .send(searchObj)
       .then(res => {
         const status = res.status === 200;
         const nameValid = res.body.historyObjs[0].e_mail === 'elena@email.de';
