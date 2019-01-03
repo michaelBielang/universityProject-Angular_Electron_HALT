@@ -24,10 +24,13 @@ if (!fs.existsSync(loggingPath)) {
 }
 logger.transports.file.file = path.join(loggingPath, 'halt-main.log');
 
-
+// keeping a reference in global so that OS isn't garbage collecting it
 let mainWindow;
 let server;
 
+/**
+ * To open visible Window for users to interact with
+ */
 function createWindow() {
   if (!mainWindow) {
     mainWindow = new BrowserWindow({
@@ -54,6 +57,9 @@ function createWindow() {
   }
 }
 
+/**
+ * Starting child process for the Express API backend
+ */
 function createServer() {
   logger.info('starting server child process...');
 
@@ -103,6 +109,9 @@ app.on('window-all-closed', () => {
   });
 });
 
+/**
+ * Close possible existing OpenVPN connections and open child processes
+ */
 async function cleanUpAndClose() {
   const tmpFileName = 'tmp.key';
   const folderTarget = path.join(appDir, 'vpn-config-files');
@@ -155,6 +164,11 @@ async function cleanUpAndClose() {
   return;
 }
 
+/**
+ * Actually killing given process with name
+ * @param processName
+ * @returns {Promise<any>}
+ */
 function killProcesses(processName) {
   return new Promise((resolve, reject) => {
     const killMsg = 'killed all ' + processName + ' processes';
@@ -184,11 +198,17 @@ function killProcesses(processName) {
   });
 }
 
+/**
+ * Determine according to OS, if given process is listed in process list and therefore active
+ * @param processName
+ * @returns {Promise<any>}
+ */
 function checkIfOpenVpnIsRunning(processName) {
   return new Promise((resolve, reject) => {
     const plat = process.platform;
     const cmd = plat === 'win32' ? 'tasklist' : (plat === 'darwin' ? 'ps -ax | grep ' + mac : (plat === 'linux' ? 'ps -A' : ''));
     const pName = plat === 'win32' ? processName + '.exe' : processName;
+    // processName == undefined also tests if processName == null
     if (cmd === '' || processName === '' || processName == undefined) {
       resolve(false)
     }

@@ -11,6 +11,13 @@ import errHandler from './services/error.handler';
 import ISearchObj from './models/search-obj.model';
 
 
+/**
+ * using controlers from business-logic to look for given search input in HS LDAP
+ * Route: /api/search/:userid
+ * @param req
+ * @param res
+ * @param next
+ */
 export function search_exec(req, res, next) {
   const searchObj: ISearchObj = {
     gender: req.body['gender'],

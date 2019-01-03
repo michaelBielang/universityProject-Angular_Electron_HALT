@@ -3,9 +3,7 @@
  * @license UNLICENSED
  */
 
-export class AuthCustomValidators {
-
-}
+export class AuthCustomValidators { }
 
 export function validationMessagesDE() {
   return {

@@ -15,6 +15,10 @@ const apiObject = api.listen(env.port, err => {
   return logger.info(`server is listening on ${env.port} in \'prod\' mode`);
 });
 
+/**
+ * exporting explicitely for testing, in order to be able to actually use and
+ * close the express server after tests
+ */
 export default {
   api: api,
   apiObj: apiObject

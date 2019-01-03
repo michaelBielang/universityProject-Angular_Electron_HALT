@@ -9,10 +9,10 @@ import ISearchObj from '../models/search-obj.model';
 class Fuzzy {
   private maxRows: number = 10;
 
-  constructor() {
-  }
-
-
+  /**
+   * To prepare all required settings for fuzzy search module
+   * @returns {}
+   */
   private fuseOptions() {
     return {
       includeScore: true,
@@ -23,26 +23,31 @@ class Fuzzy {
       maxPatternLength: 25,
       keys: [
         // RZ-Kennung
-        {name: 'uid', weight: 0.2}, // example: chris87
+        { name: 'uid', weight: 0.2 }, // example: chris87
         // Email Addresses
-        {name: 'mail', weight: 0.1}, // example: Christoph.Bichlmeier@HS-Augsburg.DE
-        {name: 'mailLocalAddress', weight: 0.05}, // example: chris87@RZ.FH-Augsburg.DE, Christoph.Bichlmeier@FH-Augsburg.DE
-        {name: 'mailRoutingAddress', weight: 0.03}, // example: chris87@RZ.FH-Augsburg.DE
-        {name: 'eduPersonPrincipalName', weight: 0.05}, // example: chris87@hs-augsburg.de
+        { name: 'mail', weight: 0.1 }, // example: Christoph.Bichlmeier@HS-Augsburg.DE
+        { name: 'mailLocalAddress', weight: 0.05 }, // example: chris87@RZ.FH-Augsburg.DE, Christoph.Bichlmeier@FH-Augsburg.DE
+        { name: 'mailRoutingAddress', weight: 0.03 }, // example: chris87@RZ.FH-Augsburg.DE
+        { name: 'eduPersonPrincipalName', weight: 0.05 }, // example: chris87@hs-augsburg.de
         // Names
-        {name: 'givenName', weight: 0.15}, // example: Christoph
-        {name: 'sn', weight: 0.15}, // example: Christoph
+        { name: 'givenName', weight: 0.15 }, // example: Christoph
+        { name: 'sn', weight: 0.15 }, // example: Christoph
         // Faculty
-        {name: 'ou', weight: 0.1}, // example: Elektrotechnik
+        { name: 'ou', weight: 0.1 }, // example: Elektrotechnik
         // StudySubject
-        {name: 'dfnEduPersonFieldOfStudyString', weight: 0.13}, // example: Applied Research (Master)
+        { name: 'dfnEduPersonFieldOfStudyString', weight: 0.13 }, // example: Applied Research (Master)
         // Gender
-        {name: 'schacGender', weight: 0.04}, // example: 1   (1 = male, 2 = female)
+        { name: 'schacGender', weight: 0.04 }, // example: 1   (1 = male, 2 = female)
       ],
     };
   }
 
-
+  /**
+   * To calculate actual search result probabilities and simply appending them onto an unfiltered array
+   * @param ldapArr
+   * @param searchObj
+   * @returns {Promise<any>}
+   */
   private fuseSearch(ldapArr, searchObj: ISearchObj): Promise<any> {
     return new Promise((resolve, reject) => {
       if (searchObj) {
@@ -61,7 +66,12 @@ class Fuzzy {
     });
   }
 
-
+  /**
+   * Using fuseSearch function and filtering the returned array to get distinct results as well as an average search result score
+   * @param ldapArr
+   * @param searchObj
+   * @returns {Promise<any>}
+   */
   fuzzySearch(ldapArr, searchObj: ISearchObj): Promise<any> {
     Object.keys(searchObj).forEach(key => {
       searchObj[key] = String(searchObj[key]);

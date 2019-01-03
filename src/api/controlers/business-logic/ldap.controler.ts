@@ -8,9 +8,12 @@ import * as ldapjs from 'ldapjs';
 import ISearchObj from '../models/search-obj.model';
 
 class LDAP {
-  constructor() { }
 
-
+  /**
+   * Providing required options to establish the ldap connection
+   * @param srv
+   * @returns {}
+   */
   ldapOptions(srv?: string) {
     return {
       url: srv,
@@ -21,7 +24,11 @@ class LDAP {
     };
   }
 
-
+  /**
+   * To prepare all required statements for each key value pair of search input
+   * @param searchObj
+   * @returns {Promise<any>}
+   */
   ldapSearch(searchObj: ISearchObj): Promise<any> {
     return new Promise((resolve, reject) => {
       if (Object.keys(searchObj).length) {
@@ -97,7 +104,15 @@ class LDAP {
     });
   }
 
-
+  /**
+   * To interface the search and concatenation of search key value pairs
+   * @param client
+   * @param ldapResults
+   * @param searchKey
+   * @param searchObj
+   * @param searchSubEntry
+   * @returns {Promise<any>}
+   */
   private sortInLdapResults(client: ldapjs.Client, ldapResults: any[], searchKey: string, searchObj: any, searchSubEntry?: string): Promise<any> {
     return new Promise(resolve => {
       this.execLdapSearch(client, this.makeLdapFilterString(searchSubEntry || searchObj[searchKey], searchObj['gender'])).then(results => {
@@ -114,7 +129,13 @@ class LDAP {
     });
   }
 
-
+  /**
+   * To get info if given user id and pw can be authenticated against the HS LDAP
+   * @param client
+   * @param user
+   * @param pass
+   * @returns {Promise<any>}
+   */
   auth(client: ldapjs.Client, user: string, pass: string): Promise<any> {
     user = user.toLowerCase();
     return new Promise((resolve, reject) => {
@@ -141,7 +162,13 @@ class LDAP {
     });
   }
 
-
+  /**
+   * To get info if given user id and pw can be authenticated against the HS LDAP
+   * @param client
+   * @param user
+   * @param pass
+   * @returns {Promise<any>}
+   */
   getLdapUserInfo(client: ldapjs.Client, user: string): Promise<any> {
     return new Promise((resolve, reject) => {
       const filterPrefix = this.getLdapUserSearchType(user);
@@ -161,7 +188,12 @@ class LDAP {
     });
   }
 
-
+  /**
+   * Actually perform search on LDAP with given key value pair
+   * @param client
+   * @param filter
+   * @returns {Promise<any>}
+   */
   execLdapSearch(client: ldapjs.Client, filter): Promise<any> {
     return new Promise((resolve, reject) => {
       const opts = {
@@ -190,7 +222,10 @@ class LDAP {
     });
   }
 
-
+  /**
+   * To establish a connection to the HS LDAP or giving info if it's unreachable
+   * @returns {Promise<any>}
+   */
   getLdapClient(): Promise<ldapjs.Client> {
     return new Promise((resolve, reject) => {
       let conCount = 0;
@@ -234,7 +269,11 @@ class LDAP {
     });
   }
 
-
+  /**
+   * Which type of id should be looked at
+   * @param email
+   * @returns string
+   */
   private getLdapUserSearchType(email) {
     if (!this.isEmailAddress(email)) {
       return this.getLdapRzIdType();
@@ -243,32 +282,50 @@ class LDAP {
     }
   }
 
-
+  /**
+   * Prepared prefix for given type
+   * @returns string
+   */
   private getLdapRzIdType() {
     return '(uid=';
   }
 
-
+  /**
+   * Prepared prefix for given type
+   * @returns string
+   */
   private getLdapFirstNameType() {
     return '(givenName=';
   }
 
-
+  /**
+   * Prepared prefix for given type
+   * @returns string
+   */
   private getLdapLastNameType() {
     return '(sn=';
   }
 
-
+  /**
+   * Prepared prefix for given type
+   * @returns string
+   */
   private getLdapFacultyType() {
     return '(ou=';
   }
 
-
+  /**
+   * Prepared prefix for given type
+   * @returns string
+   */
   private getLdapStudySubjectType() {
     return '(dfnEduPersonFieldOfStudyString=';
   }
 
-
+  /**
+   * Prepared prefix for given type
+   * @returns string
+   */
   private getLdapGenderType() {
     return '(schacGender=';
   }
@@ -276,6 +333,8 @@ class LDAP {
 
   /**
    * ldap is to slow for an or operation (filtering) with all four possibilities, it needs to be predetermined...
+   * @param email
+   * @returns string
    */
   private getLdapEmailType(email) {
     // Test Regex: https://regex101.com/
@@ -296,13 +355,24 @@ class LDAP {
     return '(mailRoutingAddress=';
   }
 
-
+  /**
+   * to concatenate filter string for ldap search
+   * @param filter
+   * @param gender
+   * @returns string
+   */
   private makeLdapFilterString(filter: string, gender?: string): string {
     const filterStr = gender ? '(&' + gender + filter + ')' : filter;
     return filterStr;
   }
 
-
+  /**
+   * comparison helper function
+   * @param arr
+   * @param arrKey
+   * @param compareValue
+   * @returns boolean
+   */
   private ldapObjArrContains(arr: any[], arrKey: string, compareValue: any): boolean {
     let contains = false;
     for (const e of arr) {
@@ -314,7 +384,11 @@ class LDAP {
     return contains;
   }
 
-
+  /**
+   * regex helper function to test if input is of type email
+   * @param email
+   * @returns boolean
+   */
   isEmailAddress(email) {
     email = email.toLowerCase();
     // @ts-ignore
@@ -322,7 +396,11 @@ class LDAP {
     return regex.test(email);
   }
 
-
+  /**
+   * helper function, mainly used to randomize selected ldap server and don't overuse a single one
+   * @param a
+   * @returns generic depends on input
+   */
   private shuffle(a) {
     for (let i = a.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));

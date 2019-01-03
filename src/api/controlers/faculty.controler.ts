@@ -6,6 +6,13 @@
 import * as db from '../datastorage';
 import errHandler from './services/error.handler';
 
+/**
+ * simply returning all known faculties
+ * Route: /api/faculties
+ * @param req
+ * @param res
+ * @param next
+ */
 export function faculty_index(req, res, next) {
   db.dbInterface.dbFunctions.getFaculties('hsa')
     .then(faculties => {

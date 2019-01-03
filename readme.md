@@ -57,6 +57,8 @@ npm run package:win
   - install ZipDLL plugin (../NSIS/Plugins/x86-ansi/): https://nsis.sourceforge.io/ZipDLL_plug-in
   - install AccessControl plugin: https://nsis.sourceforge.io/AccessControl_plug-in
   - open .nsi script file with NSIS and build it
+  - if the users needs to install OpenVPN, it alse requires the environment variable to be set
+    - This PC -> right click, and properties -> Advanced System Settings -> Environment Variables -> look for "Path" in upper variables list (or add it) -> Edit -> New -> Expample entry: `C:\Programme\OpenVPN\bin` -> accept with ok and it should be good to go
 
 
 ## How to run Tests
@@ -120,8 +122,10 @@ If on windows, it's advised to use Powershell
 - presentation of application/demo
 
 
-
-
+## Additional documentation and models
+- API Routes: https://drive.google.com/open?id=1mA8_dYpBGgLfX-3GVu8xeRJ3aJ0UyEKs
+- DB-Model: https://drive.google.com/open?id=1ZQS0EXhozjIOtZPlBilWsKoMHsfMSKS5
+- SW-Architecture: https://drive.google.com/open?id=13ZwsZ_9DXTizq_jddzv_BC6xSUcfg2nK
 
 
 # ADDITIONAL/OPTIONAL STUFF

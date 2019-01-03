@@ -16,8 +16,11 @@ class VPN {
   private sourcePath = path.join(__dirname, 'vpn-config-files');
   private tmpFileName = 'tmp.key';
 
-  constructor() { }
-
+  /**
+   * to check if executing workstation is already in HSA subnet and if not to establish a VPN connection
+   * @param credentials: { id, pw }
+   * @returns {Promise<any>}
+   */
   connectHsaVpn(credentials: { id: string, pw: string }): Promise<any> {
     return new Promise((resolve, reject) => {
       if (!this.isInHsaSubnet()) {
@@ -53,7 +56,7 @@ class VPN {
               // wait for netsh dns flush
               setTimeout(() => {
                 resolve('Connection to HSA VPN established');
-              }, 2000);
+              }, 7500);
             }
             timeSum += this.checkIntervalTime;
           }, this.checkIntervalTime);
@@ -69,6 +72,12 @@ class VPN {
     });
   }
 
+  /**
+   * since handing over an user and password string directly in command line for OpenVPN isn't possible,
+   * a text file needs to be created and removed after connection is established
+   * @param rotationFileName
+   * @returns {Promise<any>}
+   */
   removeTmpKeyFile(rotationFileName?: string): Promise<any> {
     return new Promise((resolve, reject) => {
       const localTargetPath = path.join(this.sourcePath, (rotationFileName ? rotationFileName : this.tmpFileName));
@@ -83,6 +92,13 @@ class VPN {
     });
   }
 
+  /**
+   * since handing over an user and password string directly in command line for OpenVPN isn't possible,
+   * a text file needs to be created and removed after connection is established
+   * @param credentials: { id, pw }
+   * @param rotationFileName
+   * @returns {Promise<any>}
+   */
   createTmpKeyFile(credentials: { id: string, pw: string }, rotationFileName?: string): Promise<any> {
     return new Promise((resolve, reject) => {
       if (credentials.id && credentials.pw) {
@@ -107,7 +123,10 @@ class VPN {
     });
   }
 
-  //n
+  /**
+   * to check if workstation is already in correct subnet and if a new VPN connection is required
+   * @returns boolean
+   */
   isInHsaSubnet() {
     const netInterfaces = os.networkInterfaces();
     for (const ifname of Object.keys(netInterfaces)) {

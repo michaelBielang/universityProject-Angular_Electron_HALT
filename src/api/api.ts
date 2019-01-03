@@ -33,6 +33,9 @@ class Api {
     this.errorRoutes();
   }
 
+  /**
+   * applying security stuff for express
+   */
   private addMiddlewares(): void {
     if (env.mode === 'dev') {
       this.express.use(morganLogger('dev')); // Use Morgan logger
@@ -76,6 +79,9 @@ class Api {
     ));
   }
 
+  /**
+   * to actually provide api access points
+   */
   private mountSubRoutes(): void {
     this.express.use('/api/auth', authRoutes);
     this.express.use('/api/users', userRoutes);
@@ -85,6 +91,9 @@ class Api {
     this.express.use('/api/healthcheck', healthCheckRoutes);
   }
 
+  /**
+   * hooking everything up
+   */
   private mountApiRoutes(): void {
     const apiRoutes = express.Router();
     apiRoutes.get('/api/', (req, res) => {
@@ -95,6 +104,9 @@ class Api {
     this.express.use('/', apiRoutes);
   }
 
+  /**
+   * catching all routes that are not defined
+   */
   private errorRoutes(): void {
     this.express.use((req, res, next) => {
       const error: { status?: number, message: string } = new Error('Route not available');

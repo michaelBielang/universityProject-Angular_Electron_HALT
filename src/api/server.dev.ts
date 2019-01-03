@@ -21,7 +21,7 @@ export default {
   apiObj: apiObject
 };
 
-// Handle CTRL+C
+// Handle CTRL+C only for dev mode
 process.on('SIGINT', function () {
   // so the program will not close instantly
   process.stdin.resume();

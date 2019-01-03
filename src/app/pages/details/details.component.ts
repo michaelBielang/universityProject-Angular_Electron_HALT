@@ -19,8 +19,7 @@ export class DetailsComponent implements AfterViewInit {
   constructor(
     public readonly detailsService: DetailsService,
     private readonly notificationService: NotificationService,
-  ) {
-  }
+  ) { }
 
   ngAfterViewInit() {
     this.registerClipboardEvents();

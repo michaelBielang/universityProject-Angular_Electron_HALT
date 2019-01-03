@@ -5,21 +5,14 @@
 
 import * as path from 'path';
 import * as fs from 'fs';
-// import * as elog from 'electron-log';
 import { createLogger, transports, format } from "winston";
 
+/**
+ * a simple prepared logger to centralize logging into a file in error case for production mode
+ */
 export class Logger {
   private loggingPath = path.join(__dirname, 'logging');
   private logger: any;
-
-  // constructor() {
-  //   this.logger = elog;
-  //   if (!fs.existsSync(this.loggingPath)) {
-  //     fs.mkdirSync(this.loggingPath);
-  //   }
-  //   this.setLogToFileLevel('error');
-  //   this.setLogFileName('express.log');
-  // }
 
   constructor() {
     if (!fs.existsSync(this.loggingPath)) {
@@ -42,27 +35,6 @@ export class Logger {
 
     this.logger = createLogger(options);
   }
-
-  // setFileLogging(options: { level?: elog.LevelOption, fileName?: string }) {
-  //   this.setLogToFileLevel(options['level']);
-  //   this.setLogFileName(options['fileName']);
-  //   return this.logger;
-  // }
-
-  // setLogFileName(fileName: string) {
-  //   this.logger.transports.file.file = path.join(this.loggingPath, fileName);
-  //   return this;
-  // }
-
-  // setLogToFileLevel(level: string) {
-  //   this.logger.transports.file.level = level;
-  //   return this;
-  // }
-
-  // setLogToConsoleLevel(level: string) {
-  //   this.logger.transports.console.level = level;
-  //   return this;
-  // }
 
   getLogger() {
     return this.logger;

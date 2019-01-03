@@ -23,6 +23,9 @@ logger.transports.file.file = path.join(loggingPath, 'halt-dev-main.log');
 // Keep a global reference to prevent garbage collection
 let win;
 
+/**
+ * To open visible Window for users to interact with
+ */
 const createWindow = () => {
   // set timeout to render the window not until the Angular
   // compiler is ready to show the project
@@ -54,6 +57,7 @@ app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {
   cleanUpAndClose().then(() => {
+    // IOS should not close, since process management is handled differently
     if (process.platform !== 'darwin') {
       app.quit();
     }
@@ -68,6 +72,10 @@ app.on('activate', () => {
   }
 });
 
+/**
+ * Close possible existing OpenVPN connections
+ * @returns {Promise<any>}
+ */
 function cleanUpAndClose() {
   const tmpFileName = 'tmp.key';
   const folderTarget = path.join(__dirname, '../api/controlers/business-logic/vpn-config-files');
@@ -79,7 +87,7 @@ function cleanUpAndClose() {
         try {
           fs.unlinkSync(file);
         } catch (e) {
-          // logger.info(e);
+          logger.debug(e);
         }
       }
     });
@@ -114,11 +122,17 @@ function cleanUpAndClose() {
   });
 }
 
+/**
+ * Determine according to OS, if given process is listed in process list and therefore active
+ * @param processName
+ * @returns {Promise<any>}
+ */
 function checkIfOpenVpnIsRunning(processName) {
   return new Promise((resolve, reject) => {
     const plat = process.platform;
     const cmd = plat === 'win32' ? 'tasklist' : (plat === 'darwin' ? 'ps -ax | grep ' + mac : (plat === 'linux' ? 'ps -A' : ''));
     const pName = plat === 'win32' ? processName + '.exe' : processName;
+    // processName == undefined also tests if processName == null
     if (cmd === '' || processName === '' || processName == undefined) {
       resolve(false);
     }

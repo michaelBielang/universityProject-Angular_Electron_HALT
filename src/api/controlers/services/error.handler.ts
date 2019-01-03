@@ -6,6 +6,12 @@
 import logger from '../../logging/logger';
 
 class ErrorResHandler {
+  /**
+   * centralize error handling
+   * @param res
+   * @param message
+   * @param status
+   */
   errResponse(res, message?: string, status?: number) {
     if (message) {
       logger.error(message);

@@ -8,7 +8,8 @@ import * as db from '../datastorage';
 import errHandler from './services/error.handler';
 
 /**
- * api/searchhistories
+ * handing out all known searches of a given user
+ * Route: /api/searchhistories/:userid
  * @param req
  * @param res
  * @param next

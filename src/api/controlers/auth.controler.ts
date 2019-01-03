@@ -12,6 +12,13 @@ import ldap from './business-logic/ldap.controler';
 import vpn from './business-logic/vpn.controler';
 
 
+/**
+ * handle login to application and writing/fetching user data
+ * Route: /api/auth
+ * @param req
+ * @param res
+ * @param next
+ */
 export async function auth_login(req, res, next) {
   const userid = req.body['id'].toLowerCase();
   const pw = req.body['pw'];

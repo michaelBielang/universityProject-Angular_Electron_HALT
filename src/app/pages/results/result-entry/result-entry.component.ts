@@ -3,10 +3,10 @@
  * @license UNLICENSED
  */
 
-import {AfterViewInit, Component, Input, OnDestroy} from '@angular/core';
-import {TabSelectionService} from '../../../@core/services/tab-selection.service';
-import {DetailsService} from '../../../@core/services/details.service';
-import {NotificationService} from '../../../@core/services/notification.service';
+import { AfterViewInit, Component, Input, OnDestroy } from '@angular/core';
+import { TabSelectionService } from '../../../@core/services/tab-selection.service';
+import { DetailsService } from '../../../@core/services/details.service';
+import { NotificationService } from '../../../@core/services/notification.service';
 import * as Clipboard from 'clipboard';
 import route from '../../../@core/enums/route.enum';
 
@@ -25,8 +25,7 @@ export class ResultEntryComponent implements AfterViewInit, OnDestroy {
     private readonly tabSelectionService: TabSelectionService,
     private readonly notificationService: NotificationService,
     private readonly detailsService: DetailsService,
-  ) {
-  }
+  ) { }
 
   ngAfterViewInit() {
     this.registerClipboardEvents();
