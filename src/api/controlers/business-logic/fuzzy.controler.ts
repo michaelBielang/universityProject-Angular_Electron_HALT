@@ -18,26 +18,27 @@ class Fuzzy {
       includeScore: true,
       threshold: 1.0, // smaller would require better match, 1.0 would match everything
       location: 0,
-      distance: 100,
-      minMatchCharLength: 3,
-      maxPatternLength: 25,
+      distance: 5000,
+      minMatchCharLength: 25,
+      maxPatternLength: 500,
       keys: [
         // RZ-Kennung
         { name: 'uid', weight: 0.2 }, // example: chris87
         // Email Addresses
-        { name: 'mail', weight: 0.1 }, // example: Christoph.Bichlmeier@HS-Augsburg.DE
-        { name: 'mailLocalAddress', weight: 0.05 }, // example: chris87@RZ.FH-Augsburg.DE, Christoph.Bichlmeier@FH-Augsburg.DE
-        { name: 'mailRoutingAddress', weight: 0.03 }, // example: chris87@RZ.FH-Augsburg.DE
-        { name: 'eduPersonPrincipalName', weight: 0.05 }, // example: chris87@hs-augsburg.de
+        { name: 'mail', weight: 0.05 }, // example: Christoph.Bichlmeier@HS-Augsburg.DE
+        { name: 'mailLocalAddress', weight: 0.01 }, // example: chris87@RZ.FH-Augsburg.DE, Christoph.Bichlmeier@FH-Augsburg.DE
+        { name: 'mailRoutingAddress', weight: 0.01 }, // example: chris87@RZ.FH-Augsburg.DE
+        { name: 'eduPersonPrincipalName', weight: 0.01 }, // example: chris87@hs-augsburg.de
         // Names
-        { name: 'givenName', weight: 0.15 }, // example: Christoph
-        { name: 'sn', weight: 0.15 }, // example: Christoph
+        // { name: 'givenName', weight: 0.09 }, // example: Christoph
+        // { name: 'sn', weight: 0.615 }, // example: Bichlmeier
+        { name: 'displayName', weight: 0.624 }, // example: Christoph Bichlmeier
         // Faculty
-        { name: 'ou', weight: 0.1 }, // example: Elektrotechnik
+        { name: 'ou', weight: 0.005 }, // example: Elektrotechnik
         // StudySubject
-        { name: 'dfnEduPersonFieldOfStudyString', weight: 0.13 }, // example: Applied Research (Master)
+        { name: 'dfnEduPersonFieldOfStudyString', weight: 0.005 }, // example: Applied Research (Master)
         // Gender
-        { name: 'schacGender', weight: 0.04 }, // example: 1   (1 = male, 2 = female)
+        { name: 'schacGender', weight: 0.005 }, // example: 1   (1 = male, 2 = female)
       ],
     };
   }
@@ -51,12 +52,34 @@ class Fuzzy {
   private fuseSearch(ldapArr, searchObj: ISearchObj): Promise<any> {
     return new Promise((resolve, reject) => {
       if (searchObj) {
-        const fuse = new Fuse(ldapArr, this.fuseOptions());
+        // merge duplicates from ldapArr
+        const distinctLdapArr = [];
+        for (const entry of ldapArr) {
+          let contains = false;
+          for (const distEntry of distinctLdapArr) {
+            if (entry['uid'] === distEntry['uid']) {
+              contains = true;
+              break;
+            }
+          }
+          if (!contains) {
+            distinctLdapArr.push(entry);
+          }
+        }
+        // perform actual fuse.js search and weighting
+        const fuse = new Fuse(distinctLdapArr, this.fuseOptions());
         const results = [];
         const keys = Object.keys(searchObj);
         for (const key of keys) {
           if (searchObj[key]) {
-            results.push(...fuse.search(searchObj[key]));
+            if (key === 'name' && searchObj[key]) {
+              const nameparts = searchObj[key].replace('.', ' ').split(' ');
+              for (const name of nameparts) {
+                results.push(...fuse.search(name));
+              }
+            } else {
+              results.push(...fuse.search(searchObj[key]));
+            }
           }
         }
         resolve(results);
@@ -81,7 +104,7 @@ class Fuzzy {
         const retResults = [];
         for (const res of results) {
           const item = res['item'];
-          item['fusescores'] = [1 - res['score']];
+
           let containsItem = false;
           for (const retRes of retResults) {
             if (retRes['uid'] === item['uid']) {
@@ -91,18 +114,26 @@ class Fuzzy {
             }
           }
           if (!containsItem) {
+            item['fusescores'] = [1 - res['score']];
             retResults.push(item);
           }
         }
         for (const retRes of retResults) {
           let scoreSum = 0;
           for (const score of retRes['fusescores']) {
+            if (retRes['highscore'] && retRes['highscore'] < score) {
+              retRes['highscore'] = score;
+            } else if (!retRes['highscore']) {
+              retRes['highscore'] = score;
+            }
             scoreSum += score;
           }
           retRes['avgscore'] = scoreSum / retRes['fusescores'].length;
         }
         resolve(retResults.sort((a, b) =>
-          (a['avgscore'] > b['avgscore'] ? -1 : a['avgscore'] < b['avgscore'] ? 1 : 0)).slice(0, this.maxRows));
+          // (a['highscore'] > b['highscore'] ? -1 : a['highscore'] < b['highscore'] ? 1 : 0)).slice(0, this.maxRows)
+          (a['avgscore'] > b['avgscore'] ? -1 : a['avgscore'] < b['avgscore'] ? 1 : 0)).slice(0, this.maxRows)
+        );
       }).catch(err => {
         reject(err);
       });
