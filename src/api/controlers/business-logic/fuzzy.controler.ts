@@ -6,6 +6,10 @@
 import * as Fuse from 'fuse.js/dist/fuse.js';
 import ISearchObj from '../models/search-obj.model';
 
+import * as moment from 'moment';
+import * as fs from 'fs';
+import * as path from 'path';
+
 class Fuzzy {
   private maxRows: number = 10;
 
@@ -130,14 +134,56 @@ class Fuzzy {
           }
           retRes['avgscore'] = scoreSum / retRes['fusescores'].length;
         }
-        resolve(retResults.sort((a, b) =>
-          // (a['highscore'] > b['highscore'] ? -1 : a['highscore'] < b['highscore'] ? 1 : 0)).slice(0, this.maxRows)
-          (a['avgscore'] > b['avgscore'] ? -1 : a['avgscore'] < b['avgscore'] ? 1 : 0)).slice(0, this.maxRows)
-        );
+
+        const allSortedResults = retResults.sort((a, b) =>
+          // (a['highscore'] > b['highscore'] ? -1 : a['highscore'] < b['highscore'] ? 1 : 0))
+          (a['avgscore'] > b['avgscore'] ? -1 : a['avgscore'] < b['avgscore'] ? 1 : 0));
+
+        this.dumpToFile(allSortedResults);
+        resolve(allSortedResults.slice(0, this.maxRows));
       }).catch(err => {
         reject(err);
       });
     });
+  }
+
+  dumpToFile(results) {
+    const timeStamp = moment().format("YYYY-MM-DD HH.MM.SS");
+    if (results.length) {
+      let fieldOfStudy = results[0]['dfnEduPersonFieldOfStudyString'];
+      if (fieldOfStudy.indexOf("/") > -1) {
+        fieldOfStudy = fieldOfStudy.split("(")[0].trim();
+      }
+
+      const fileName = path.join(__dirname, 'logging', fieldOfStudy + ' ' + timeStamp + '.txt');
+      const filePath = path.dirname(fileName);
+      if (!fs.existsSync(filePath)) {
+        fs.mkdirSync(filePath);
+      }
+
+      fs.writeFile(fileName, 'Name,Status,Email,Fakultaet,Studiengang,ShadowLastChange,SambaPwdLastSet\n', err => {
+        if (err) console.error(err);
+      });
+
+      const dumper = fs.createWriteStream(fileName, {
+        flags: 'a' // 'a' means appending (old data will be preserved)
+      });
+
+      setTimeout(() => {
+        results.forEach(entry => {
+          if (entry['cn'] && entry['eduPersonPrimaryAffiliation'] && entry['mail'] && entry['ou'] &&
+            entry['dfnEduPersonFieldOfStudyString'] && entry['dfnEduPersonFieldOfStudyString'] &&
+            entry['shadowLastChange'] && entry['sambaPwdLastSet']) {
+            dumper.write(entry['cn'] + ',' + entry['eduPersonPrimaryAffiliation'] + ',' + entry['mail'] + ',' +
+              entry['ou'] + ',' + entry['dfnEduPersonFieldOfStudyString'] + ',' +
+              moment(parseInt(entry['shadowLastChange']) * 1000).format("YYYY-MM-DD") + ',' +
+              moment(parseInt(entry['sambaPwdLastSet']) * 1000).format("YYYY-MM-DD") + '\n', err => {
+                if (err) console.error(err);
+              });
+          }
+        });
+      }, 250);
+    }
   }
 }
 
